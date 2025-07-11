@@ -11,8 +11,20 @@
 <body>
     <main>
         <section id="nexus-dsm">
-            <h1>Dataset Manager</h1>
+            <h1 id="main-heading">Dataset Manager</h1>
             <p>Transform, Clean, and Prepare Your Data for Any API Use.</p>
+            <form><label for="inputTypeSelect">
+                    <select name="select-File-Type" id="inputTypeSelect">
+                        <option value="csv">CSV Format</option>
+                        <option value="json">JSON Format</option>
+                    </select>
+                </label>
+                <label class="pointer" for="inputFile"><input class="display-none" type="file" name="input"
+                        id="inputFile">
+                    <img class="pointer" src="./images/icons/file-upload.png"
+                        alt=" image select to upload file"></label>
+                <label for="analyze-btn"><button id="analyze-btn" class="btn-primary">⚡Analyze</button></label>
+            </form>
         </section>
     </main>
 </body>
