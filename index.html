@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nexus DSM: Nexus Dataset Management Web Application</title>
     <link rel="stylesheet" href="style.css">
+    <script defer src="script.js"></script>
 </head>
 
 <body>
@@ -15,12 +16,12 @@
             <p>Transform, Clean, and Prepare Your Data for Any API Use.</p>
             <form><label for="inputTypeSelect">
                     <select name="select-File-Type" id="inputTypeSelect">
-                        <option value="csv">CSV Format</option>
-                        <option value="json">JSON Format</option>
+                        <option value="text/csv">CSV Format</option>
+                        <option value="application/json">JSON Format</option>
                     </select>
                 </label>
-                <label class="pointer" for="inputFile"><input class="display-none" type="file" name="input"
-                        id="inputFile">
+                <label class="pointer" for="inputFile"><input class="display-none" type="file" accept="text/csv"
+                        name="input" id="inputFile">
                     <img class="pointer" src="./images/icons/file-upload.png"
                         alt=" image select to upload file"></label>
                 <label for="analyze-btn"><button id="analyze-btn" class="btn-primary">⚡Analyze</button></label>
