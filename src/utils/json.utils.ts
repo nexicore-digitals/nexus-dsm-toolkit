@@ -1,13 +1,13 @@
-import { ParseError } from "papaparse";
+import { ParseError } from "../types/errors.js";
 import {
   JSONEmptyFileError,
   JSONInvalidRootError,
   JSONNoDataRowsError,
   JSONNonObjectItemError,
-  JsonParseResult,
   JSONSyntaxError,
   JSONUnexpectedError,
-} from "../types/errors.js";
+} from "../types/json.errors.js";
+import { JsonParseResult } from "../types/response.js";
 
 export function isJson(data: string): JsonParseResult {
   let parsedData: unknown; // Start with 'unknown' for safety
@@ -18,6 +18,7 @@ export function isJson(data: string): JsonParseResult {
         name: "JSONEmptyFileError",
         message: "JSON file is empty or contains no data.",
         type: "EmptyFileError",
+        code: "EmptyJsonFile",
       };
       throw error;
     }
@@ -37,6 +38,7 @@ export function isJson(data: string): JsonParseResult {
           message:
             "JSON file contains an array, but not all its items are valid objects. Nested arrays or non-object items at the top level are not supported.",
           type: "NonObjectItemError",
+          code: "NonObjectArrayItem",
         };
         throw error;
       }
@@ -45,6 +47,7 @@ export function isJson(data: string): JsonParseResult {
           name: "JSONNoDataRowsError",
           message: "JSON file contains an empty array. No data rows found.",
           type: "NoDataRowsError",
+          code: "NoJsonDataRows",
         };
         throw error;
       }
@@ -62,6 +65,7 @@ export function isJson(data: string): JsonParseResult {
         message:
           "JSON file must contain an array or a single object at its root for dataset management.",
         type: "InvalidRootError",
+        code: "InvalidJsonRoot",
       };
       throw error;
     }
@@ -71,13 +75,28 @@ export function isJson(data: string): JsonParseResult {
         name: "JSONSyntaxError",
         message: `Invalid JSON format: ${err.message}.`,
         type: "SyntaxError",
+        code: "JsonSyntaxError",
       };
-      return { success: false, message: syntaxError.message };
+      return {
+        success: false,
+        message: syntaxError.message,
+        type: syntaxError.type,
+        name: syntaxError.name,
+        detailedErrors: [syntaxError],
+        code: syntaxError.code,
+      };
     }
     // Catch specific errors thrown by our own validation logic (which extend ParseError)
     else if (err instanceof Error && (err as unknown as ParseError).type) {
       // If it's one of our custom ParseErrors, return its message
-      return { success: false, message: err.message };
+      const customError = err as ParseError;
+      return {
+        success: false,
+        message: customError.message,
+        name: customError.name,
+        type: customError.type,
+        detailedErrors: [customError],
+      };
     }
     // Catch any truly unexpected errors that don't fit our custom error types
     else {
@@ -87,8 +106,16 @@ export function isJson(data: string): JsonParseResult {
           err
         )}`,
         type: "UnexpectedError",
+        code: "UnknownJsonError",
       };
-      return { success: false, message: unexpectedError.message };
+      return {
+        name: unexpectedError.name,
+        success: false,
+        message: unexpectedError.message,
+        type: unexpectedError.type,
+        detailedErrors: [unexpectedError],
+        code: unexpectedError.code,
+      };
     }
   }
 }
