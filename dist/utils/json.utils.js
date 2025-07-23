@@ -57,12 +57,26 @@ export function isJson(data) {
                 type: "SyntaxError",
                 code: "JsonSyntaxError",
             };
-            return { success: false, message: syntaxError.message };
+            return {
+                success: false,
+                message: syntaxError.message,
+                type: syntaxError.type,
+                name: syntaxError.name,
+                detailedErrors: [syntaxError],
+                code: syntaxError.code,
+            };
         }
         // Catch specific errors thrown by our own validation logic (which extend ParseError)
         else if (err instanceof Error && err.type) {
             // If it's one of our custom ParseErrors, return its message
-            return { success: false, message: err.message };
+            const customError = err;
+            return {
+                success: false,
+                message: customError.message,
+                name: customError.name,
+                type: customError.type,
+                detailedErrors: [customError],
+            };
         }
         // Catch any truly unexpected errors that don't fit our custom error types
         else {
@@ -72,7 +86,14 @@ export function isJson(data) {
                 type: "UnexpectedError",
                 code: "UnknownJsonError",
             };
-            return { success: false, message: unexpectedError.message };
+            return {
+                name: unexpectedError.name,
+                success: false,
+                message: unexpectedError.message,
+                type: unexpectedError.type,
+                detailedErrors: [unexpectedError],
+                code: unexpectedError.code,
+            };
         }
     }
 }

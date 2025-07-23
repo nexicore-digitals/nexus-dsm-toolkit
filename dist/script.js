@@ -19,7 +19,6 @@ if (checkDomDependencies(domDependencies)) {
         if (file)
             handleAnalyzeFile(file, dataFormat);
     });
-    console.log(analyzeBtn);
 }
 async function handleAnalyzeFile(file, dataFormat) {
     if (dataFormat.toLowerCase().includes("csv"))

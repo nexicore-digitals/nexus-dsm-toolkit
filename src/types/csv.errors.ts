@@ -1,67 +1,64 @@
 import { ParseError } from "./errors";
 
-export interface CSVError extends ParseError {
-  row?: number;
+export interface CsvError extends ParseError {
+  row?: number | undefined;
+  index?: number | undefined;
 }
 
-export interface CSVInvalidQuotesError extends CSVError {
+export interface CsvInvalidQuotesError extends CsvError {
   type: "SyntaxError";
   code: "InvalidQuotes";
-  row: number;
 }
 
-export interface CSVNoHeadersError extends CSVError {
+export interface CsvNoHeadersError extends CsvError {
   type: "NoHeadersError";
   code: "NoHeaders";
 }
 
-export interface CSVMissingQuotesError extends CSVError {
+export interface CsvMissingQuotesError extends CsvError {
   type: "SyntaxError";
   code: "MissingQuotes";
-  row: number;
 }
 
-export interface CSVTooFewFieldsError extends CSVError {
-  type: "FieldMisMatchError";
+export interface CsvTooFewFieldsError extends CsvError {
+  type: "FieldMismatchError";
   code: "TooFewFields";
-  row: number;
 }
 
-export interface CSVTooManyFieldsError extends CSVError {
-  type: "FieldMisMatchError";
+export interface CsvTooManyFieldsError extends CsvError {
+  type: "FieldMismatchError";
   code: "TooManyFields";
-  row: number;
 }
 
-export interface CSVNoValidDataRowsError extends CSVError {
+export interface CsvNoValidDataRowsError extends CsvError {
   type: "NoValidDataRowsError";
   code: "InvalidDataRows";
 }
 
-export interface CSVEmptyFileError extends CSVError {
+export interface CsvEmptyFileError extends CsvError {
   type: "EmptyFileError";
   code: "EmptyFile";
 }
 
-export interface CSVUndetectableDelimiter extends CSVError {
-  type: "ParseError";
+export interface CsvUndetectableDelimiter extends CsvError {
+  type: "DelimiterError";
   code: "UndetectableDelimiter";
 }
 
-export interface CSVUnexpectedError extends CSVError {
+export interface CsvUnexpectedError extends CsvError {
   type: "UnexpectedError";
   code: "UnknownError";
 }
 
-type CSVSyntaxError = CSVInvalidQuotesError | CSVMissingQuotesError;
+type CsvSyntaxError = CsvInvalidQuotesError | CsvMissingQuotesError;
 
-type CSVFieldMismatchError = CSVTooFewFieldsError | CSVTooManyFieldsError;
+type CsvFieldMismatchError = CsvTooFewFieldsError | CsvTooManyFieldsError;
 
-export type SpecificCSVError =
-  | CSVSyntaxError
-  | CSVEmptyFileError
-  | CSVNoHeadersError
-  | CSVFieldMismatchError
-  | CSVNoValidDataRowsError
-  | CSVUnexpectedError
-  | CSVUndetectableDelimiter;
+export type SpecificCsvError =
+  | CsvSyntaxError
+  | CsvEmptyFileError
+  | CsvNoHeadersError
+  | CsvFieldMismatchError
+  | CsvNoValidDataRowsError
+  | CsvUnexpectedError
+  | CsvUndetectableDelimiter;

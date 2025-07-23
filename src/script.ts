@@ -22,7 +22,6 @@ if (checkDomDependencies(domDependencies)) {
     const dataFormat: string = inputFile?.getAttribute("accept") || "text/csv";
     if (file) handleAnalyzeFile(file, dataFormat);
   });
-  console.log(analyzeBtn);
 }
 async function handleAnalyzeFile(file: File, dataFormat: string) {
   if (dataFormat.toLowerCase().includes("csv"))

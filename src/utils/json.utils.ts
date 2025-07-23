@@ -7,9 +7,8 @@ import {
   JSONSyntaxError,
   JSONUnexpectedError,
 } from "../types/json.errors.js";
-import { JsonParseResult } from "../types/response.js";
 
-export function isJson(data: string): JsonParseResult {
+export function isJson(data: string) {
   let parsedData: unknown; // Start with 'unknown' for safety
 
   try {
