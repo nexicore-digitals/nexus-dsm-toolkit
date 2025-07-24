@@ -1,5 +1,4 @@
-import { CsvError } from "./csv.errors";
-import { ValidResponse } from "./response";
+import { ErrorResponse, ValidResponse } from "./response";
 
 interface Meta {
   aborted: boolean;
@@ -11,7 +10,10 @@ interface Meta {
   truncated: boolean;
 }
 
-export interface CsvResponse extends ValidResponse {
+export interface CsvValidResponse extends ValidResponse {
   meta: Meta;
-  errors: CsvError[];
 }
+
+export interface CsvErrorResponse extends ErrorResponse {}
+
+export type CsvResponse = CsvValidResponse | CsvErrorResponse;

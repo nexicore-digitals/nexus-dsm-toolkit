@@ -5,9 +5,10 @@ export interface BaseResponse {
 
 export interface ValidResponse extends BaseResponse {
   data: object | object[];
+  success: true;
 }
 
 export interface ErrorResponse extends BaseResponse, ParseError {
-  code?: string;
   detailedErrors?: ParseError[];
+  success: false;
 }
