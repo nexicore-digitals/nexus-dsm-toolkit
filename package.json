@@ -30,9 +30,6 @@
     "test:watch": "jest --watch --verbose"
   },
   "devDependencies": {
-    "@types/jest": "^30.0.0",
-    "@types/papaparse": "^5.3.16",
-    "jest": "^30.0.5",
-    "ts-jest": "^29.4.0"
+    "@types/papaparse": "^5.3.16"
   }
 }
