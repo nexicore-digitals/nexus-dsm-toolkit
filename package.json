@@ -1,5 +1,38 @@
 {
+  "name": "nexus-dsm",
+  "version": "1.0.0",
+  "description": "**Nexus DSM** (Dataset Management) is a powerful, client-side web application designed to streamline the process of transforming and cleaning datasets (CSV and JSON) into a structured, API-ready JSON format. Built with vanilla JavaScript and styled using Tailwind CSS, Nexus DSM provides an intuitive interface for managing your data with precision and ease.",
+  "type": "commonjs",
+  "license": "ISC",
+  "private": false,
+  "author": "Owen • Nexicore Digital",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/nexus-dsm.git"
+  },
+  "keywords": [
+    "csv",
+    "json",
+    "data-cleaning",
+    "client-side",
+    "dataset",
+    "visual-transformation",
+    "javascript",
+    "tailwind",
+    "browser-tool",
+    "nexus"
+  ],
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "jest --verbose",
+    "test:watch": "jest --watch --verbose"
+  },
   "devDependencies": {
-    "@types/papaparse": "^5.3.16"
+    "@types/jest": "^30.0.0",
+    "@types/papaparse": "^5.3.16",
+    "jest": "^30.0.5",
+    "ts-jest": "^29.4.0"
   }
 }

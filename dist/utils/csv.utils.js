@@ -13,11 +13,11 @@ export default function parseCSV(file) {
                     message: "CSV file is empty or contains no data.",
                     type: "EmptyFileError",
                     code: "EmptyFile",
-                    // row and index are optional for this type
                 };
                 customErrors.push(csvEmptyFileError);
             }
             const result = papa.parse(csv, { dynamicTyping: true, header: true });
+            /* papaparse merged it's result.meta.errors into result.errors */
             if (!(result.meta.fields !== undefined) ||
                 result.meta.fields.length === 0) {
                 const csvNoHeadersError = {
@@ -25,7 +25,6 @@ export default function parseCSV(file) {
                     message: "CSV file has no valid headers. Ensure the first line is not empty.",
                     type: "NoHeadersError",
                     code: "NoHeaders",
-                    // row and index are optional for this type, so they are omitted if not applicable
                 };
                 customErrors.push(csvNoHeadersError);
             }
@@ -37,24 +36,50 @@ export default function parseCSV(file) {
                     message: "CSV file contains headers but no valid data rows could be parsed.",
                     type: "NoValidDataRowsError",
                     code: "InvalidDataRows",
-                    // row and index are optional for this type, so they are omitted if not applicable
                 };
                 customErrors.push(csvNoValidDataRowsError);
             }
             result.errors.forEach((error) => {
                 customErrors.push(transformPapaParseError(error));
             });
-            const customResult = {
-                meta: result.meta,
-                data: result.data,
-                errors: customErrors,
-                success: !!(customErrors.length === 0),
-            };
-            resolve(customResult);
+            if (customErrors.length === 0) {
+                const customResult = {
+                    meta: result.meta,
+                    data: result.data,
+                    success: true,
+                };
+                resolve(customResult);
+            }
+            else {
+                const primaryError = customErrors[0]; // Get the first error for the main message
+                const errorResponse = {
+                    // Use CsvErrorResponse interface
+                    success: false,
+                    name: primaryError.name,
+                    message: primaryError.message,
+                    type: primaryError.type,
+                    code: primaryError.code,
+                    detailedErrors: customErrors, // Include all collected errors
+                };
+                return resolve(errorResponse);
+            }
         };
-        csvReader.onerror = (e) => {
-            console.log("Unable to read file:", file.name);
-            reject(`Unable to read file: ${file.name}`);
+        csvReader.onerror = (errorEvent) => {
+            const unexpectedError = {
+                name: "CSVUnexpectedError",
+                message: `Error reading file: ${errorEvent.target?.error?.message || "Unknown file reading error"} (File: ${file.name})`,
+                type: "UnexpectedError",
+                code: "UnknownError",
+            };
+            // Resolve the Promise with an ErrorResponse containing the unexpected error
+            return resolve({
+                success: false,
+                name: unexpectedError.name,
+                message: unexpectedError.message,
+                type: unexpectedError.type,
+                code: unexpectedError.code,
+                detailedErrors: [unexpectedError], // Include the specific error in detailedErrors
+            });
         };
     });
 }
