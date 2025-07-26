@@ -1,6 +1,5 @@
 import { transformPapaParseError } from "../adapters/papaparse.adapter.js";
 import readFile from "./filereader.util.js";
-const papa = window.Papa;
 export default async function parseCSV(file) {
     const customErrors = [];
     const response = await readFile(file);
@@ -22,7 +21,7 @@ export default async function parseCSV(file) {
         };
         customErrors.push(csvEmptyFileError);
     }
-    const result = papa.parse(csv, { dynamicTyping: true, header: true });
+    const result = window.Papa.parse(csv, { dynamicTyping: true, header: true });
     /* papaparse merged it's result.meta.errors into result.errors */
     if (!(result.meta.fields !== undefined) || result.meta.fields.length === 0) {
         const csvNoHeadersError = {

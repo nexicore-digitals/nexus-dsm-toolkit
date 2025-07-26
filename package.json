@@ -34,6 +34,7 @@
     "vitest": "^3.2.4"
   },
   "dependencies": {
-    "jsdom": "^26.1.0"
+    "jsdom": "^26.1.0",
+    "papaparse": "^5.5.3"
   }
 }

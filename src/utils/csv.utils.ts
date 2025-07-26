@@ -3,13 +3,10 @@ import {
   CsvEmptyFileError,
   CsvNoHeadersError,
   CsvNoValidDataRowsError,
-  CsvUnexpectedError,
   SpecificCsvError,
 } from "../types/csv.errors";
 import { CsvErrorResponse, CsvResponse } from "../types/csv.response";
 import readFile from "./filereader.util.js";
-
-const papa = window.Papa;
 
 export default async function parseCSV(file: File): Promise<CsvResponse> {
   const customErrors: SpecificCsvError[] = [];
@@ -34,7 +31,7 @@ export default async function parseCSV(file: File): Promise<CsvResponse> {
     };
     customErrors.push(csvEmptyFileError);
   }
-  const result = papa.parse(csv, { dynamicTyping: true, header: true });
+  const result = window.Papa.parse(csv, { dynamicTyping: true, header: true });
   /* papaparse merged it's result.meta.errors into result.errors */
   if (!(result.meta.fields !== undefined) || result.meta.fields.length === 0) {
     const csvNoHeadersError: CsvNoHeadersError = {
