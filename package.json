@@ -26,10 +26,14 @@
     "lib": "lib"
   },
   "scripts": {
-    "test": "jest --verbose",
-    "test:watch": "jest --watch --verbose"
+    "test": "vitest",
+    "test:coverage": "vitest run --coverage"
   },
   "devDependencies": {
-    "@types/papaparse": "^5.3.16"
+    "@types/papaparse": "^5.3.16",
+    "vitest": "^3.2.4"
+  },
+  "dependencies": {
+    "jsdom": "^26.1.0"
   }
 }
