@@ -33,7 +33,13 @@ export default async function parseCSV(file: File): Promise<CsvResponse> {
   }
   const result = window.Papa.parse(csv, { dynamicTyping: true, header: true });
   /* papaparse merged it's result.meta.errors into result.errors */
-  if (!(result.meta.fields !== undefined) || result.meta.fields.length === 0) {
+  if (
+    result.meta.fields === undefined ||
+    result.meta.fields.length === 0 ||
+    result.meta.fields.some(
+      (field) => /^[A-Z]/.test(field.trim()) || isNaN(Number(field))
+    )
+  ) {
     const csvNoHeadersError: CsvNoHeadersError = {
       name: "CSVNoHeadersError",
       message:

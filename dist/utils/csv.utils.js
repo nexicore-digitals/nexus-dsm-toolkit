@@ -23,7 +23,9 @@ export default async function parseCSV(file) {
     }
     const result = window.Papa.parse(csv, { dynamicTyping: true, header: true });
     /* papaparse merged it's result.meta.errors into result.errors */
-    if (!(result.meta.fields !== undefined) || result.meta.fields.length === 0) {
+    if (result.meta.fields === undefined ||
+        result.meta.fields.length === 0 ||
+        result.meta.fields.some((field) => /^[A-Z]/.test(field.trim()) || isNaN(Number(field)))) {
         const csvNoHeadersError = {
             name: "CSVNoHeadersError",
             message: "CSV file has no valid headers. Ensure the first line is not empty.",

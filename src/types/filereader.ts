@@ -4,6 +4,7 @@ export interface FileReadError {
   type: string;
   code: string;
   success: false;
+  content?: string; // Optional content in case of an error
 }
 export interface FileReadSuccess {
   success: true;
