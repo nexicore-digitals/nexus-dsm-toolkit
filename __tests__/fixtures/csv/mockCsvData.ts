@@ -12,8 +12,7 @@ export const NO_HEADERS = {
 
 export const MISSING_QUOTES = {
   success: true,
-  content: `id,name,comment
-1,John,This "comment is missing an end quote`, // → MissingQuotes
+  content: 'id,name,comment\n1,John,This "comment is missing an end quote',
 };
 
 export const INVALID_QUOTES = {

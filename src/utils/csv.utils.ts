@@ -8,6 +8,11 @@ import {
 import { CsvErrorResponse, CsvResponse } from "../types/csv.response";
 import readFile from "./filereader.util.js";
 
+export function csvQuoteCount(field: string): number {
+  if (!field) return 0;
+  return field.match(/"/g)?.length ?? 0;
+}
+
 export default async function parseCSV(file: File): Promise<CsvResponse> {
   const customErrors: SpecificCsvError[] = [];
   const response = await readFile(file);
@@ -37,7 +42,7 @@ export default async function parseCSV(file: File): Promise<CsvResponse> {
     result.meta.fields === undefined ||
     result.meta.fields.length === 0 ||
     result.meta.fields.some(
-      (field) => /^[A-Z]/.test(field.trim()) || isNaN(Number(field))
+      (field) => /^[A-Z]/.test(field.trim()) || !isNaN(Number(field))
     )
   ) {
     const csvNoHeadersError: CsvNoHeadersError = {
@@ -62,6 +67,30 @@ export default async function parseCSV(file: File): Promise<CsvResponse> {
       code: "InvalidDataRows",
     };
     customErrors.push(csvNoValidDataRowsError);
+  }
+  if (
+    result.data.some((row) =>
+      Object.values(row as object).some(
+        (field) => csvQuoteCount(field.toString()) % 2 !== 0
+      )
+    )
+  ) {
+    const quoteErrors: SpecificCsvError[] = [];
+    result.data.forEach((row, rowIndex) => {
+      Object.entries(row as object).forEach(([key, value]) => {
+        if (csvQuoteCount(value?.toString() ?? "") % 2 !== 0) {
+          quoteErrors.push({
+            name: "CSVMissingQuotesError",
+            message: `Row ${
+              rowIndex + 1
+            }, field "${key}" has unbalanced quotes.`,
+            type: "SyntaxError",
+            code: "MissingQuotes",
+          });
+        }
+      });
+    });
+    customErrors.push(...quoteErrors);
   }
   result.errors.forEach((error) => {
     customErrors.push(transformPapaParseError(error));
