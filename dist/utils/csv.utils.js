@@ -1,10 +1,7 @@
 import { transformPapaParseError } from "../adapters/papaparse.adapter.js";
+import { csvEmptyFileError } from "./csv.custom_errors.js";
+import { validateDataRows, validateHeaders, validateQuoteBalance, } from "./csv.helper_functions.js";
 import readFile from "./filereader.util.js";
-export function csvQuoteCount(field) {
-    if (!field)
-        return 0;
-    return field.match(/"/g)?.length ?? 0;
-}
 export default async function parseCSV(file) {
     const customErrors = [];
     const response = await readFile(file);
@@ -17,62 +14,36 @@ export default async function parseCSV(file) {
             code: "CSVFileReadError",
         };
     const csv = response.content;
-    if (csv.trim().length === 0) {
-        const csvEmptyFileError = {
-            name: "CSVEmptyFileError",
-            message: "CSV file is empty or contains no data.",
-            type: "EmptyFileError",
-            code: "EmptyFile",
-        };
+    // check for empty files
+    if (csv.trim().length === 0)
         customErrors.push(csvEmptyFileError);
-    }
     const result = window.Papa.parse(csv, { dynamicTyping: true, header: true });
+    const { meta, data, errors = [] } = result;
+    const fields = meta?.fields ?? [];
     /* papaparse merged it's result.meta.errors into result.errors */
-    if (result.meta.fields === undefined ||
-        result.meta.fields.length === 0 ||
-        result.meta.fields.some((field) => /^[A-Z]/.test(field.trim()) || !isNaN(Number(field)))) {
-        const csvNoHeadersError = {
-            name: "CSVNoHeadersError",
-            message: "CSV file has no valid headers. Ensure the first line is not empty.",
-            type: "NoHeadersError",
-            code: "NoHeaders",
-        };
-        customErrors.push(csvNoHeadersError);
+    if (fields) {
+        // check for invalid headers
+        const invalidHeadersError = validateHeaders(fields);
+        if (invalidHeadersError)
+            customErrors.push(invalidHeadersError);
+        if (data) {
+            // check for invalid data rows
+            const invalidDataRows = validateDataRows(data, fields);
+            if (invalidDataRows)
+                customErrors.push(invalidDataRows);
+            // custom extra check for inbalanced quotes
+            customErrors.push(...validateQuoteBalance(result.data));
+        }
     }
-    if (result.data.length === 0 &&
-        result.meta.fields &&
-        result.meta.fields.length > 0) {
-        const csvNoValidDataRowsError = {
-            name: "CSVNoValidDataRowsError",
-            message: "CSV file contains headers but no valid data rows could be parsed.",
-            type: "NoValidDataRowsError",
-            code: "InvalidDataRows",
-        };
-        customErrors.push(csvNoValidDataRowsError);
-    }
-    if (result.data.some((row) => Object.values(row).some((field) => csvQuoteCount(field.toString()) % 2 !== 0))) {
-        const quoteErrors = [];
-        result.data.forEach((row, rowIndex) => {
-            Object.entries(row).forEach(([key, value]) => {
-                if (csvQuoteCount(value?.toString() ?? "") % 2 !== 0) {
-                    quoteErrors.push({
-                        name: "CSVMissingQuotesError",
-                        message: `Row ${rowIndex + 1}, field "${key}" has unbalanced quotes.`,
-                        type: "SyntaxError",
-                        code: "MissingQuotes",
-                    });
-                }
-            });
+    if (Array.isArray(result.errors)) {
+        result.errors.forEach((error) => {
+            customErrors.push(transformPapaParseError(error));
         });
-        customErrors.push(...quoteErrors);
     }
-    result.errors.forEach((error) => {
-        customErrors.push(transformPapaParseError(error));
-    });
     if (customErrors.length === 0) {
         const customResult = {
-            meta: result.meta,
-            data: result.data,
+            meta,
+            data,
             success: true,
         };
         return customResult;
