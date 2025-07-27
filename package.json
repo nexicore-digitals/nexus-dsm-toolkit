@@ -1,9 +1,9 @@
 {
   "name": "nexus-dsm",
   "version": "1.0.0",
-  "description": "**Nexus DSM** (Dataset Management) is a powerful, client-side web application designed to streamline the process of transforming and cleaning datasets (CSV and JSON) into a structured, API-ready JSON format. Built with vanilla JavaScript and styled using Tailwind CSS, Nexus DSM provides an intuitive interface for managing your data with precision and ease.",
-  "type": "commonjs",
-  "license": "ISC",
+  "description": "Core toolkit for parsing, validating, converting, and indexing structured datasets (CSV ↔ JSON).",
+  "type": "module",
+  "license": "MIT",
   "private": false,
   "author": "Owen • Nexicore Digital",
   "repository": {
@@ -13,28 +13,34 @@
   "keywords": [
     "csv",
     "json",
-    "data-cleaning",
-    "client-side",
+    "parser",
     "dataset",
-    "visual-transformation",
-    "javascript",
-    "tailwind",
-    "browser-tool",
+    "validator",
+    "node",
+    "typescript",
+    "conversion",
+    "metadata",
+    "cli-toolkit",
     "nexus"
   ],
-  "directories": {
-    "lib": "lib"
-  },
   "scripts": {
     "test": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "dev": "tsx src/index.ts",
+    "example:csv": "tsx examples/parse-csv.ts",
+    "example:json": "tsx examples/parse-json.ts",
+    "build": "tsup src/index.ts --format esm,cjs --dts --clean",
+    "lint": "eslint . --ext .ts"
+  },
+  "dependencies": {
+    "papaparse": "^5.5.3"
   },
   "devDependencies": {
     "@types/papaparse": "^5.3.16",
+    "eslint": "^9.32.0",
+    "tsup": "^8.5.0",
+    "tsx": "^4.20.3",
+    "typescript": "^5.8.3",
     "vitest": "^3.2.4"
-  },
-  "dependencies": {
-    "jsdom": "^26.1.0",
-    "papaparse": "^5.5.3"
   }
 }

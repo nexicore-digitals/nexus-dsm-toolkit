@@ -1,8 +1,19 @@
 import { SpecificCsvError } from "../types/csv.errors";
+import { FileReadResponse } from "../types/filereader";
 import {
   csvNoHeadersError,
   csvNoValidDataRowsError,
-} from "./csv.custom_errors";
+} from "../constants/csv-custom-errors";
+import readFile from "./read-file";
+
+export async function normalizeToContent(
+  fileOrString: File | string
+): Promise<FileReadResponse> {
+  if (fileOrString instanceof File) {
+    return await readFile(fileOrString);
+  }
+  return { success: true, content: fileOrString };
+}
 
 export function csvQuoteCount(field: string): number {
   if (!field) return 0;

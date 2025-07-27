@@ -1,13 +1,13 @@
 import { describe, it, expect, vi, beforeAll, Mock } from "vitest";
-import parseCSV from "../../../src/utils/csv.utils.js";
-import readFile from "../../../src/utils/filereader.util.js";
 import {
   EMPTY_FILE,
   MISSING_QUOTES,
   NO_HEADERS,
-} from "../../fixtures/csv/mockCsvData.js";
+} from "../../fixtures/csv/mockCsvData";
+import readFile from "../../../src/utils/read-file";
+import parseCSV from "../../../src/parsers/csv-parser.js";
 
-vi.mock("../../../src/utils/filereader.util.js", () => ({
+vi.mock("../../../src/utils/read-file", () => ({
   default: vi.fn(),
 }));
 

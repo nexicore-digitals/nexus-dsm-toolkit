@@ -1,4 +1,4 @@
-import { ParseError } from "../types/errors.js";
+import { ParseError } from "../types/errors";
 import {
   JSONEmptyFileError,
   JSONInvalidRootError,
@@ -6,7 +6,7 @@ import {
   JSONNonObjectItemError,
   JSONSyntaxError,
   JSONUnexpectedError,
-} from "../types/json.errors.js";
+} from "../types/json.errors";
 
 export function isJson(data: string) {
   let parsedData: unknown; // Start with 'unknown' for safety

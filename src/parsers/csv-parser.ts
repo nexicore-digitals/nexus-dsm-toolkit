@@ -1,32 +1,38 @@
-import { transformPapaParseError } from "../adapters/papaparse.adapter.js";
-import { SpecificCsvError } from "../types/csv.errors";
+import Papa from "papaparse";
 import { CsvErrorResponse, CsvResponse } from "../types/csv.response";
-import { csvEmptyFileError } from "./csv.custom_errors.js";
+import { SpecificCsvError } from "../types/csv.errors";
 import {
+  normalizeToContent,
   validateDataRows,
   validateHeaders,
   validateQuoteBalance,
-} from "./csv.helper_functions.js";
-import readFile from "./filereader.util.js";
+} from "../utils/csv-utilities";
+import { csvEmptyFileError } from "../constants/csv-custom-errors";
+import { transformPapaParseError } from "../adapters/papaparse.adapter";
 
-export default async function parseCSV(file: File): Promise<CsvResponse> {
+export default async function parseCSV(
+  file: File | string
+): Promise<CsvResponse> {
   const customErrors: SpecificCsvError[] = [];
-  const response = await readFile(file);
-  if (!response.success)
+  const fileOrStringData = await normalizeToContent(file);
+
+  if (!fileOrStringData.success) {
     return {
       success: false,
       name: "FileReadError",
-      message: response.message,
+      message: fileOrStringData.message,
       type: "FileReadError",
       code: "CSVFileReadError",
     };
+  }
 
-  const csv = response.content;
+  const csv = fileOrStringData.content;
 
   // check for empty files
   if (csv.trim().length === 0) customErrors.push(csvEmptyFileError);
 
-  const result = window.Papa.parse(csv, { dynamicTyping: true, header: true });
+  const result = Papa.parse(csv, { dynamicTyping: true, header: true });
+
   const { meta, data, errors = [] } = result;
   const fields = meta?.fields ?? [];
 
