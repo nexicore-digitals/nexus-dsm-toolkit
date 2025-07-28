@@ -1,3 +1,4 @@
+import Papa from "papaparse";
 import { describe, it, expect, vi, beforeAll, Mock } from "vitest";
 import {
   EMPTY_FILE,
@@ -6,6 +7,8 @@ import {
   NO_HEADERS,
   TOO_FEW_FIELDS,
   TOO_MANY_FIELDS,
+  UNDETECTABLE_DELIMITER,
+  VALID_SAMPLE,
 } from "../../fixtures/csv/mockCsvData";
 import parseCSV from "../../../src/parsers/csv-parser.js";
 
@@ -61,5 +64,35 @@ describe("CSV Parsing tests", () => {
         expect(result.code).toBe("TooManyFields");
       }
     });
+  });
+  it("should handle undetectable delimiter", async () => {
+    const result = await parseCSV(UNDETECTABLE_DELIMITER.content);
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.name).toBe("CSVUndetectableDelimiterError");
+      expect(result.code).toBe("UndetectableDelimiter");
+    }
+  });
+  it("should handle any other unexpected errors", async () => {
+    vi.spyOn(Papa, "parse").mockImplementationOnce(() => {
+      throw new Error("sheesh there was an unexpected error");
+    });
+    const result = await parseCSV(VALID_SAMPLE.content);
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.name).toBe("CSVUnexpectedError");
+      expect(result.code).toBe("UnknownError");
+    }
+    vi.resetAllMocks();
+  });
+  it("should successful resolve and return the data", async () => {
+    const result = await parseCSV(VALID_SAMPLE.content);
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.data).toBeDefined();
+      if (Array.isArray(result.data))
+        expect(result.data.length).toBeGreaterThan(0);
+      expect(result.meta?.fields?.length).toBeGreaterThan(0);
+    }
   });
 });

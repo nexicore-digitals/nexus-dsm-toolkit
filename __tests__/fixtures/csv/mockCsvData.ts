@@ -36,8 +36,9 @@ export const TOO_MANY_FIELDS = {
 
 export const UNDETECTABLE_DELIMITER = {
   success: true,
-  content: `id|name|email
-1|Alice|alice@example.com`, // → UndetectableDelimiter
+  content: `colA,colB;colC
+val1|val2;val3
+itemA-itemB_itemC`, // → UndetectableDelimiter
 };
 
 export const NO_VALID_DATA_ROWS = {
@@ -57,6 +58,5 @@ export const VALID_SAMPLE = {
 
 export const UNEXPECTED_FORMAT = {
   success: true,
-  content: `# This file is corrupted
-value: missing, headers`, // → UnknownError
+  content: "# This file is corrupted value: missing, headers", // → UnknownError
 };

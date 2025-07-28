@@ -11,7 +11,7 @@ interface Meta {
 }
 
 export interface CsvValidResponse extends ValidResponse {
-  meta: Meta;
+  meta: Meta | undefined;
 }
 
 export interface CsvErrorResponse extends ErrorResponse {}
