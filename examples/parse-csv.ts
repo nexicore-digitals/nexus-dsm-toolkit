@@ -1,10 +1,12 @@
 // examples/parse.ts
-import fs from "fs";
 import parseCSV from "../src/parsers/csv-parser";
+import {
+  EMPTY_FILE,
+  VALID_SAMPLE,
+} from "../__tests__/fixtures/csv/mockCsvData";
 
-async function main(CSVSampleFilePath: string) {
-  const file = fs.readFileSync(CSVSampleFilePath, "utf-8");
-  const result = await parseCSV(file);
+async function main(data: string) {
+  const result = await parseCSV(data);
 
   if (result.success) {
     console.log("Parsed Result:", result.meta);
@@ -14,12 +16,9 @@ async function main(CSVSampleFilePath: string) {
 }
 
 async function run() {
-  const goodCSVFilePath = "./data/goodSample.csv";
-  const emptyCSVFilePath = "./data/emptySample.csv";
-
-  await main(goodCSVFilePath);
-  console.log("-----------");
-  await main(emptyCSVFilePath);
+  await main(VALID_SAMPLE.content);
+  console.log("\n-----------\n");
+  await main(EMPTY_FILE.content);
 }
 
 run();

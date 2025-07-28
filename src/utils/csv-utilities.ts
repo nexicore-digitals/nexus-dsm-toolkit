@@ -4,16 +4,6 @@ import {
   csvNoHeadersError,
   csvNoValidDataRowsError,
 } from "../constants/csv-custom-errors";
-import readFile from "./read-file";
-
-export async function normalizeToContent(
-  fileOrString: File | string
-): Promise<FileReadResponse> {
-  if (fileOrString instanceof File) {
-    return await readFile(fileOrString);
-  }
-  return { success: true, content: fileOrString };
-}
 
 export function csvQuoteCount(field: string): number {
   if (!field) return 0;

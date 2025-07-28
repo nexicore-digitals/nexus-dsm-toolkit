@@ -2,7 +2,6 @@ import Papa from "papaparse";
 import { CsvErrorResponse, CsvResponse } from "../types/csv.response";
 import { SpecificCsvError } from "../types/csv.errors";
 import {
-  normalizeToContent,
   validateDataRows,
   validateHeaders,
   validateQuoteBalance,
@@ -10,23 +9,10 @@ import {
 import { csvEmptyFileError } from "../constants/csv-custom-errors";
 import { transformPapaParseError } from "../adapters/papaparse.adapter";
 
-export default async function parseCSV(
-  file: File | string
-): Promise<CsvResponse> {
+export default async function parseCSV(file: string): Promise<CsvResponse> {
   const customErrors: SpecificCsvError[] = [];
-  const fileOrStringData = await normalizeToContent(file);
 
-  if (!fileOrStringData.success) {
-    return {
-      success: false,
-      name: "FileReadError",
-      message: fileOrStringData.message,
-      type: "FileReadError",
-      code: "CSVFileReadError",
-    };
-  }
-
-  const csv = fileOrStringData.content;
+  const csv = file;
 
   // check for empty files
   if (csv.trim().length === 0) customErrors.push(csvEmptyFileError);

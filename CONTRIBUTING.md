@@ -8,18 +8,22 @@ Thanks for your interest in contributing to Nexus DSM! We're building a modular 
 
 To get your local development environment ready:
 
-1.  **Clone the Repository:**
+1. **Clone the Repository:**
+
     ```bash
     git clone [https://github.com/owen-6936/nexus-dsm.git](https://github.com/owen-6936/nexus-dsm.git)
     cd nexus-dsm
     ```
-2.  **Install Dependencies:**
+
+2. **Install Dependencies:**
+
     ```bash
     npm install
     ```
 
-3.  **Run Tests:**
+3. **Run Tests:**
     Nexus DSM uses [Vitest](https://vitest.dev) for testing.
+
     ```bash
     # Run all tests
     npm test
@@ -28,8 +32,9 @@ To get your local development environment ready:
     npm run test:coverage
     ```
 
-4.  **Run Examples:**
+4. **Run Examples:**
     See the core functionality in action with the provided examples:
+
     ```bash
     # Example for CSV parsing
     npm run example:csv
@@ -38,8 +43,9 @@ To get your local development environment ready:
     npm run example:json
     ```
 
-5.  **Build the Project:**
+5. **Build the Project:**
     To compile the project for distribution:
+
     ```bash
     npm run build
     ```
@@ -69,15 +75,17 @@ To maintain code quality and ensure smooth collaboration, please adhere to these
 * **Type Safety:** Maintain strong type safety with clear TypeScript interfaces and types.
 * **Comprehensive Testing:** Add tests for any new functionality, bug fixes, or edge cases you introduce.
 * **Code Style & Linting:** Ensure your code adheres to the project's style conventions.
+
     ```bash
     # Run ESLint to check for code quality and style issues
     npm run lint
     ```
+
 * **Pull Request (PR) Etiquette:**
-    * Keep your PRs focused on a single logical change.
-    * Branch from `main` for new features or bug fixes.
-    * Write clear, concise, and descriptive commit messages (following Conventional Commits if possible, but descriptive is key!).
-    * Provide a detailed description in your PR explaining the problem it solves and how.
+  * Keep your PRs focused on a single logical change.
+  * Branch from `main` for new features or bug fixes.
+  * Write clear, concise, and descriptive commit messages (following Conventional Commits if possible, but descriptive is key!).
+  * Provide a detailed description in your PR explaining the problem it solves and how.
 
 ---
 
