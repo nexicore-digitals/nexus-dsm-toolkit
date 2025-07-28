@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeAll, Mock } from "vitest";
 import {
   EMPTY_FILE,
+  INVALID_QUOTES,
   MISSING_QUOTES,
   NO_HEADERS,
 } from "../../fixtures/csv/mockCsvData";
@@ -29,6 +30,14 @@ describe("CSV Utils Tests", () => {
     if (!result.success) {
       expect(result.name).toBe("CSVMissingQuotesError");
       expect(result.code).toBe("MissingQuotes");
+    }
+  });
+  it("should handle invalid quotes in csv", async () => {
+    const result = await parseCSV(INVALID_QUOTES.content);
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.name).toBe("CSVInvalidQuotesError");
+      expect(result.code).toBe("InvalidQuotes");
     }
   });
 });

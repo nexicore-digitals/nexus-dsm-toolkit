@@ -8,6 +8,7 @@ import {
 } from "../utils/csv-utilities";
 import { csvEmptyFileError } from "../constants/csv-custom-errors";
 import { transformPapaParseError } from "../adapters/papaparse.adapter";
+import { sortCsvErrorsByPriority } from "../utils/csv-error-priority";
 
 export default async function parseCSV(file: string): Promise<CsvResponse> {
   const customErrors: SpecificCsvError[] = [];
@@ -53,7 +54,8 @@ export default async function parseCSV(file: string): Promise<CsvResponse> {
     };
     return customResult;
   } else {
-    const primaryError = customErrors[0]; // Get the first error for the main message
+    const sortedErrors = sortCsvErrorsByPriority(customErrors);
+    const primaryError = sortedErrors[0]; // Get the first error for the main message
 
     const errorResponse: CsvErrorResponse = {
       // Use CsvErrorResponse interface
