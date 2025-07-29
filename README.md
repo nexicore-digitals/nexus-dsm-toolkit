@@ -21,12 +21,13 @@ In today's data-driven world, while tools promise seamless automation for parsin
 
 This repository contains the **core logic** for:
 
-- Parsing and syntax validation  
-- Conversion between formats  
-- Metadata-driven eligibility checks  
+- Parsing and syntax validation
+- **Schema validation**
+- Conversion between formats
+- Metadata-driven eligibility checks
 - (Future) indexing for advanced dataset workflows
 
-> ⚠️ **Note:** UI components, drag-and-drop tools, and frontend visualizations are maintained in a **separate repository** [`nexus-dsm-ui`](https://github.com/your-org/nexus-dsm-ui).  
+> ⚠️ **Note:** UI components, drag-and-drop tools, and frontend visualizations are maintained in a **separate repository** [`nexus-dsm-ui`](https://github.com/your-org/nexus-dsm-ui).
 > This repo focuses strictly on backend dataset processing logic.
 
 ---
@@ -35,7 +36,7 @@ This repository contains the **core logic** for:
 
 | Phase                        | Status     | Description                                                                                      |
 |-----------------------------|------------|------------------------------------------------------------------------------------------------|
-| **Phase 1: Core Node Utility** | ✅ Now     | Typed CSV/JSON parsing engine for Node; no build, no bundling, environment-agnostic core logic. |
+| **Phase 1: Core Node Utility** | ✅ Now     | Typed CSV/JSON parsing engine for Node; no build, no bundling, environment-agnostic core logic. Includes **schema validation**. |
 | **Phase 2: Optional Browser Support** | 🟡 Later   | Same API, browser bundle via conditional logic and bundlers (`tsup`, `rollup`, or `vite`).      |
 | **Phase 3: Headless API**       | 🟢 Optional| Serverless or self-hosted HTTP API exposing parsing endpoints for remote or client use.          |
 | **Phase 4: CLI Tool**           | 🟢 Bonus   | Command-line interface wrapping core utils for parsing, validation, and conversion tasks.       |
@@ -65,6 +66,7 @@ This repository contains the **core logic** for:
 |------------------------|-----------------------------------------------------------------------------|
 | `parseCSV(file)`       | Parses CSV input, validates syntax, and outputs structured data             |
 | `parseJSON(file)`      | Parses structured JSON arrays into rows and fields                          |
+| `validateSchema(data, schema)` | Validates parsed data against a predefined schema (e.g., JSON Schema) |
 | `convertToCSV(meta)`   | Converts parsed JSON into CSV (requires `ParsedFileMeta`)                   |
 | `convertToJSON(meta)`  | Converts parsed CSV into JSON (requires `ParsedFileMeta`)                   |
 | `indexFile(data)`      | _(Planned)_ Indexing module for chaining and querying parsed dataset output |
@@ -76,6 +78,8 @@ This repository contains the **core logic** for:
     📥 Upload or pass input file (.csv/.json)
         ↓
     🔍 Parsing + Syntax Validation
+        ↓
+    ✅ Schema Validation
         ↓
     🧾 Metadata Creation (syntax tree + eligibility flags)
         ↓
@@ -91,12 +95,17 @@ This repository contains the **core logic** for:
     ├── src/
     │   ├── parsers/        # CSV and JSON parsing logic
     │   ├── converters/     # Format transformation modules
-    │   ├── validators/     # Syntax, quote balance, header checks
+    │   ├── validators/     # Syntax, quote balance, header, and schema checks
+    │   ├── index.ts        # Re-exports all validation functions
+    │   ├── syntaxValidator.ts
+    │   ├── headerValidator.ts
+    │   └── schemaValidator.ts  # Logic for schema validation
+    │   ├── schemas/        # To define/store schema definitions
     │   ├── indexers/       # (Planned) data indexing logic
     │   ├── constants/      # Constants used across the project
     │   ├── adapters/       # Environment or format adapters
-    │   ├── types/          # TS interfaces: ParsedFileMeta, CsvResponse, etc.
     │   └── utils/          # Shared helpers
+    └── index.ts        # Main export file for the library (all index.ts in the root of src)
     │
     ├── __tests__/          # Unit and integration tests
     ├── lib/                # External libraries (e.g. papaparse.min.js)
@@ -119,10 +128,11 @@ This repository contains the **core logic** for:
 
 Use `__tests__` with fixtures to simulate:
 
-- CSV files with quote imbalances  
-- JSON inputs with nested structures  
-- Metadata eligibility checks  
-- Conversion passes and failure edge cases  
+- CSV files with quote imbalances
+- JSON inputs with nested structures
+- **Data inputs that conform/don't conform to specific schemas**
+- Metadata eligibility checks
+- Conversion passes and failure edge cases
 
 > Built to support mock-driven unit tests and validation suites for CLI, API, or internal tooling.
 
@@ -130,12 +140,12 @@ Use `__tests__` with fixtures to simulate:
 
 ## 🔭 Future Enhancements
 
-- ✅ Metadata-guarded conversion logic  
-- 🧠 Full metadata schema (`ParsedFileMeta`) with eligibility flags  
-- 🗂 Dataset indexing (column hashing, structure mapping)  
-- ⚡ CLI command dispatcher (`parse`, `convert`, `index`)  
-- 📡 API interface for remote orchestration  
-- 🖼 Separate UI repo for visualization: [`nexus-dsm-ui`](https://github.com/your-org/nexus-dsm-ui)
+- ✅ Metadata-guarded conversion logic
+- 🧠 Full metadata schema (`ParsedFileMeta`) with eligibility flags and **schema validation results**
+- 🗂 Dataset indexing (column hashing, structure mapping)
+- ⚡ CLI command dispatcher (`parse`, `convert`, `index`, `validate-schema`)
+- 📡 API interface for remote orchestration
+- 🖼 Separate UI repo for visualization: [`nexus-dsm-ui`](https://github.com/owen-6936/nexus-dsm-ui)
 
 ---
 
