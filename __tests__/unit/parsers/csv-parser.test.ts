@@ -10,7 +10,7 @@ import {
   TOO_MANY_FIELDS,
   UNDETECTABLE_DELIMITER,
   VALID_SAMPLE,
-} from "../../fixtures/csv/mockCsvData";
+} from "../../fixtures/csv/mockCsvData.js";
 import parseCSV from "../../../src/parsers/csv-parser.js";
 
 describe("CSV Parsing tests", () => {
