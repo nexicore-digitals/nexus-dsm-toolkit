@@ -25,6 +25,11 @@ export interface CsvNoHeadersError extends CsvError {
   code: "NoHeaders";
 }
 
+export interface CsvMissingHeaderValueError extends CsvError {
+  type: "MissingHeaderValueError";
+  code: "MissingHeaderValue";
+}
+
 export interface CsvNoValidDataRowsError extends CsvError {
   type: "NoValidDataRowsError";
   code: "InvalidDataRows";
@@ -66,6 +71,7 @@ export type SpecificCsvError =
   | CsvEmptyFileError
   | CsvUndetectableDelimiter
   | CsvNoHeadersError
+  | CsvMissingHeaderValueError
   | CsvNoValidDataRowsError
   | CsvSyntaxError // This union includes InvalidQuotes and MissingQuotes
   | CsvFieldMismatchError // This union includes TooFewFields and TooManyFields

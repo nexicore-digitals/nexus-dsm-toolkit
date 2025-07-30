@@ -1,6 +1,6 @@
 import { SpecificCsvError } from "../types/csv.errors";
-import { FileReadResponse } from "../types/filereader";
 import {
+  csvMissingHeaderValueError,
   csvNoHeadersError,
   csvNoValidDataRowsError,
 } from "../constants/csv-custom-errors";
@@ -31,6 +31,8 @@ export function validateQuoteBalance(data: object[]): SpecificCsvError[] {
 
 export function validateHeaders(fields?: string[]): SpecificCsvError | null {
   if (!fields || fields.length === 0) return csvNoHeadersError;
+  else if (fields && fields.some((field) => field === ""))
+    return csvMissingHeaderValueError;
 
   const looksLikeData = fields.some(
     (field) => /^[A-Z]/.test(field.trim()) || !isNaN(Number(field))

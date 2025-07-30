@@ -11,13 +11,14 @@ const ERROR_PRIORITY_MAP: { [code: string]: number } = {
 
   // 2. Structural Errors (Header / Data Rows)
   NoHeaders: 3,
-  InvalidDataRows: 4,
+  MissingHeaderValue: 4,
+  InvalidDataRows: 5,
 
   // 3. Syntax Errors (Quote / Field Mismatch - honoring your specific preference)
-  InvalidQuotes: 5, // Highest priority among quote/field issues, as requested
-  MissingQuotes: 6, // Second highest among quote issues
-  TooFewFields: 7,
-  TooManyFields: 8,
+  InvalidQuotes: 6, // Highest priority among quote/field issues, as requested
+  MissingQuotes: 7, // Second highest among quote issues
+  TooFewFields: 8,
+  TooManyFields: 9,
 
   // 4. Catch-all / Unexpected Errors
   UnknownError: 99, // Assign a very low priority to unknown errors

@@ -3,6 +3,7 @@ import { describe, it, expect, vi, beforeAll, Mock } from "vitest";
 import {
   EMPTY_FILE,
   INVALID_QUOTES,
+  MISSING_HEADER_VALUE,
   MISSING_QUOTES,
   NO_HEADERS,
   TOO_FEW_FIELDS,
@@ -21,14 +22,25 @@ describe("CSV Parsing tests", () => {
       expect(result.code).toBe("EmptyFile");
     }
   });
-  it("should handle CSV file with no headers", async () => {
-    const result = await parseCSV(NO_HEADERS.content);
-    expect(result.success).toBe(false);
-    if (!result.success) {
-      expect(result.name).toBe("CSVNoHeadersError");
-      expect(result.code).toBe("NoHeaders");
-    }
+  describe("should properly handle missing or no headers", () => {
+    it("should handle CSV file with no headers", async () => {
+      const result = await parseCSV(NO_HEADERS.content);
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.name).toBe("CSVNoHeadersError");
+        expect(result.code).toBe("NoHeaders");
+      }
+    });
+    it("should handle CSV file with no headers", async () => {
+      const result = await parseCSV(MISSING_HEADER_VALUE.content);
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.name).toBe("CSVMissingHeaderValueError");
+        expect(result.code).toBe("MissingHeaderValue");
+      }
+    });
   });
+
   describe("should handle malformed quotes correctly", () => {
     it("should properly handle missing quotes", async () => {
       const result = await parseCSV(MISSING_QUOTES.content);

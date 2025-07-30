@@ -1,5 +1,6 @@
 import {
   CsvEmptyFileError,
+  CsvMissingHeaderValueError,
   CsvNoHeadersError,
   CsvNoValidDataRowsError,
 } from "../types/csv.errors";
@@ -16,6 +17,13 @@ export const csvNoHeadersError: CsvNoHeadersError = {
   message: "CSV file has no valid headers. Ensure the first line is not empty.",
   type: "NoHeadersError",
   code: "NoHeaders",
+};
+
+export const csvMissingHeaderValueError: CsvMissingHeaderValueError = {
+  name: "CSVMissingHeaderValueError",
+  message: "CSV header contains one or more empty or missing column names.",
+  type: "MissingHeaderValueError",
+  code: "MissingHeaderValue",
 };
 
 export const csvNoValidDataRowsError: CsvNoValidDataRowsError = {
