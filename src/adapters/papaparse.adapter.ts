@@ -8,7 +8,7 @@ import {
   CsvUndetectableDelimiter,
   CsvUnexpectedError,
   SpecificCsvError,
-} from "../types/csv-errors";
+} from "../types/csv.errors";
 
 /**
  * Adapts a single raw error object from Papa Parse into a specific,

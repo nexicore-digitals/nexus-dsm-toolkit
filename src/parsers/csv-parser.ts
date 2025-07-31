@@ -1,6 +1,6 @@
 import Papa from "papaparse";
-import { CsvErrorResponse, CsvResponse } from "../types/csv-response";
-import { CsvUnexpectedError, SpecificCsvError } from "../types/csv-errors";
+import { CsvErrorResponse, CsvResponse } from "../types/csv.response";
+import { CsvUnexpectedError, SpecificCsvError } from "../types/csv.errors";
 import {
   validateDataRows,
   validateHeaders,

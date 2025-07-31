@@ -3,7 +3,7 @@ import {
   CsvMissingHeaderValueError,
   CsvNoHeadersError,
   CsvNoValidDataRowsError,
-} from "../types/csv-errors";
+} from "../types/csv.errors";
 
 export const csvEmptyFileError: CsvEmptyFileError = {
   name: "CSVEmptyFileError",

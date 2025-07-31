@@ -10,7 +10,8 @@ export interface ParseError extends Error {
     | "NoValidDataRowsError"
     | "UnexpectedError"
     | "InvalidRootError"
-    | "NonObjectItemError";
+    | "NonObjectItemError"
+    | "JsonValidation";
   message: string;
   code?: string;
 }

@@ -1,39 +1,44 @@
 import { ParseError } from "./errors";
 
-export interface JSONSyntaxError extends ParseError {
+export interface JsonSyntaxError extends ParseError {
   type: "SyntaxError";
   code: "JsonSyntaxError";
 }
 
-export interface JSONEmptyFileError extends ParseError {
+export interface JsonEmptyFileError extends ParseError {
   type: "EmptyFileError";
   code: "EmptyJsonFile";
 }
 
-export interface JSONInvalidRootError extends ParseError {
+export interface JsonInvalidRootError extends ParseError {
   type: "InvalidRootError";
   code: "InvalidJsonRoot";
 }
 
-export interface JSONNonObjectItemError extends ParseError {
+export interface JsonNonObjectItemError extends ParseError {
   type: "NonObjectItemError";
   code: "NonObjectArrayItem";
 }
 
-export interface JSONNoDataRowsError extends ParseError {
+export interface JsonNoDataRowsError extends ParseError {
   type: "NoValidDataRowsError";
   code: "NoJsonDataRows";
 }
 
-export interface JSONUnexpectedError extends ParseError {
+export interface JsonUnexpectedError extends ParseError {
   type: "UnexpectedError";
   code: "UnknownJsonError";
 }
 
-export type SpecificJSONError =
-  | JSONSyntaxError
-  | JSONEmptyFileError
-  | JSONInvalidRootError
-  | JSONNonObjectItemError
-  | JSONNoDataRowsError
-  | JSONUnexpectedError;
+export interface JsonValidationFailedError extends ParseError {
+  type: "JsonValidation";
+  code: "JsonValidationFailed";
+}
+
+export type SpecificJsonError =
+  | JsonSyntaxError
+  | JsonEmptyFileError
+  | JsonInvalidRootError
+  | JsonNonObjectItemError
+  | JsonNoDataRowsError
+  | JsonUnexpectedError;
