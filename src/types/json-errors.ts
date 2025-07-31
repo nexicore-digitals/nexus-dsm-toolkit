@@ -21,7 +21,7 @@ export interface JSONNonObjectItemError extends ParseError {
 }
 
 export interface JSONNoDataRowsError extends ParseError {
-  type: "NoDataRowsError";
+  type: "NoValidDataRowsError";
   code: "NoJsonDataRows";
 }
 

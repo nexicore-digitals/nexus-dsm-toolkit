@@ -1,6 +1,6 @@
 // src/utils/error-sorter.ts
 
-import { SpecificCsvError } from "../types/csv.errors";
+import { SpecificCsvError } from "../types/csv-errors";
 
 // Define the priority for each error code.
 // Lower number = Higher priority.

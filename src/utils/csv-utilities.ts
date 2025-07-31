@@ -1,4 +1,4 @@
-import { SpecificCsvError } from "../types/csv.errors";
+import { SpecificCsvError } from "../types/csv-errors";
 import {
   csvMissingHeaderValueError,
   csvNoHeadersError,

@@ -6,9 +6,10 @@ import {
   JSONNonObjectItemError,
   JSONSyntaxError,
   JSONUnexpectedError,
-} from "../types/json.errors";
+} from "../types/json-errors";
+import { JsonResponse } from "../types/json-response";
 
-export function isJson(data: string) {
+export async function isJson(data: string): Promise<JsonResponse> {
   let parsedData: unknown; // Start with 'unknown' for safety
 
   try {
@@ -45,7 +46,7 @@ export function isJson(data: string) {
         const error: JSONNoDataRowsError = {
           name: "JSONNoDataRowsError",
           message: "JSON file contains an empty array. No data rows found.",
-          type: "NoDataRowsError",
+          type: "NoValidDataRowsError",
           code: "NoJsonDataRows",
         };
         throw error;
