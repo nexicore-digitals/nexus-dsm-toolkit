@@ -5,6 +5,7 @@ import {
   checkJsonNonObjectItem,
   checkJsonSyntax,
   isJson,
+  validateJsonEmptyObjects,
   validateJsonNoDataRows,
   validateJsonRootStructure,
 } from "../utils/json-utilities";
@@ -21,6 +22,7 @@ export default async function parseJSON(data: string): Promise<JsonResponse> {
   if (Array.isArray(parsedData)) {
     customErrors.push(...checkJsonNonObjectItem(parsedData));
     customErrors.push(...validateJsonNoDataRows(parsedData));
+    customErrors.push(...validateJsonEmptyObjects(parsedData));
   }
 
   if (customErrors.length > 0) {

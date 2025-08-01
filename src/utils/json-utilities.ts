@@ -54,14 +54,34 @@ export function validateJsonRootStructure(
 }
 
 export function validateJsonNoDataRows(parsedData: any[]): SpecificJsonError[] {
-  if (
-    parsedData.length > 0 &&
-    parsedData.every((item) => {
-      typeof item === "object" &&
-        item !== null &&
-        Object.keys(item).length === 0;
-    })
-  )
+  if (parsedData.length === 0) {
+    return [jsonNoDataRowsError]; // Return error for a truly empty array
+  }
+  return [];
+}
+
+export function validateJsonEmptyObjects(
+  parsedData: object[]
+): SpecificJsonError[] {
+  if (parsedData.length === 0) {
     return [];
-  else return [jsonNoDataRowsError];
+  }
+
+  const allObjectsAreEmpty = parsedData.every(
+    (item) =>
+      typeof item === "object" &&
+      item !== null &&
+      Object.keys(item).length === 0
+  );
+
+  if (allObjectsAreEmpty) {
+    return [
+      {
+        ...jsonNoDataRowsError,
+        message:
+          "JSON array contains only empty objects. No valid data rows found.",
+      },
+    ];
+  }
+  return [];
 }

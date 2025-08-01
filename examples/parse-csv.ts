@@ -1,9 +1,9 @@
 // examples/parse.ts
-import parseCSV from "../src/parsers/csv-parser";
 import {
-  EMPTY_FILE,
   VALID_SAMPLE,
-} from "../__tests__/fixtures/csv/mockCsvData";
+  EMPTY_FILE,
+} from "../__tests__/fixtures/csv/csv-mock-data";
+import parseCSV from "../src/parsers/csv-parser";
 
 async function main(data: string) {
   const result = await parseCSV(data);
