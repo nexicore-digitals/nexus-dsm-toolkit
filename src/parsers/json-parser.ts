@@ -4,6 +4,7 @@ import {
   checkEmptyJson,
   checkJsonSyntax,
   isJson,
+  validateJsonRootStructure,
 } from "../utils/json-utilities";
 
 export default async function parseJSON(data: string): Promise<JsonResponse> {
@@ -12,6 +13,7 @@ export default async function parseJSON(data: string): Promise<JsonResponse> {
   customErrors.push(...checkEmptyJson(data));
   customErrors.push(...checkJsonSyntax(data));
   if (isJson(data)) parsedData = JSON.parse(data);
+  customErrors.push(...validateJsonRootStructure(data));
   if (customErrors.length > 0) {
     const primaryError = customErrors[0];
     return {

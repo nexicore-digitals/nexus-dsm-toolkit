@@ -2,6 +2,8 @@ import { describe, expect, it } from "vitest";
 import parseJSON from "../../../src/parsers/json-parser";
 import {
   EMPTY_FILE,
+  INVALID_ROOT_NULL,
+  INVALID_ROOT_PRIMITIVE,
   WHITESPACE_FILE,
 } from "../../fixtures/json/json-mock-data";
 
@@ -21,5 +23,23 @@ describe("JSON parsing tests", () => {
       expect(result.name).toBe("JsonEmptyFileError");
       expect(result.code).toBe("EmptyJsonFile");
     }
+  });
+  describe("it should identify primitives and null as invalid root data", async () => {
+    it("it should identify primitives as invalid json root data", async () => {
+      const result = await parseJSON(INVALID_ROOT_PRIMITIVE.content);
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.name).toBe("JsonInvalidRootError");
+        expect(result.code).toBe("InvalidJsonRoot");
+      }
+    });
+    it("it should identify null as invalid json root data", async () => {
+      const result = await parseJSON(INVALID_ROOT_NULL.content);
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.name).toBe("JsonInvalidRootError");
+        expect(result.code).toBe("InvalidJsonRoot");
+      }
+    });
   });
 });
