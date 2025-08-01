@@ -5,7 +5,10 @@ import {
   EMPTY_FILE,
   INVALID_ROOT_NULL,
   INVALID_ROOT_PRIMITIVE,
+  NO_VALID_DATA_ROWS,
   NON_OBJECT_ITEM,
+  VALID_ARRAY_OF_OBJECTS,
+  VALID_SINGLE_OBJECT,
   WHITESPACE_FILE,
 } from "../../fixtures/json/json-mock-data";
 
@@ -52,12 +55,40 @@ describe("JSON parsing tests", () => {
       expect(result.code).toBe("NonObjectArrayItem");
     }
   });
-  it("empty arrays are valid but do not pass the check", async () => {
-    const result = await parseJSON(ALL_EMPTY_OBJECTS.content);
-    expect(result.success).toBe(false);
-    if (!result.success) {
-      expect(result.name).toBe("JsonNoDataRowsError");
-      expect(result.code).toBe("NoJsonDataRows");
-    }
+  describe("should return an error response for no content", () => {
+    it("empty arrays are valid but do not pass the check", async () => {
+      const result = await parseJSON(NO_VALID_DATA_ROWS.content);
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.name).toBe("JsonNoDataRowsError");
+        expect(result.code).toBe("NoJsonDataRows");
+      }
+    });
+    it("empty arrays containing empty objects should also fail the check", async () => {
+      const result = await parseJSON(ALL_EMPTY_OBJECTS.content);
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.name).toBe("JsonNoDataRowsError");
+        expect(result.message).toContain("empty objects");
+      }
+    });
+  });
+  describe("valid json data should pass", () => {
+    it("a single valid single object should pass the test", async () => {
+      const result = await parseJSON(VALID_SINGLE_OBJECT.content);
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data).toBeDefined();
+        expect(result.data).toBeTypeOf("object");
+      }
+    });
+    it("a valid array of objects should pass the test", async () => {
+      const result = await parseJSON(VALID_ARRAY_OF_OBJECTS.content);
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data).toBeDefined();
+        expect(Array.isArray(result.data)).toBe(true);
+      }
+    });
   });
 });
