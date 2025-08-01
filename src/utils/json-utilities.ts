@@ -108,3 +108,10 @@ export function createErrorResponse(errors: SpecificJsonError[]): JsonResponse {
     detailedErrors: errors,
   };
 }
+
+export function checkEmptyFile(data: string): SpecificJsonError[] {
+  if (data.trim().length === 0) {
+    return [jsonEmptyFileError];
+  }
+  return [];
+}

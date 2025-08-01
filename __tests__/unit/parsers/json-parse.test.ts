@@ -11,8 +11,14 @@ import {
   VALID_SINGLE_OBJECT,
   WHITESPACE_FILE,
 } from "../../fixtures/json/json-mock-data";
+import parseJsonFromFile from "../../../src/parsers/json-parser-orchestration";
 
 describe("JSON parsing tests", () => {
+  it("should enforce the file limit", async () => {
+    const filePath = "./__tests__/fixtures/json/large-test.json";
+    const result = await parseJsonFromFile(filePath);
+    console.log(result);
+  });
   it("should gracefully handle empty JSON file", async () => {
     const result = await parseJSON(EMPTY_FILE.content);
     expect(result.success).toBe(false);

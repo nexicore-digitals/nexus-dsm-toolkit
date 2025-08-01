@@ -6,6 +6,7 @@ import {
   JsonNoDataRowsError as JsonNoDataRowsErrorType,
   JsonUnexpectedError as JsonUnexpectedErrorType,
   JsonValidationFailedError as JsonValidationFailedErrorType,
+  JsonFileTooLargeError as JsonFileTooLargeErrorType,
 } from "../types/json-errors";
 
 export const jsonEmptyFileError: JsonEmptyFileErrorType = {
@@ -13,6 +14,13 @@ export const jsonEmptyFileError: JsonEmptyFileErrorType = {
   message: "JSON file is empty or contains no content.",
   type: "EmptyFileError",
   code: "EmptyJsonFile",
+};
+
+export const jsonFileTooLargeError: JsonFileTooLargeErrorType = {
+  name: "JsonFileTooLargeError",
+  message: "JSON file exceeds the maximum allowed size.",
+  type: "OperationalError",
+  code: "FileTooLarge",
 };
 
 export const jsonSyntaxError: JsonSyntaxErrorType = {

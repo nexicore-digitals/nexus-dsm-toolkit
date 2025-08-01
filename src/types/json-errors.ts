@@ -1,4 +1,4 @@
-import { ParseError } from "./errors";
+import { FileNotFoundError, FileSystemError, ParseError } from "./errors";
 
 export interface JsonSyntaxError extends ParseError {
   type: "SyntaxError";
@@ -35,6 +35,11 @@ export interface JsonValidationFailedError extends ParseError {
   code: "JsonValidationFailed";
 }
 
+export interface JsonFileTooLargeError extends ParseError {
+  type: "OperationalError";
+  code: "FileTooLarge";
+}
+
 export type SpecificJsonError =
   | JsonSyntaxError
   | JsonEmptyFileError
@@ -42,4 +47,7 @@ export type SpecificJsonError =
   | JsonNonObjectItemError
   | JsonNoDataRowsError
   | JsonUnexpectedError
-  | JsonValidationFailedError;
+  | JsonValidationFailedError
+  | JsonFileTooLargeError
+  | FileSystemError
+  | FileNotFoundError;
