@@ -17,7 +17,10 @@ describe("JSON parsing tests", () => {
   it("should enforce the file limit", async () => {
     const filePath = "./__tests__/fixtures/json/large-test.json";
     const result = await parseJsonFromFile(filePath);
-    console.log(result);
+    if (!result.success) {
+      expect(result.name).toBe("JsonFileTooLargeError");
+      expect(result.code).toBe("FileTooLarge");
+    }
   });
   it("should gracefully handle empty JSON file", async () => {
     const result = await parseJSON(EMPTY_FILE.content);
