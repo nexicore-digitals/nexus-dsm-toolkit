@@ -54,6 +54,14 @@ export function validateJsonRootStructure(
 }
 
 export function validateJsonNoDataRows(parsedData: any[]): SpecificJsonError[] {
-  if (parsedData.length > 0) return [];
+  if (
+    parsedData.length > 0 &&
+    parsedData.every((item) => {
+      typeof item === "object" &&
+        item !== null &&
+        Object.keys(item).length === 0;
+    })
+  )
+    return [];
   else return [jsonNoDataRowsError];
 }

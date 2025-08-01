@@ -2,8 +2,10 @@ import { SpecificJsonError } from "../types/json-errors";
 import { JsonResponse } from "../types/json-response";
 import {
   checkEmptyJson,
+  checkJsonNonObjectItem,
   checkJsonSyntax,
   isJson,
+  validateJsonNoDataRows,
   validateJsonRootStructure,
 } from "../utils/json-utilities";
 
@@ -12,8 +14,15 @@ export default async function parseJSON(data: string): Promise<JsonResponse> {
   const customErrors: SpecificJsonError[] = [];
   customErrors.push(...checkEmptyJson(data));
   customErrors.push(...checkJsonSyntax(data));
+
   if (isJson(data)) parsedData = JSON.parse(data);
-  customErrors.push(...validateJsonRootStructure(data));
+  customErrors.push(...validateJsonRootStructure(parsedData));
+
+  if (Array.isArray(parsedData)) {
+    customErrors.push(...checkJsonNonObjectItem(parsedData));
+    customErrors.push(...validateJsonNoDataRows(parsedData));
+  }
+
   if (customErrors.length > 0) {
     const primaryError = customErrors[0];
     return {
