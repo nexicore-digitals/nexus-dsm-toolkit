@@ -41,4 +41,5 @@ export type SpecificJsonError =
   | JsonInvalidRootError
   | JsonNonObjectItemError
   | JsonNoDataRowsError
-  | JsonUnexpectedError;
+  | JsonUnexpectedError
+  | JsonValidationFailedError;

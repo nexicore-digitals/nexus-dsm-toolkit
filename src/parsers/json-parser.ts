@@ -2,8 +2,10 @@ import { SpecificJsonError } from "../types/json-errors";
 import { JsonResponse } from "../types/json-response";
 import {
   checkEmptyJson,
+  checkForMultipleErrors,
   checkJsonNonObjectItem,
   checkJsonSyntax,
+  createErrorResponse,
   isJson,
   validateJsonEmptyObjects,
   validateJsonNoDataRows,
@@ -13,6 +15,9 @@ import {
 export default async function parseJSON(data: string): Promise<JsonResponse> {
   let parsedData: unknown;
   const customErrors: SpecificJsonError[] = [];
+
+  if (customErrors.length > 0) return createErrorResponse(customErrors);
+
   customErrors.push(...checkEmptyJson(data));
   customErrors.push(...checkJsonSyntax(data));
 
@@ -25,15 +30,8 @@ export default async function parseJSON(data: string): Promise<JsonResponse> {
     customErrors.push(...validateJsonEmptyObjects(parsedData));
   }
 
-  if (customErrors.length > 0) {
-    const primaryError = customErrors[0];
-    return {
-      success: false,
-      name: primaryError.name,
-      type: primaryError.type,
-      code: primaryError.code,
-      message: primaryError.message,
-      detailedErrors: customErrors,
-    };
-  } else return { success: true, data: parsedData as object | object[] };
+  customErrors.push(...checkForMultipleErrors(customErrors));
+
+  if (customErrors.length > 0) return createErrorResponse(customErrors);
+  else return { success: true, data: parsedData as object | object[] };
 }

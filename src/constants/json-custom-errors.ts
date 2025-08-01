@@ -1,6 +1,3 @@
-// constants/json-custom-errors.ts
-
-import { ParseError } from "../types/errors"; // Adjust path if necessary
 import {
   JsonEmptyFileError as JsonEmptyFileErrorType,
   JsonSyntaxError as JsonSyntaxErrorType,
@@ -8,8 +5,8 @@ import {
   JsonNonObjectItemError as JsonNonObjectItemErrorType,
   JsonNoDataRowsError as JsonNoDataRowsErrorType,
   JsonUnexpectedError as JsonUnexpectedErrorType,
-  JsonValidationFailedError as JsonValidationFailedErrorType, // If you define this type
-} from "../types/json-errors"; // Adjust path if necessary, assuming these are defined there or in json-errors.ts
+  JsonValidationFailedError as JsonValidationFailedErrorType,
+} from "../types/json-errors";
 
 export const jsonEmptyFileError: JsonEmptyFileErrorType = {
   name: "JsonEmptyFileError",

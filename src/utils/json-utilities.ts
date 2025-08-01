@@ -4,9 +4,10 @@ import {
   jsonNoDataRowsError,
   jsonNonObjectItemError,
   jsonSyntaxError,
+  jsonValidationFailedError,
 } from "../constants/json-custom-errors";
-import { ParseError } from "../types/errors";
 import { SpecificJsonError } from "../types/json-errors";
+import { JsonResponse } from "../types/json-response";
 
 export function isJson(data: string): boolean {
   try {
@@ -84,4 +85,26 @@ export function validateJsonEmptyObjects(
     ];
   }
   return [];
+}
+
+export function checkForMultipleErrors(
+  error: SpecificJsonError[]
+): SpecificJsonError[] {
+  if (error.length > 1) return [jsonValidationFailedError];
+  else return [];
+}
+
+export function createErrorResponse(errors: SpecificJsonError[]): JsonResponse {
+  if (errors.length === 0) {
+    throw new Error("Cannot create an error response from an empty array.");
+  }
+  const primaryError = errors[0];
+  return {
+    success: false,
+    name: primaryError.name,
+    message: primaryError.message,
+    type: primaryError.type,
+    code: primaryError.code,
+    detailedErrors: errors,
+  };
 }
