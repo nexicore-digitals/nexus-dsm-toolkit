@@ -1,50 +1,50 @@
 # 🤝 Contributing to Nexus DSM
 
-Thanks for your interest in contributing to Nexus DSM! We're building a modular TypeScript toolkit for parsing, validating, converting, and indexing structured datasets. Whether you're fixing a parsing edge case, tightening eligibility checks, extending conversion logic, or improving documentation — your contribution is highly welcome.
+Thanks for your interest in contributing to **Nexus DSM**—a modular TypeScript toolkit for parsing, validating, converting, and indexing structured datasets. Whether you're fixing a parsing edge case, refining schema validation, extending conversion logic, or improving documentation, your contribution is deeply appreciated.
 
 ---
 
-## ⚙️ Setup & Development
+## ⚙️ Local Setup
 
-To get your local development environment ready:
+To get started with development:
 
-1. **Clone the Repository:**
+1. **Clone the Repository**
 
     ```bash
-    git clone [https://github.com/owen-6936/nexus-dsm.git](https://github.com/owen-6936/nexus-dsm.git)
-    cd nexus-dsm
+    git clone https://github.com/nexicore-digitals/nexus-dsm-toolkit.git
+    cd nexus-dsm-toolkit
     ```
 
-2. **Install Dependencies:**
+2. **Install Dependencies**
 
     ```bash
     npm install
     ```
 
-3. **Run Tests:**
+3. **Run Tests**
+
     Nexus DSM uses [Vitest](https://vitest.dev) for testing.
 
     ```bash
     # Run all tests
     npm test
 
-    # Run tests and check code coverage
+    # Run tests with coverage report
     npm run test:coverage
     ```
 
-4. **Run Examples:**
-    See the core functionality in action with the provided examples:
+4. **Run Examples**
+
+    See the core functionality in action:
 
     ```bash
-    # Example for CSV parsing
-    npm run example:csv
-
-    # Example for JSON parsing
-    npm run example:json
+    npm run example:csv     # CSV parsing demo
+    npm run example:json    # JSON parsing demo
     ```
 
-5. **Build the Project:**
-    To compile the project for distribution:
+5. **Build the Project**
+
+    Compile for distribution:
 
     ```bash
     npm run build
@@ -52,41 +52,60 @@ To get your local development environment ready:
 
 ---
 
-## 🧱 Code Structure
+## 🧱 Code Structure Overview
 
-Understanding the project's layout will help you find your way around:
+Understanding the layout will help you contribute effectively:
 
-* `src/parsers/` — Core logic for CSV and JSON parsing.
-* `src/validators/` — Modules for syntax checks, header validation, and quote balance.
-* `src/converters/` — Logic for transforming data between CSV and JSON formats.
-* `src/adapters/` — Integration layers for external libraries (e.g., PapaParse adapter).
-* `src/constants/` — Shared constants and configuration values used across the project.
-* `src/types/` — Shared TypeScript interfaces and type definitions.
-* `src/utils/` — General utility helpers and shared functions.
-* `__tests__/` — Contains all unit and integration tests (feel free to add new test fixtures here!).
+- `src/parsers/` — CSV and JSON parsing logic
+- `src/validators/` — Syntax, header, quote balance, and schema checks
+- `src/converters/` — Format transformation modules (CSV ↔ JSON)
+- `src/adapters/` — Integration layers (e.g. PapaParse)
+- `src/constants/` — Shared constants and config values
+- `src/types/` — TypeScript interfaces and definitions
+- `src/utils/` — General-purpose helpers
+- `__tests__/` — Unit and integration tests (add fixtures here!)
 
 ---
 
 ## ✅ Contribution Guidelines
 
-To maintain code quality and ensure smooth collaboration, please adhere to these guidelines:
+To maintain quality and clarity across the toolkit:
 
-* **Focus on Modularity:** Keep logic pure, testable, and contained within its relevant module.
-* **Type Safety:** Maintain strong type safety with clear TypeScript interfaces and types.
-* **Comprehensive Testing:** Add tests for any new functionality, bug fixes, or edge cases you introduce.
-* **Code Style & Linting:** Ensure your code adheres to the project's style conventions.
+- **Modularity First**  
+  Keep logic pure, testable, and scoped to its module.
+
+- **Type Safety**  
+  Use clear, expressive TypeScript types and interfaces.
+
+- **Testing Required**  
+  Add tests for all new features, bug fixes, and edge cases.
+
+- **Linting & Style**  
+  Ensure your code follows project conventions:
 
     ```bash
-    # Run ESLint to check for code quality and style issues
     npm run lint
     ```
 
-* **Pull Request (PR) Etiquette:**
-  * Keep your PRs focused on a single logical change.
-  * Branch from `main` for new features or bug fixes.
-  * Write clear, concise, and descriptive commit messages (following Conventional Commits if possible, but descriptive is key!).
-  * Provide a detailed description in your PR explaining the problem it solves and how.
+- **Pull Request Etiquette**
+  - Branch from `main`
+  - Keep PRs focused and atomic
+  - Use clear commit messages (Conventional Commits encouraged)
+  - Include a detailed PR description: what, why, and how
 
 ---
 
-Need help understanding the structure, troubleshooting, or picking a good place to contribute? Don't hesitate to open an issue, ask questions, or drop a draft PR — we're always happy to collaborate and guide you!
+## 🤖 Nexi Is Here to Help
+
+If you're unsure where to start, open an issue or draft PR—Nexi (our AI guide) and the maintainers will help you navigate the toolkit, suggest improvements, and clarify architecture decisions.
+
+---
+
+## 💬 Questions & Collaboration
+
+Need help understanding the structure, troubleshooting a bug, or exploring a new feature?  
+Open an issue, start a discussion, or reach out—we’re building this ecosystem together.
+
+---
+
+**Built by Nexicore Digitals to empower developers with clarity, control, and confidence.**
