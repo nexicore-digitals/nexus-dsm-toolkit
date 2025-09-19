@@ -1,24 +1,25 @@
 // examples/parse.ts
 import {
-  VALID_SAMPLE,
-  EMPTY_FILE,
-} from "../__tests__/fixtures/csv/csv-mock-data";
-import parseCSV from "../src/parsers/csv-parser";
+    VALID_SAMPLE,
+    EMPTY_FILE,
+} from "../__tests__/fixtures/csv/csv-mock-data.ts";
+import parseCSV from "../src/parsers/csv-parser.ts";
+import { logger } from "../src/utils/logger.ts";
 
 async function main(data: string) {
-  const result = await parseCSV(data);
+    const result = await parseCSV(data);
 
-  if (result.success) {
-    console.log("Parsed Result:", result.meta);
-  } else {
-    console.log("Parsed Result:", result);
-  }
+    if (result.success) {
+        logger.info("Parsed Result:", result.meta);
+    } else {
+        logger.info("Parsed Result:", result);
+    }
 }
 
 async function run() {
-  await main(VALID_SAMPLE.content);
-  console.log("\n-----------\n");
-  await main(EMPTY_FILE.content);
+    await main(VALID_SAMPLE.content);
+    logger.info("\n-----------\n");
+    await main(EMPTY_FILE.content);
 }
 
 run();

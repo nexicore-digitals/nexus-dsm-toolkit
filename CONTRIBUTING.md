@@ -88,10 +88,10 @@ To maintain quality and clarity across the toolkit:
     ```
 
 - **Pull Request Etiquette**
-  - Branch from `main`
-  - Keep PRs focused and atomic
-  - Use clear commit messages (Conventional Commits encouraged)
-  - Include a detailed PR description: what, why, and how
+    - Branch from `main`
+    - Keep PRs focused and atomic
+    - Use clear commit messages (Conventional Commits encouraged)
+    - Include a detailed PR description: what, why, and how
 
 ---
 

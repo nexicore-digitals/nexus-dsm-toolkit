@@ -10,10 +10,10 @@ If you find a security vulnerability, please do NOT open a public issue. Instead
 
 ### When Reporting, Please Include
 
-* A clear description of the vulnerability.
-* Steps to reproduce the vulnerability.
-* The potential impact of the vulnerability.
-* Any suggested mitigations or fixes (optional, but helpful).
+- A clear description of the vulnerability.
+- Steps to reproduce the vulnerability.
+- The potential impact of the vulnerability.
+- Any suggested mitigations or fixes (optional, but helpful).
 
 We will acknowledge your email within 48 hours and provide regular updates on the progress of addressing the vulnerability. We aim to address critical vulnerabilities as quickly as possible.
 
