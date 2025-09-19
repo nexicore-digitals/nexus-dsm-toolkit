@@ -1,4 +1,4 @@
-import { ValidResponse, ErrorResponse } from "./response";
+import { ValidResponse, ErrorResponse } from "./response.ts";
 
 export interface JsonValidResponse extends ValidResponse {}
 

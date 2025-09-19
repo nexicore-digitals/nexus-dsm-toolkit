@@ -1,14 +1,14 @@
-import { ParseError } from "./errors";
+import { ParseError } from "./errors.ts";
 export interface BaseResponse {
-  success: boolean;
+    success: boolean;
 }
 
 export interface ValidResponse extends BaseResponse {
-  data: object | object[];
-  success: true;
+    data: object | object[];
+    success: true;
 }
 
 export interface ErrorResponse extends BaseResponse, ParseError {
-  detailedErrors?: ParseError[];
-  success: false;
+    detailedErrors?: ParseError[];
+    success: false;
 }

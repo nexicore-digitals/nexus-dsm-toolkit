@@ -1,46 +1,55 @@
 {
-  "name": "nexus-dsm",
-  "version": "1.0.0",
-  "description": "Core toolkit for parsing, validating, converting, and indexing structured datasets (CSV ↔ JSON).",
-  "type": "module",
-  "license": "MIT",
-  "private": false,
-  "author": "Owen • Nexicore Digital",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/owen-6936/nexus-dsm.git"
-  },
-  "keywords": [
-    "csv",
-    "json",
-    "parser",
-    "dataset",
-    "validator",
-    "node",
-    "typescript",
-    "conversion",
-    "metadata",
-    "cli-toolkit",
-    "nexus"
-  ],
-  "scripts": {
-    "test": "vitest",
-    "test:coverage": "vitest run --coverage",
-    "dev": "tsx src/index.ts",
-    "example:csv": "tsx examples/parse-csv.ts",
-    "example:json": "tsx examples/parse-json.ts",
-    "build": "tsup src/index.ts --format esm,cjs --dts --clean",
-    "lint": "eslint . --ext .ts"
-  },
-  "dependencies": {
-    "papaparse": "^5.5.3"
-  },
-  "devDependencies": {
-    "@types/papaparse": "^5.3.16",
-    "eslint": "^9.32.0",
-    "tsup": "^8.5.0",
-    "tsx": "^4.20.3",
-    "typescript": "^5.8.3",
-    "vitest": "^3.2.4"
-  }
+    "name": "nexus-dsm",
+    "version": "1.0.0",
+    "description": "Core toolkit for parsing, validating, converting, and indexing structured datasets (CSV ↔ JSON).",
+    "type": "module",
+    "license": "MIT",
+    "private": false,
+    "author": "Owen • Nexicore Digital",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/owen-6936/nexus-dsm.git"
+    },
+    "keywords": [
+        "csv",
+        "json",
+        "parser",
+        "dataset",
+        "validator",
+        "node",
+        "typescript",
+        "conversion",
+        "metadata",
+        "cli-toolkit",
+        "nexus"
+    ],
+    "scripts": {
+        "test": "vitest",
+        "test:coverage": "vitest run --coverage",
+        "dev": "tsx src/index.ts",
+        "example:csv": "tsx examples/parse-csv.ts",
+        "example:json": "tsx examples/parse-json.ts",
+        "build": "tsup src/index.ts --format esm,cjs --dts --clean",
+        "lint": "eslint . --ext .ts",
+        "format": "prettier --write .",
+        "test:node": "node --loader tsx src/index.ts"
+    },
+    "dependencies": {
+        "papaparse": "^5.5.3"
+    },
+    "devDependencies": {
+        "@eslint/js": "^9.35.0",
+        "@types/papaparse": "^5.3.16",
+        "eslint": "^9.32.0",
+        "eslint-plugin-import": "^2.32.0",
+        "eslint-plugin-prettier": "^5.5.4",
+        "eslint-plugin-vitest": "^0.5.4",
+        "globals": "^16.4.0",
+        "prettier": "^3.6.2",
+        "tsup": "^8.5.0",
+        "tsx": "^4.20.3",
+        "typescript": "^5.8.3",
+        "typescript-eslint": "^8.44.0",
+        "vitest": "^3.2.4"
+    }
 }

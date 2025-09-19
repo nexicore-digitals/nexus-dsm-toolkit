@@ -16,7 +16,8 @@ Built for modularity, clarity, and service-ready integration.
 
 Most data tools promise seamless automation—but often operate as opaque black boxes. This obscures subtle quality issues and forces blind trust in processes that should be transparent. When working with critical datasets, that lack of visibility can lead to costly errors or endless manual review.
 
-**Nexus DSM** takes a different approach:  
+**Nexus DSM** takes a different approach:
+
 > _Your data is yours. You deserve control, clarity, and confidence._
 
 Instead of a “set-it-and-forget-it” pipeline, Nexus DSM offers a **developer-assisted validation engine** that flags syntax issues, highlights inconsistencies (like malformed rows or ambiguous headers), and guides you through every step. Whether you're ingesting raw CSVs or preparing JSON for an API, Nexus DSM ensures every byte meets your standards—with full visibility and explainable feedback.
@@ -39,12 +40,12 @@ This repository contains the **core logic** for:
 
 ## 🚀 Project Phases & Trajectory
 
-| Phase                        | Status     | Description                                                                                      |
-|-----------------------------|------------|--------------------------------------------------------------------------------------------------|
-| **Phase 1: Core Node Utility** | ✅ Active   | Typed CSV/JSON parsing engine for Node. Environment-agnostic, no bundling required. Includes schema validation. |
-| **Phase 2: Optional Browser Support** | 🟡 Planned  | Same API, browser bundle via conditional logic and bundlers (`tsup`, `rollup`, or `vite`).      |
-| **Phase 3: Headless API**       | 🟢 Optional | Serverless or self-hosted HTTP API exposing parsing endpoints for remote or client use.         |
-| **Phase 4: CLI Tool**           | 🟢 Bonus    | Command-line interface wrapping core utils for parsing, validation, and conversion tasks.       |
+| Phase                                 | Status      | Description                                                                                                     |
+| ------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------------- |
+| **Phase 1: Core Node Utility**        | ✅ Active   | Typed CSV/JSON parsing engine for Node. Environment-agnostic, no bundling required. Includes schema validation. |
+| **Phase 2: Optional Browser Support** | 🟡 Planned  | Same API, browser bundle via conditional logic and bundlers (`tsup`, `rollup`, or `vite`).                      |
+| **Phase 3: Headless API**             | 🟢 Optional | Serverless or self-hosted HTTP API exposing parsing endpoints for remote or client use.                         |
+| **Phase 4: CLI Tool**                 | 🟢 Bonus    | Command-line interface wrapping core utils for parsing, validation, and conversion tasks.                       |
 
 ---
 
@@ -69,14 +70,14 @@ node cli/index.js parse ./fixtures/sample.csv
 
 ## 🧠 Core Capabilities
 
-| Function                     | Description                                                                 |
-|------------------------------|-----------------------------------------------------------------------------|
-| `parseCSV(file)`             | Parses CSV input, validates syntax, and outputs structured data             |
-| `parseJSON(file)`            | Parses structured JSON arrays into rows and fields                          |
+| Function                       | Description                                                                  |
+| ------------------------------ | ---------------------------------------------------------------------------- |
+| `parseCSV(file)`               | Parses CSV input, validates syntax, and outputs structured data              |
+| `parseJSON(file)`              | Parses structured JSON arrays into rows and fields                           |
 | `validateSchema(data, schema)` | Validates parsed data against a predefined schema (e.g., Zod or JSON Schema) |
-| `convertToCSV(meta)`         | Converts parsed JSON into CSV (requires `ParsedFileMeta`)                   |
-| `convertToJSON(meta)`        | Converts parsed CSV into JSON (requires `ParsedFileMeta`)                   |
-| `indexFile(data)`            | _(Planned)_ Indexing module for chaining and querying parsed dataset output |
+| `convertToCSV(meta)`           | Converts parsed JSON into CSV (requires `ParsedFileMeta`)                    |
+| `convertToJSON(meta)`          | Converts parsed CSV into JSON (requires `ParsedFileMeta`)                    |
+| `indexFile(data)`              | _(Planned)_ Indexing module for chaining and querying parsed dataset output  |
 
 ---
 
