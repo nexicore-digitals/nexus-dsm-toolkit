@@ -1,0 +1,34 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`convertJsonStructure > should match snapshot for valid array structure 1`] = `
+{
+  "conversionWarnings": undefined,
+  "keySet": [
+    "id",
+    "name",
+  ],
+  "nestingDepth": 1,
+  "original": [
+    {
+      "id": 1,
+      "name": "Alice",
+    },
+    {
+      "id": 2,
+      "name": "Bob",
+    },
+  ],
+  "rootItems": [
+    {
+      "id": 1,
+      "name": "Alice",
+    },
+    {
+      "id": 2,
+      "name": "Bob",
+    },
+  ],
+  "rootLength": 2,
+  "structureType": "array",
+}
+`;

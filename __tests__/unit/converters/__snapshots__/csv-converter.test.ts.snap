@@ -1,0 +1,33 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`CSV Conversion Logic > should match snapshot for full conversion result 1`] = `
+{
+  "columnCount": 3,
+  "columnNames": [
+    "id",
+    "name",
+    "active",
+  ],
+  "content": ""id","name","active"
+"1","Alice","true"
+"2","Bob","false"",
+  "delimiter": ",",
+  "encoding": "utf-8",
+  "flatRecords": [
+    {
+      "active": "true",
+      "id": "1",
+      "name": "Alice",
+    },
+    {
+      "active": "false",
+      "id": "2",
+      "name": "Bob",
+    },
+  ],
+  "quoteChar": """,
+  "rowCount": 2,
+  "sourceLabel": "sample.csv",
+  "success": true,
+}
+`;

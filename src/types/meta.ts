@@ -52,7 +52,7 @@ export interface CsvParsedFileMeta extends ParsedFileMeta {
  * A specialized metadata object for successfully parsed JSON files.
  */
 export interface JsonParsedFileMeta extends ParsedFileMeta {
-    structureType: "array" | "object" | "mixed"; // JSON root structure
+    structureType: "array" | "object"; // JSON root structure
     nestingDepth: number; // max depth of nested objects
     validationFlags: {
         isArrayOfObjects: boolean;

@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - YYYY-MM-DD
+
+### Added
+
+- **Conversion Module (`src/converters/`):** Introduced a new module for data conversion with a modular, two-step process (structure normalization -> serialization).
+- **Conversion Result Types (`src/types/conversion.ts`):** Defined rich, type-safe result interfaces (`JsonConversionResult`, `CsvConversionResult`, `CsvTabularConversion`) using discriminated unions for robust error handling.
+- **Structure Normalization:** Added `convertJsonStructure` and `convertCsvStructure` helpers to create standardized, "conversion-ready" payloads from parsed data.
+- **Converter Functions:** Implemented `convertToCsv` and `convertFromJson` to handle final serialization into string formats, guarded by metadata eligibility checks.
+- **Testing:** Added comprehensive unit and snapshot tests for the new converter and structure normalization functions.
+
+### Changed
+
+- The main entry point (`src/index.ts`) now exports the new converter functions.
+
 ## [1.0.0] - 2025-10-17
 
 This is the initial major release, introducing a comprehensive metadata generation system and a significant architectural refactoring to support a developer-assisted validation workflow.

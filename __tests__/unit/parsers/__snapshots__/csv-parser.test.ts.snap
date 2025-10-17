@@ -2,7 +2,7 @@
 
 exports[`CSV Parsing tests > should match metadata snapshot for valid sample 1`] = `
 {
-  "createdAt": "2025-10-17T01:04:45.852Z",
+  "createdAt": "2023-01-01T00:00:00.000Z",
   "delimiter": ",",
   "diagnostics": {
     "errorCodes": [],
