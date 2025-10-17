@@ -1,5 +1,8 @@
 import {
     CsvEmptyFileError,
+    CsvFileNotFoundError,
+    CsvFileSystemError,
+    CsvFileTooLargeError,
     CsvMissingHeaderValueError,
     CsvNoHeadersError,
     CsvNoValidDataRowsError,
@@ -10,6 +13,27 @@ export const csvEmptyFileError: CsvEmptyFileError = {
     message: "CSV file is empty or contains no data.",
     type: "EmptyFileError",
     code: "EmptyFile",
+};
+
+export const csvFileTooLargeError: CsvFileTooLargeError = {
+    name: "CSVFileTooLargeError",
+    message: "CSV file exceeds the maximum allowed size.",
+    type: "FileSizeError",
+    code: "FileTooLarge",
+};
+
+export const csvFileNotFoundError: CsvFileNotFoundError = {
+    name: "CSVFileNotFoundError",
+    message: "CSV file was not found.",
+    type: "FileSystemError",
+    code: "FileNotFound",
+};
+
+export const csvFileSystemError: CsvFileSystemError = {
+    name: "CSVFileSystemError",
+    message: "An error occurred while reading the CSV file.",
+    type: "FileSystemError",
+    code: "FileReadError",
 };
 
 export const csvNoHeadersError: CsvNoHeadersError = {

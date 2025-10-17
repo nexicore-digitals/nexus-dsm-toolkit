@@ -1,0 +1,28 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`CSV Parsing tests > should match metadata snapshot for valid sample 1`] = `
+{
+  "createdAt": "2025-10-17T01:04:45.852Z",
+  "delimiter": ",",
+  "diagnostics": {
+    "errorCodes": [],
+    "warnings": [],
+  },
+  "eligibleForConversion": true,
+  "encoding": "",
+  "fields": [
+    "id",
+    "name",
+    "email",
+  ],
+  "rowCount": 2,
+  "source": "",
+  "validationFlags": {
+    "hasBalancedQuotes": true,
+    "hasCommentLines": false,
+    "hasEmptyLines": false,
+    "hasHeaders": true,
+    "hasValidRows": true,
+  },
+}
+`;

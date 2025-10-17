@@ -14,6 +14,7 @@ export interface ParseError extends Error {
         | "JsonValidation"
         | "FileSystemError"
         | "FileNotFoundError"
+        | "FileSizeError"
         | "OperationalError";
     message: string;
     code?: string;

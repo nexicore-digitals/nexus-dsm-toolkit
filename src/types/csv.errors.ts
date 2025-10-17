@@ -14,6 +14,21 @@ export interface CsvEmptyFileError extends CsvError {
     code: "EmptyFile";
 }
 
+export interface CsvFileTooLargeError extends CsvError {
+    type: "FileSizeError";
+    code: "FileTooLarge";
+}
+
+export interface CsvFileNotFoundError extends CsvError {
+    type: "FileSystemError";
+    code: "FileNotFound";
+}
+
+export interface CsvFileSystemError extends CsvError {
+    type: "FileSystemError";
+    code: "FileReadError";
+}
+
 export interface CsvUndetectableDelimiter extends CsvError {
     type: "DelimiterError";
     code: "UndetectableDelimiter";
@@ -67,6 +82,12 @@ type CsvSyntaxError = CsvInvalidQuotesError | CsvMissingQuotesError;
 
 type CsvFieldMismatchError = CsvTooFewFieldsError | CsvTooManyFieldsError;
 
+export type CsvFileLevelError =
+    | CsvEmptyFileError
+    | CsvFileTooLargeError
+    | CsvFileNotFoundError
+    | CsvFileSystemError;
+
 export type SpecificCsvError =
     | CsvEmptyFileError
     | CsvUndetectableDelimiter
@@ -75,4 +96,5 @@ export type SpecificCsvError =
     | CsvNoValidDataRowsError
     | CsvSyntaxError // This union includes InvalidQuotes and MissingQuotes
     | CsvFieldMismatchError // This union includes TooFewFields and TooManyFields
-    | CsvUnexpectedError;
+    | CsvUnexpectedError
+    | CsvFileLevelError;

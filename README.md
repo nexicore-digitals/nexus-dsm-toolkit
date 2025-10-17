@@ -38,14 +38,9 @@ This repository contains the **core logic** for:
 
 ---
 
-## 🚀 Project Phases & Trajectory
+## ️ Roadmap
 
-| Phase                                 | Status      | Description                                                                                                     |
-| ------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------------- |
-| **Phase 1: Core Node Utility**        | ✅ Active   | Typed CSV/JSON parsing engine for Node. Environment-agnostic, no bundling required. Includes schema validation. |
-| **Phase 2: Optional Browser Support** | 🟡 Planned  | Same API, browser bundle via conditional logic and bundlers (`tsup`, `rollup`, or `vite`).                      |
-| **Phase 3: Headless API**             | 🟢 Optional | Serverless or self-hosted HTTP API exposing parsing endpoints for remote or client use.                         |
-| **Phase 4: CLI Tool**                 | 🟢 Bonus    | Command-line interface wrapping core utils for parsing, validation, and conversion tasks.                       |
+Our development trajectory, planned features, and long-term goals are detailed in our official **Project Roadmap**. We welcome community feedback and contributions to help shape the future of the toolkit.
 
 ---
 

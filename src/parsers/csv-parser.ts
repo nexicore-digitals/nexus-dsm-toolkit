@@ -9,10 +9,20 @@ import {
 import { csvEmptyFileError } from "../constants/csv-custom-errors.ts";
 import { transformPapaParseError } from "../adapters/papaparse.adapter.ts";
 import { sortCsvErrorsByPriority } from "../utils/csv-error-priority.ts";
+import { CsvParsedFileMeta } from "../types/meta.ts";
+import { ParsedFileMetaBuilder } from "../utils/parsed-file-meta-builder.ts";
+import { analyzeCsvFile } from "./csv-parser-orchestration.ts";
 
-export default async function parseCSV(file: string): Promise<CsvResponse> {
+export default async function parseCSV(
+    data?: string,
+    filePath?: string,
+): Promise<CsvResponse> {
     const customErrors: SpecificCsvError[] = [];
-    const csv = file;
+    const fileResponse = analyzeCsvFile(filePath ?? "");
+    const csv = filePath ? (await fileResponse)?.content : (data ?? "");
+    customErrors.push(
+        ...((await fileResponse).diagnostics as SpecificCsvError[]),
+    );
 
     // check for empty files
     if (csv.trim().length === 0) customErrors.push(csvEmptyFileError);
@@ -26,12 +36,24 @@ export default async function parseCSV(file: string): Promise<CsvResponse> {
         const { meta, data } = result;
         const fields = meta?.fields ?? [];
 
+        // Validation flags
+        const validationFlags = {
+            hasHeaders: fields.length > 0,
+            hasBalancedQuotes: true, // will be updated below
+            hasValidRows: Array.isArray(data) && data.length > 0,
+            hasCommentLines: csv.includes("#"),
+            hasEmptyLines: csv.split("\n").some((line) => line.trim() === ""),
+        };
+
         /* papaparse merged it's result.meta.errors into result.errors */
 
         if (fields) {
             // check for invalid headers
             const invalidHeadersError = validateHeaders(fields);
-            if (invalidHeadersError) customErrors.push(invalidHeadersError);
+            if (invalidHeadersError) {
+                customErrors.push(invalidHeadersError);
+                validationFlags.hasHeaders = false;
+            }
 
             if (data) {
                 // check for invalid data rows
@@ -45,6 +67,9 @@ export default async function parseCSV(file: string): Promise<CsvResponse> {
                 customErrors.push(
                     ...validateQuoteBalance(result.data as object[]),
                 );
+                if (customErrors.map((e) => e.code).includes("MissingQuotes")) {
+                    validationFlags.hasBalancedQuotes = false;
+                }
             }
         }
 
@@ -54,9 +79,22 @@ export default async function parseCSV(file: string): Promise<CsvResponse> {
             });
         }
 
+        // Build metadata
+        const parsedMeta: CsvParsedFileMeta =
+            ParsedFileMetaBuilder.fromPapaResult({
+                source: filePath ?? "",
+                result,
+                validationFlags,
+                encoding: (await fileResponse).encoding,
+                diagnostics: {
+                    warnings: customErrors.map((e) => e.message),
+                    errorCodes: customErrors.map((e) => e.code),
+                },
+            });
+
         if (customErrors.length === 0) {
             const customResult: CsvResponse = {
-                meta,
+                meta: parsedMeta,
                 data,
                 success: true,
             };
@@ -68,6 +106,7 @@ export default async function parseCSV(file: string): Promise<CsvResponse> {
             const errorResponse: CsvErrorResponse = {
                 // Use CsvErrorResponse interface
                 success: false,
+                meta: parsedMeta,
                 name: primaryError.name,
                 message: primaryError.message,
                 type: primaryError.type,
@@ -100,7 +139,19 @@ export default async function parseCSV(file: string): Promise<CsvResponse> {
                 message: sortedErrors[0].message,
             }; // Returns failure
         } else {
-            return { success: true, data: [], meta: undefined }; // Only returns success if NO errors were detected
+            const parsedMeta: CsvParsedFileMeta = ParsedFileMetaBuilder.init(
+                filePath ?? "",
+                [],
+                0,
+            )
+                .withCsvFlags({
+                    hasHeaders: false,
+                    hasBalancedQuotes: false,
+                    hasValidRows: false,
+                })
+                .buildCsv();
+
+            return { success: true, data: [], meta: parsedMeta }; // Only returns success if NO errors were detected
         }
     }
 }

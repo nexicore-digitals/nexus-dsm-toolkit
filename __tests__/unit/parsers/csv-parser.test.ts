@@ -107,4 +107,39 @@ describe("CSV Parsing tests", () => {
             expect(result.meta?.fields?.length).toBeGreaterThan(0);
         }
     });
+    it("should expose correct validation flags and eligibility in metadata", async () => {
+        const result = await parseCSV(VALID_SAMPLE.content);
+        expect(result.success).toBe(true);
+        if (result.success) {
+            const flags = result.meta.validationFlags;
+            expect(flags.hasHeaders).toBe(true);
+            expect(flags.hasBalancedQuotes).toBe(true);
+            expect(flags.hasValidRows).toBe(true);
+            expect(result.meta.eligibleForConversion).toBe(true);
+        }
+    });
+    it("should include diagnostics in metadata on failure", async () => {
+        const result = await parseCSV(MISSING_QUOTES.content);
+        expect(result.success).toBe(false);
+        if (!result.success) {
+            expect(result.meta?.diagnostics?.warnings?.length).toBeGreaterThan(
+                0,
+            );
+            expect(result.meta?.diagnostics?.errorCodes).toContain(
+                "MissingQuotes",
+            );
+        }
+    });
+    it("should return fallback metadata on unexpected error", async () => {
+        vi.spyOn(Papa, "parse").mockImplementationOnce(() => {
+            throw new Error("unexpected");
+        });
+        const result = await parseCSV(VALID_SAMPLE.content);
+        expect(result.success).toBe(false);
+        if (!result.success) {
+            expect(result.name).toBe("CSVUnexpectedError");
+            expect(result.meta).toBeUndefined(); // fallback path skips meta
+        }
+        vi.resetAllMocks();
+    });
 });

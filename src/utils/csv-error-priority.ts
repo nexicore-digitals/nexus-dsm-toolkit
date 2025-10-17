@@ -7,18 +7,21 @@ import { SpecificCsvError } from "../types/csv.errors.ts";
 const ERROR_PRIORITY_MAP: { [code: string]: number } = {
     // 1. Fundamental / Blocking Errors
     EmptyFile: 1,
-    UndetectableDelimiter: 2,
+    FileTooLarge: 2,
+    FileNotFound: 3,
+    FileReadError: 4,
+    UndetectableDelimiter: 5,
 
-    // 2. Structural Errors (Header / Data Rows)
-    NoHeaders: 3,
-    MissingHeaderValue: 4,
-    InvalidDataRows: 5,
+    // 2. Structural Errors
+    NoHeaders: 6,
+    MissingHeaderValue: 7,
+    InvalidDataRows: 8,
 
-    // 3. Syntax Errors (Quote / Field Mismatch - honoring your specific preference)
-    InvalidQuotes: 6, // Highest priority among quote/field issues, as requested
-    MissingQuotes: 7, // Second highest among quote issues
-    TooFewFields: 8,
-    TooManyFields: 9,
+    // 3. Syntax Errors
+    InvalidQuotes: 9,
+    MissingQuotes: 10,
+    TooFewFields: 11,
+    TooManyFields: 12,
 
     // 4. Catch-all / Unexpected Errors
     UnknownError: 99, // Assign a very low priority to unknown errors
