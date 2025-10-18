@@ -18,7 +18,7 @@ import { CsvResponse } from "../types/csv.response.ts";
  * @returns A structured tabular conversion result.
  */
 export function convertCsvStructure(
-    response: CsvResponse,
+    response: CsvResponse
 ): CsvTabularConversion {
     if (!response.success || !response.meta?.eligibleForConversion) {
         return {
@@ -46,13 +46,16 @@ export function convertCsvStructure(
 }
 
 /**
- * Processes a `CsvResponse` to produce a structured conversion result.
- * This function is typically used to "clean" or re-format a CSV file after parsing and validation,
- * ensuring a consistent output format.
+ * Converts a parsed CSV response back into a CSV string.
+ *
+ * This function takes the successful result from `parseCSV`, checks for conversion
+ * eligibility, and uses `papaparse` to serialize the data back into a
+ * well-formed CSV string. It's ideal for cleaning, standardizing, or
+ * re-formatting CSV data after validation.
  *
  * @param response The `CsvResponse` from the parsing stage.
- * @returns A `CsvConversionResult` which is either a success object with detailed
- *          metadata or a failure object with an error message.
+ * @returns A `CsvConversionResult` which is either a `SuccessfulCsvConversionResult`
+ *          containing the string content, or a `FailedConversionResult`.
  */
 export function convertToCsv(response: CsvResponse): CsvConversionResult {
     const tabularResult = convertCsvStructure(response);

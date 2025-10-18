@@ -30,7 +30,7 @@ Unlike "black box" tools, Nexus DSM is designed to be a **developer-assisted val
 
 ### Phase 1: Core Node.js Utility
 
-**Status:** Mostly Complete ✅
+**Status:** Complete ✅
 
 **Goal:** Establish a stable, environment-agnostic Node.js library for core parsing and validation tasks. This phase focuses on creating a robust, well-tested foundation.
 
@@ -39,8 +39,8 @@ Unlike "black box" tools, Nexus DSM is designed to be a **developer-assisted val
 | **Core Parsing Engine**                       | ✅        | Parse CSV and JSON array inputs into a standardized internal representation.                            |
 | **Syntax Validation**                         | ✅        | Detect structural issues like quote imbalances, malformed rows, and inconsistent delimiters.            |
 | **Schema Validation Integration**             | ✅        | Validate data against user-defined schemas using `Zod` and `JSON Schema`.                               |
-| **Metadata Generation (`ParsedFileMeta`)**    | ⏳        | Create a rich metadata object containing file stats, validation results, and eligibility flags.         |
-| **Metadata-Guarded Conversions**              | ⏳        | Use `ParsedFileMeta` flags to determine if a file is safe to convert between CSV and JSON.              |
+| **Metadata Generation (`ParsedFileMeta`)**    | ✅        | Create a rich metadata object containing file stats, validation results, and eligibility flags.         |
+| **Metadata-Guarded Conversions**              | ✅        | Use `ParsedFileMeta` flags to determine if a file is safe to convert between CSV and JSON.              |
 | **Initial Test Suite**                        | ✅        | Establish comprehensive unit and integration tests for all core functionality.                          |
 
 ### Phase 2: Expanded Capabilities & Browser Support

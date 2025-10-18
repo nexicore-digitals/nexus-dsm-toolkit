@@ -27,7 +27,7 @@ export interface JsonStructureConversionPayload {
  */
 export function convertJsonStructure(
     original: unknown,
-    meta: JsonParsedFileMeta,
+    meta: JsonParsedFileMeta
 ): JsonStructureConversionPayload {
     const { structureType, nestingDepth, fields, validationFlags } = meta;
 
@@ -42,13 +42,13 @@ export function convertJsonStructure(
 
     if (structureType === "object" && !Array.isArray(original)) {
         conversionWarnings.push(
-            "Root is an object, not an array. Flattening may be lossy.",
+            "Root is an object, not an array. Flattening may be lossy."
         );
     }
 
     if (validationFlags?.hasConsistentKeys === false) {
         conversionWarnings.push(
-            "Inconsistent keys detected across root items.",
+            "Inconsistent keys detected across root items."
         );
     }
 
@@ -65,13 +65,15 @@ export function convertJsonStructure(
 }
 
 /**
- * Processes a `JsonResponse` to produce a structured conversion result.
- * This function acts as a pre-conversion step, preparing the data and metadata
- * for final transformation into another format (like CSV).
+ * Converts a parsed JSON response into a structured result with a JSON string.
+ *
+ * This function takes the successful result from `parseJSON`, checks for conversion
+ * eligibility, and produces a `SuccessfulJsonConversionResult` containing a
+ * pretty-printed JSON string and detailed structural metadata.
  *
  * @param response The `JsonResponse` from the parsing stage.
- * @returns A `JsonConversionResult` which is either a success object with detailed
- *          metadata or a failure object with an error message.
+ * @returns A `JsonConversionResult` which is either a `SuccessfulJsonConversionResult`
+ *          or a `FailedConversionResult`.
  */
 export function convertFromJson(response: JsonResponse): JsonConversionResult {
     if (!response.success || !response.meta?.eligibleForConversion) {
@@ -84,7 +86,7 @@ export function convertFromJson(response: JsonResponse): JsonConversionResult {
 
     const payload = convertJsonStructure(
         response.data,
-        response.meta as JsonParsedFileMeta,
+        response.meta as JsonParsedFileMeta
     );
 
     return {

@@ -16,7 +16,7 @@ import path from "path";
 const MAX_SIZE_BYTES = 5 * 1024 * 1024; // 5MB
 
 export default async function parseJsonFromFile(
-    filePath: string,
+    filePath: string
 ): Promise<JsonResponse> {
     const absolutePath = path.resolve(filePath);
     const customErrors: SpecificJsonError[] = [];
