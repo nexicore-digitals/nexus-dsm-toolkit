@@ -13,6 +13,9 @@ import {
 } from "../../fixtures/csv/csv-mock-data.ts";
 import parseCSV from "../../../src/parsers/csv-parser.ts";
 
+vi.useFakeTimers();
+vi.setSystemTime(new Date("2023-01-01T00:00:00.000Z"));
+
 describe("CSV Parsing tests", () => {
     it("should gracefully handle empty CSV file", async () => {
         const result = await parseCSV(EMPTY_FILE.content);
@@ -140,6 +143,13 @@ describe("CSV Parsing tests", () => {
             expect(result.name).toBe("CSVUnexpectedError");
             expect(result.meta).toBeUndefined(); // fallback path skips meta
         }
-        vi.resetAllMocks();
     });
+    it("should match metadata snapshot for valid sample", async () => {
+        const result = await parseCSV(VALID_SAMPLE.content);
+        expect(result.success).toBe(true);
+        if (result.success) {
+            expect(result.meta).toMatchSnapshot();
+        }
+    });
+    vi.resetAllMocks();
 });

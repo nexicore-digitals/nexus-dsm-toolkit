@@ -1,6 +1,6 @@
 {
     "name": "nexus-dsm",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "Core toolkit for parsing, validating, converting, and indexing structured datasets (CSV ↔ JSON).",
     "type": "module",
     "license": "MIT",
