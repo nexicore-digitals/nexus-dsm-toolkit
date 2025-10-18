@@ -44,19 +44,89 @@ Our development trajectory, planned features, and long-term goals are detailed i
 
 ---
 
-## ⚡ Quick Start
+## 🚀 Usage
+
+### Installation
+
+```bash
+npm install nexus-dsm
+```
+
+### Parsing a CSV
+
+The `parseCSV` function can process a CSV from a file path or a raw string. It returns a detailed response object with the parsed data and rich metadata.
+
+```typescript
+import { parseCSV } from 'nexus-dsm';
+
+// From a file path
+const response = await parseCSV(undefined, './data/sample.csv');
+
+if (response.success) {
+  console.log('Parsed Data:', response.data);
+  console.log('Is eligible for conversion?', response.meta.eligibleForConversion);
+} else {
+  console.error('Parsing Failed:', response.message);
+  console.log('Error Details:', response.meta.diagnostics);
+}
+```
+
+### Parsing a JSON
+
+The `parseJSON` function handles JSON files with a root-level array of objects or a single root object.
+
+```typescript
+import { parseJSON } from 'nexus-dsm';
+
+const jsonString = '[{"id": 1, "name": "Alice"}]';
+const response = await parseJSON(jsonString);
+
+if (response.success) {
+  console.log('Parsed Data:', response.data);
+  console.log('Structure Type:', response.meta.structureType);
+} else {
+  console.error('Parsing Failed:', response.message);
+}
+```
+
+---
+
+### Converting Data
+
+After parsing, you can convert between CSV and JSON formats using the conversion functions.
+
+```typescript
+import { convertToCsv, convertToJSON } from 'nexus-dsm';
+
+const response = await convertToCsv(parsedData);
+
+if (response.success) {
+  console.log('Converted CSV:', response.data);
+} else {
+  console.error('Conversion Failed:', response.message);
+}
+
+const jsonResponse = await convertToJSON(parsedData);
+
+if (jsonResponse.success) {
+  console.log('Converted JSON:', jsonResponse.data);
+} else {
+  console.error('Conversion Failed:', jsonResponse.message);
+}
+```
+
+---
+
+## 💻 Development
 
 ```bash
 # Clone and install
 git clone https://github.com/nexicore-digitals/nexus-dsm-toolkit.git
 cd nexus-dsm-toolkit
-npm install
+pnpm install
 
 # Run tests
 npm run test
-
-# Example (if CLI enabled)
-node cli/index.js parse ./fixtures/sample.csv
 ```
 
 > CLI and API layers are optional — core functions are usable as a library.

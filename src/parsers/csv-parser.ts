@@ -13,15 +13,49 @@ import { CsvParsedFileMeta } from "../types/meta.ts";
 import { ParsedFileMetaBuilder } from "../utils/parsed-file-meta-builder.ts";
 import { analyzeCsvFile } from "./csv-parser-orchestration.ts";
 
+/**
+ * Parses a CSV file from a file path or a raw string content.
+ *
+ * This function serves as the primary entry point for CSV parsing. It orchestrates
+ * file reading, validation, and metadata generation. It returns a discriminated union
+ * `CsvResponse` which is either a `CsvValidResponse` on success or a `CsvErrorResponse`
+ * on failure.
+ *
+ * Even on failure, a `meta` object is attached to the response to provide
+ * as much diagnostic context as possible.
+ *
+ * @param data - The raw CSV string content. To be used if `filePath` is not provided.
+ * @param filePath - The path to the CSV file. If provided, it takes precedence over `data`.
+ * @returns A promise that resolves to a `CsvResponse` object.
+ *
+ * @example
+ * // --- Parsing from a file path ---
+ * const response = await parseCSV(undefined, './data/my-file.csv');
+ * if (response.success) {
+ *   console.log("Parsed Data:", response.data);
+ *   console.log("Eligibility:", response.meta.eligibleForConversion);
+ * } else {
+ *   console.error("Parsing Failed:", response.message);
+ *   console.log("Error Codes:", response.meta.diagnostics?.errorCodes);
+ * }
+ *
+ * @example
+ * // --- Parsing from a string ---
+ * const csvString = `id,name\n1,Alice\n2,Bob`;
+ * const responseFromString = await parseCSV(csvString);
+ * if (responseFromString.success) {
+ *   console.log(responseFromString.data);
+ * }
+ */
 export default async function parseCSV(
     data?: string,
-    filePath?: string,
+    filePath?: string
 ): Promise<CsvResponse> {
     const customErrors: SpecificCsvError[] = [];
     const fileResponse = analyzeCsvFile(filePath ?? "");
     const csv = filePath ? (await fileResponse)?.content : (data ?? "");
     customErrors.push(
-        ...((await fileResponse).diagnostics as SpecificCsvError[]),
+        ...((await fileResponse).diagnostics as SpecificCsvError[])
     );
 
     // check for empty files
@@ -59,13 +93,13 @@ export default async function parseCSV(
                 // check for invalid data rows
                 const invalidDataRows = validateDataRows(
                     data as object[],
-                    fields,
+                    fields
                 );
                 if (invalidDataRows) customErrors.push(invalidDataRows);
 
                 // custom extra check for inbalanced quotes
                 customErrors.push(
-                    ...validateQuoteBalance(result.data as object[]),
+                    ...validateQuoteBalance(result.data as object[])
                 );
                 if (customErrors.map((e) => e.code).includes("MissingQuotes")) {
                     validationFlags.hasBalancedQuotes = false;
@@ -142,7 +176,7 @@ export default async function parseCSV(
             const parsedMeta: CsvParsedFileMeta = ParsedFileMetaBuilder.init(
                 filePath ?? "",
                 [],
-                0,
+                0
             )
                 .withCsvFlags({
                     hasHeaders: false,
