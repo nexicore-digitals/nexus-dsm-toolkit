@@ -44,6 +44,5 @@ jobs:
             - name: Build
               run: pnpm build
 
-            - uses: actions/checkout@v4
             - name: Publish package
               run: npx jsr publish
