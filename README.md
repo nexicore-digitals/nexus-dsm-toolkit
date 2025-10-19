@@ -8,6 +8,10 @@
 ![Modular DX](https://img.shields.io/badge/modular-DX-blue)
 ![Beginner Friendly](https://img.shields.io/badge/beginner-friendly-green)
 ![Nexi Inside](https://img.shields.io/badge/Nexi-AI-blue)
+[![JSR](https://jsr.io/badges/@nexicore/nexus-dsm)](https://jsr.io/@nexicore/nexus-dsm)
+![npm version](https://img.shields.io/npm/v/nexus-dsm)
+
+---
 
 **Centralized tooling for parsing, validating, converting, and indexing structured datasets (`CSV` ↔ `JSON`).**  
 Built for modularity, clarity, and service-ready integration.
