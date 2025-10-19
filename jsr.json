@@ -1,0 +1,31 @@
+{
+    "name": "@nexicore-digitals/nexus-dsm",
+    "version": "1.1.0",
+    "description": "Modular toolkit for parsing, validating, and converting structured datasets (CSV ↔ JSON) with reviewer clarity.",
+    "exports": {
+        ".": "./mod.ts"
+    },
+    "keywords": [
+        "csv",
+        "json",
+        "parser",
+        "validator",
+        "converter",
+        "typescript",
+        "esm",
+        "nexus",
+        "nexicore"
+    ],
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/nexicore-digitals/nexus-dsm-toolkit.git"
+    },
+    "contributors": [
+        {
+            "name": "Owen",
+            "email": "erhaborowen3@gmail.com",
+            "url": "https://github.com/owen-6936"
+        }
+    ]
+}

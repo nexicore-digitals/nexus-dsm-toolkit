@@ -12,6 +12,7 @@ export default [
             "*.d.ts",
             "*.js.map",
             "src/utils/logger.ts",
+            "mod.ts",
         ],
     },
     {
