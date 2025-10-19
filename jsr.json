@@ -6,7 +6,8 @@
         ".": "./mod.ts"
     },
     "publish": {
-        "include": ["dist/**", "mod.ts"]
+        "include": ["dist/**", "mod.ts"],
+        "exclude": ["**", "!mod.ts", "!dist/index.js", "!dist/index.d.ts"]
     },
     "keywords": [
         "csv",
