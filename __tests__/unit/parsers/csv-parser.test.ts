@@ -10,8 +10,8 @@ import {
     TOO_MANY_FIELDS,
     UNDETECTABLE_DELIMITER,
     VALID_SAMPLE,
-} from "../../fixtures/csv/csv-mock-data.ts";
-import parseCSV from "../../../src/parsers/csv-parser.ts";
+} from "../../fixtures/csv/csv-mock-data.js";
+import parseCSV from "../../../src/parsers/csv-parser.js";
 
 vi.useFakeTimers();
 vi.setSystemTime(new Date("2023-01-01T00:00:00.000Z"));
@@ -126,10 +126,10 @@ describe("CSV Parsing tests", () => {
         expect(result.success).toBe(false);
         if (!result.success) {
             expect(result.meta?.diagnostics?.warnings?.length).toBeGreaterThan(
-                0,
+                0
             );
             expect(result.meta?.diagnostics?.errorCodes).toContain(
-                "MissingQuotes",
+                "MissingQuotes"
             );
         }
     });

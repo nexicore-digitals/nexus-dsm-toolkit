@@ -1,4 +1,4 @@
-import {
+import type {
     JsonEmptyFileError as JsonEmptyFileErrorType,
     JsonSyntaxError as JsonSyntaxErrorType,
     JsonInvalidRootError as JsonInvalidRootErrorType,
@@ -7,7 +7,7 @@ import {
     JsonUnexpectedError as JsonUnexpectedErrorType,
     JsonValidationFailedError as JsonValidationFailedErrorType,
     JsonFileTooLargeError as JsonFileTooLargeErrorType,
-} from "../types/json-errors.ts";
+} from "../types/json-errors.js";
 
 export const jsonEmptyFileError: JsonEmptyFileErrorType = {
     name: "JsonEmptyFileError",

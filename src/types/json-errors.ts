@@ -1,4 +1,4 @@
-import { FileNotFoundError, FileSystemError, ParseError } from "./errors.ts";
+import { FileNotFoundError, FileSystemError, ParseError } from "./errors.js";
 
 /** Error for when the JSON string is syntactically incorrect. */
 export interface JsonSyntaxError extends ParseError {

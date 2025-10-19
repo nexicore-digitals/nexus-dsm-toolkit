@@ -49,7 +49,7 @@ Our development trajectory, planned features, and long-term goals are detailed i
 ### Installation
 
 ```bash
-npm install nexus-dsm
+npm install nexus-dsm # or pnpm add nexus-dsm
 ```
 
 ### Parsing a CSV
@@ -57,17 +57,20 @@ npm install nexus-dsm
 The `parseCSV` function can process a CSV from a file path or a raw string. It returns a detailed response object with the parsed data and rich metadata.
 
 ```typescript
-import { parseCSV } from 'nexus-dsm';
+import { parseCSV } from "nexus-dsm";
 
 // From a file path
-const response = await parseCSV(undefined, './data/sample.csv');
+const response = await parseCSV(undefined, "./data/sample.csv");
 
 if (response.success) {
-  console.log('Parsed Data:', response.data);
-  console.log('Is eligible for conversion?', response.meta.eligibleForConversion);
+    console.log("Parsed Data:", response.data);
+    console.log(
+        "Is eligible for conversion?",
+        response.meta.eligibleForConversion
+    );
 } else {
-  console.error('Parsing Failed:', response.message);
-  console.log('Error Details:', response.meta.diagnostics);
+    console.error("Parsing Failed:", response.message);
+    console.log("Error Details:", response.meta.diagnostics);
 }
 ```
 
@@ -76,16 +79,16 @@ if (response.success) {
 The `parseJSON` function handles JSON files with a root-level array of objects or a single root object.
 
 ```typescript
-import { parseJSON } from 'nexus-dsm';
+import { parseJSON } from "nexus-dsm";
 
 const jsonString = '[{"id": 1, "name": "Alice"}]';
 const response = await parseJSON(jsonString);
 
 if (response.success) {
-  console.log('Parsed Data:', response.data);
-  console.log('Structure Type:', response.meta.structureType);
+    console.log("Parsed Data:", response.data);
+    console.log("Structure Type:", response.meta.structureType);
 } else {
-  console.error('Parsing Failed:', response.message);
+    console.error("Parsing Failed:", response.message);
 }
 ```
 
@@ -96,22 +99,22 @@ if (response.success) {
 After parsing, you can convert between CSV and JSON formats using the conversion functions.
 
 ```typescript
-import { convertToCsv, convertToJSON } from 'nexus-dsm';
+import { convertToCsv, convertToJSON } from "nexus-dsm";
 
 const response = await convertToCsv(parsedData);
 
 if (response.success) {
-  console.log('Converted CSV:', response.data);
+    console.log("Converted CSV:", response.data);
 } else {
-  console.error('Conversion Failed:', response.message);
+    console.error("Conversion Failed:", response.message);
 }
 
 const jsonResponse = await convertToJSON(parsedData);
 
 if (jsonResponse.success) {
-  console.log('Converted JSON:', jsonResponse.data);
+    console.log("Converted JSON:", jsonResponse.data);
 } else {
-  console.error('Conversion Failed:', jsonResponse.message);
+    console.error("Conversion Failed:", jsonResponse.message);
 }
 ```
 
@@ -126,7 +129,7 @@ cd nexus-dsm-toolkit
 pnpm install
 
 # Run tests
-npm run test
+pnpm test
 ```
 
 > CLI and API layers are optional — core functions are usable as a library.

@@ -1,17 +1,20 @@
 import Papa from "papaparse";
-import { CsvErrorResponse, CsvResponse } from "../types/csv.response.ts";
-import { CsvUnexpectedError, SpecificCsvError } from "../types/csv.errors.ts";
+import type { CsvErrorResponse, CsvResponse } from "../types/csv.response.js";
+import type {
+    CsvUnexpectedError,
+    SpecificCsvError,
+} from "../types/csv.errors.js";
 import {
     validateDataRows,
     validateHeaders,
     validateQuoteBalance,
-} from "../utils/csv-utilities.ts";
-import { csvEmptyFileError } from "../constants/csv-custom-errors.ts";
-import { transformPapaParseError } from "../adapters/papaparse.adapter.ts";
-import { sortCsvErrorsByPriority } from "../utils/csv-error-priority.ts";
-import { CsvParsedFileMeta } from "../types/meta.ts";
-import { ParsedFileMetaBuilder } from "../utils/parsed-file-meta-builder.ts";
-import { analyzeCsvFile } from "./csv-parser-orchestration.ts";
+} from "../utils/csv-utilities.js";
+import { csvEmptyFileError } from "../constants/csv-custom-errors.js";
+import { transformPapaParseError } from "../adapters/papaparse.adapter.js";
+import { sortCsvErrorsByPriority } from "../utils/csv-error-priority.js";
+import { CsvParsedFileMeta } from "../types/meta.js";
+import { ParsedFileMetaBuilder } from "../utils/parsed-file-meta-builder.js";
+import { analyzeCsvFile } from "./csv-parser-orchestration.js";
 
 /**
  * Parses a CSV file from a file path or a raw string content.

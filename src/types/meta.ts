@@ -4,8 +4,8 @@
  */
 
 import { ParseMeta } from "papaparse";
-import { SpecificCsvError } from "./csv.errors.ts";
-import { SpecificJsonError } from "./json-errors.ts";
+import { SpecificCsvError } from "./csv.errors.js";
+import { SpecificJsonError } from "./json-errors.js";
 
 /**
  * The base metadata structure for any successfully parsed file.

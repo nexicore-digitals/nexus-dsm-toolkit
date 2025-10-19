@@ -1,5 +1,5 @@
-import { CsvParsedFileMeta } from "./meta.ts";
-import { ErrorResponse, ValidResponse } from "./response.ts";
+import { CsvParsedFileMeta } from "./meta.js";
+import { ErrorResponse, ValidResponse } from "./response.js";
 
 /**
  * Represents a successful CSV parsing operation.

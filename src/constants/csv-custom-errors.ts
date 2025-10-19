@@ -1,4 +1,4 @@
-import {
+import type {
     CsvEmptyFileError,
     CsvFileNotFoundError,
     CsvFileSystemError,
@@ -6,7 +6,7 @@ import {
     CsvMissingHeaderValueError,
     CsvNoHeadersError,
     CsvNoValidDataRowsError,
-} from "../types/csv.errors.ts";
+} from "../types/csv.errors.js";
 
 export const csvEmptyFileError: CsvEmptyFileError = {
     name: "CSVEmptyFileError",

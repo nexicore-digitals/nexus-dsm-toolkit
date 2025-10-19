@@ -1,9 +1,9 @@
-import { SpecificCsvError } from "../types/csv.errors.ts";
+import type { SpecificCsvError } from "../types/csv.errors.js";
 import {
     csvMissingHeaderValueError,
     csvNoHeadersError,
     csvNoValidDataRowsError,
-} from "../constants/csv-custom-errors.ts";
+} from "../constants/csv-custom-errors.js";
 
 export function csvQuoteCount(field: string): number {
     if (!field) return 0;
@@ -35,7 +35,7 @@ export function validateHeaders(fields?: string[]): SpecificCsvError | null {
         return csvMissingHeaderValueError;
 
     const looksLikeData = fields.some(
-        (field) => /^[A-Z]/.test(field.trim()) || !isNaN(Number(field)),
+        (field) => /^[A-Z]/.test(field.trim()) || !isNaN(Number(field))
     );
 
     return looksLikeData ? csvNoHeadersError : null;
@@ -43,7 +43,7 @@ export function validateHeaders(fields?: string[]): SpecificCsvError | null {
 
 export function validateDataRows(
     data: object[],
-    fields?: string[],
+    fields?: string[]
 ): SpecificCsvError | null {
     return data.length === 0 && fields && fields.length > 0
         ? csvNoValidDataRowsError

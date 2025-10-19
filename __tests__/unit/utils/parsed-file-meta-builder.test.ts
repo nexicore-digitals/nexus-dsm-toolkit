@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { ParsedFileMetaBuilder } from "../../../src/utils/parsed-file-meta-builder.ts";
+import { ParsedFileMetaBuilder } from "../../../src/utils/parsed-file-meta-builder.js";
 
 vi.useFakeTimers();
 vi.setSystemTime(new Date("2023-01-01T00:00:00.000Z"));

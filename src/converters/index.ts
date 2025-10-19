@@ -3,5 +3,5 @@
  * @author Owen
  */
 
-export * from "./csv-converter.ts";
-export * from "./json-converter.ts";
+export * from "./csv-converter.js";
+export * from "./json-converter.js";

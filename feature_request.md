@@ -3,8 +3,7 @@ name: ✨ Feature Request
 about: Suggest a new feature or enhancement for the Nexus DSM Toolkit.
 title: "[FEAT] A brief, descriptive title"
 labels: ["enhancement", "needs-triage"]
-assignees: ''
-
+assignees: ""
 ---
 
 **Thank you for contributing your ideas to Nexus DSM! Your suggestions help shape the future of the toolkit.**

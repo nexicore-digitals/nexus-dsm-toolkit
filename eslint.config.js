@@ -5,7 +5,15 @@ import vitestPlugin from "eslint-plugin-vitest";
 import importPlugin from "eslint-plugin-import";
 
 export default [
-    { ignores: ["src/utils/logger.ts"] },
+    {
+        ignores: [
+            "dist/",
+            "coverage/",
+            "*.d.ts",
+            "*.js.map",
+            "src/utils/logger.ts",
+        ],
+    },
     {
         files: ["**/*.ts"],
         languageOptions: {
@@ -37,14 +45,7 @@ export default [
             "vitest/no-focused-tests": "error",
             "vitest/no-identical-title": "error",
 
-            "import/extensions": [
-                "error",
-                "ignorePackages",
-                {
-                    ts: "always",
-                    js: "never",
-                },
-            ],
+            "import/extensions": "off",
         },
     },
     {

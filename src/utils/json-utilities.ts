@@ -5,9 +5,9 @@ import {
     jsonNonObjectItemError,
     jsonSyntaxError,
     jsonValidationFailedError,
-} from "../constants/json-custom-errors.ts";
-import { SpecificJsonError } from "../types/json-errors.ts";
-import { JsonResponse } from "../types/json-response.ts";
+} from "../constants/json-custom-errors.js";
+import type { SpecificJsonError } from "../types/json-errors.js";
+import type { JsonResponse } from "../types/json-response.js";
 
 export function isJson(data: string): boolean {
     try {
@@ -31,14 +31,12 @@ export function checkEmptyJson(data: string): SpecificJsonError[] {
 }
 
 export function checkJsonNonObjectItem(
-    parsedData: unknown[],
+    parsedData: unknown[]
 ): SpecificJsonError[] {
     if (
         parsedData.some(
             (item: unknown) =>
-                typeof item !== "object" ||
-                item === null ||
-                Array.isArray(item),
+                typeof item !== "object" || item === null || Array.isArray(item)
         )
     )
         return [jsonNonObjectItemError];
@@ -48,7 +46,7 @@ export function checkJsonNonObjectItem(
 }
 
 export function validateJsonRootStructure(
-    parsedData: unknown,
+    parsedData: unknown
 ): SpecificJsonError[] {
     if (
         Array.isArray(parsedData) ||
@@ -59,7 +57,7 @@ export function validateJsonRootStructure(
 }
 
 export function validateJsonNoDataRows(
-    parsedData: unknown[],
+    parsedData: unknown[]
 ): SpecificJsonError[] {
     if (parsedData.length === 0) {
         return [jsonNoDataRowsError]; // Return error for a truly empty array
@@ -68,7 +66,7 @@ export function validateJsonNoDataRows(
 }
 
 export function validateJsonEmptyObjects(
-    parsedData: object[],
+    parsedData: object[]
 ): SpecificJsonError[] {
     if (parsedData.length === 0) {
         return [];
@@ -78,7 +76,7 @@ export function validateJsonEmptyObjects(
         (item) =>
             typeof item === "object" &&
             item !== null &&
-            Object.keys(item).length === 0,
+            Object.keys(item).length === 0
     );
 
     if (allObjectsAreEmpty) {
@@ -94,7 +92,7 @@ export function validateJsonEmptyObjects(
 }
 
 export function checkForMultipleErrors(
-    error: SpecificJsonError[],
+    error: SpecificJsonError[]
 ): SpecificJsonError[] {
     if (error.length > 1) return [jsonValidationFailedError];
     else return [];

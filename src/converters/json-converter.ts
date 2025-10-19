@@ -3,9 +3,9 @@
  * @author Owen
  */
 
-import { JsonResponse } from "../types/json-response.ts";
-import { JsonConversionResult } from "../types/conversion.ts";
-import { JsonParsedFileMeta } from "../types/meta.ts";
+import type { JsonResponse } from "../types/json-response.js";
+import type { JsonConversionResult } from "../types/conversion.js";
+import type { JsonParsedFileMeta } from "../types/meta.js";
 
 export interface JsonStructureConversionPayload {
     structureType: "array" | "object";

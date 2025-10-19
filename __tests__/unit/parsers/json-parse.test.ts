@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import parseJSON from "../../../src/parsers/json-parser.ts";
+import parseJSON from "../../../src/parsers/json-parser.js";
 import {
     ALL_EMPTY_OBJECTS,
     EMPTY_FILE,
@@ -10,8 +10,8 @@ import {
     VALID_ARRAY_OF_OBJECTS,
     VALID_SINGLE_OBJECT,
     WHITESPACE_FILE,
-} from "../../fixtures/json/json-mock-data.ts";
-import parseJsonFromFile from "../../../src/parsers/json-parser-orchestration.ts";
+} from "../../fixtures/json/json-mock-data.js";
+import parseJsonFromFile from "../../../src/parsers/json-parser-orchestration.js";
 
 describe("JSON parsing tests", () => {
     it("should enforce the file limit", async () => {

@@ -4,11 +4,11 @@
  */
 
 import { unparse } from "papaparse";
-import {
+import type {
     CsvConversionResult,
     CsvTabularConversion,
-} from "../types/conversion.ts";
-import { CsvResponse } from "../types/csv.response.ts";
+} from "../types/conversion.js";
+import type { CsvResponse } from "../types/csv.response.js";
 
 /**
  * Converts parsed CSV data into a normalized tabular payload.

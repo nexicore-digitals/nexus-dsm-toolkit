@@ -1,18 +1,18 @@
 import path from "path";
 import fs from "fs/promises";
-import { SpecificCsvError } from "../types/csv.errors.ts";
-import { CsvFileAnalysisResult } from "../types/meta.ts";
+import type { SpecificCsvError } from "../types/csv.errors.js";
+import type { CsvFileAnalysisResult } from "../types/meta.js";
 import {
     csvEmptyFileError,
     csvFileNotFoundError,
     csvFileSystemError,
     csvFileTooLargeError,
-} from "../constants/csv-custom-errors.ts";
+} from "../constants/csv-custom-errors.js";
 
 const MAX_SIZE_BYTES = 5 * 1024 * 1024; // 5MB
 
 export async function analyzeCsvFile(
-    filePath: string,
+    filePath: string
 ): Promise<CsvFileAnalysisResult> {
     if (filePath.trim().length === 0)
         return {
@@ -52,7 +52,7 @@ export async function analyzeCsvFile(
             diagnostics: diagnostics.length > 0 ? diagnostics : undefined,
         };
     } catch (err: unknown) {
-        if (err instanceof Error && "code" in err && err.code === "ENOENT") {
+        if ((err as Error & { code: string }).code === "ENOENT") {
             diagnostics.push({
                 ...csvFileNotFoundError,
                 message: `The file '${absolutePath}' was not found.`,
