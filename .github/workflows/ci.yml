@@ -45,6 +45,10 @@ jobs:
               with:
                   version: 10
 
+            - name: Install dependencies
+              run: pnpm install
+              shell: bash
+
             - name: Typecheck
               run: pnpm typecheck
               shell: bash
@@ -61,6 +65,10 @@ jobs:
               with:
                   version: 10
 
+            - name: Install dependencies
+              run: pnpm install
+              shell: bash
+
             - name: Format & Lint
               run: pnpm format && pnpm lint
               shell: bash
@@ -76,6 +84,10 @@ jobs:
               uses: pnpm/action-setup@v2
               with:
                   version: 10
+
+            - name: Install dependencies
+              run: pnpm install
+              shell: bash
 
             - name: Test
               run: pnpm test
