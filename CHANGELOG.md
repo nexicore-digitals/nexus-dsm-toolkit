@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.2.1] - 2025-10-19
+
+### Fixed
+
+- Resolved a potential silent data loss issue in `convertCsvStructure` when handling single-object data payloads.
+
+### Changed
+
+- **Documentation:** Improved JSDoc documentation across all barrel files (`parsers`, `converters`, `adapters`, `utils`, `types`) for better API discoverability.
+- **Configuration:** Refined `jsr.json` to exclude the `dist` directory, aligning with JSR's source-first publishing model.
+- **Code Quality:** Simplified complex type unions in `csv.errors.ts` to improve TypeScript compiler performance and made the public API for the `utils` module more explicit.
+
+### Removed
+
+- Deleted unused types in `filereader.ts` and the corresponding unused `eligibility.util.ts` utility and its test file to clean up the codebase.
+
 ## [v1.2.0] - 2025-10-19
 
 ### Added (v1.2.0)
