@@ -16,6 +16,9 @@ jobs:
             contents: read
             id-token: write
         steps:
+            - uses: actions/checkout@v4
+              name: Checkout repository
+
             - uses: pnpm/action-setup@v3
               name: Install pnpm
               with:
