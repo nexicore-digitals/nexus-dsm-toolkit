@@ -35,7 +35,7 @@
  *   console.log("Error Codes:", response.meta.diagnostics?.errorCodes);
  * }
  */
-export { parseCSV } from "./dist/index.js";
+export { parseCSV } from "./src/parsers/index.js";
 
 /**
  * Parses a JSON file from a file path or a raw string content.
@@ -63,7 +63,7 @@ export { parseCSV } from "./dist/index.js";
  *   console.error("Parsing Failed:", response.message);
  * }
  */
-export { parseJSON } from "./dist/index.js";
+export { parseJSON } from "./src/parsers/index.js";
 
 // --- Converters ---
 
@@ -87,7 +87,7 @@ export { parseJSON } from "./dist/index.js";
  *   console.log(csvResult.content); // "id,name\r\n1,test"
  * }
  */
-export { convertToCsv } from "./dist/index.js";
+export { convertToCsv } from "./src/converters/index.js";
 
 /**
  * Converts a parsed CSV response into a pretty-printed JSON string.
@@ -109,7 +109,7 @@ export { convertToCsv } from "./dist/index.js";
  *   console.log(jsonResult.content); // '[\n  {\n    "id": 1,\n    "name": "test"\n  }\n]'
  * }
  */
-export { convertFromJson } from "./dist/index.js";
+export { convertFromJson } from "./src/converters/index.js";
 
 // --- Utilities ---
 
@@ -136,7 +136,7 @@ export { convertFromJson } from "./dist/index.js";
  *
  * console.log(meta.eligibleForConversion); // true
  */
-export { ParsedFileMetaBuilder } from "./dist/index.js";
+export { ParsedFileMetaBuilder } from "./src/utils/index.js";
 
 /**
  * Calculates the maximum nesting depth of a JSON object or array.
@@ -152,7 +152,7 @@ export { ParsedFileMetaBuilder } from "./dist/index.js";
  * const depth = calculateNestingDepth(data);
  * console.log(depth); // 3
  */
-export { calculateNestingDepth } from "./dist/index.js";
+export { calculateNestingDepth } from "./src/utils/index.js";
 
 /**
  * Checks if all objects in an array have the same set of keys.
@@ -170,7 +170,7 @@ export { calculateNestingDepth } from "./dist/index.js";
  * const inconsistent = [{ a: 1 }, { b: 2 }];
  * console.log(checkKeyConsistency(inconsistent)); // false
  */
-export { checkKeyConsistency } from "./dist/index.js";
+export { checkKeyConsistency } from "./src/utils/index.js";
 
 // --- Advanced / Lower-Level Functions ---
 
@@ -181,7 +181,7 @@ export { checkKeyConsistency } from "./dist/index.js";
  * @param {CsvResponse} response - The response object from `parseCSV`.
  * @returns {CsvTabularConversion} A structured object with records, columns, and stats.
  */
-export { convertCsvStructure } from "./dist/index.js";
+export { convertCsvStructure } from "./src/converters/index.js";
 
 /**
  * Normalizes a parsed JSON response into a structure-aware payload.
@@ -191,7 +191,7 @@ export { convertCsvStructure } from "./dist/index.js";
  * @param {JsonParsedFileMeta} meta - The metadata from a `JsonResponse`.
  * @returns {JsonStructureConversionPayload} A normalized payload with structure details.
  */
-export { convertJsonStructure } from "./dist/index.js";
+export { convertJsonStructure } from "./src/converters/index.js";
 
 /**
  * Adapts a raw error from the PapaParse library into a standardized Nexus DSM error format.
@@ -199,7 +199,7 @@ export { convertJsonStructure } from "./dist/index.js";
  * @param {PapaParseRawError} papaError - The raw error object from PapaParse.
  * @returns {SpecificCsvError} A specific, standardized error object.
  */
-export { transformPapaParseError } from "./dist/index.js";
+export { transformPapaParseError } from "./src/adapters/index.js";
 
 // --- Type Definitions ---
 
@@ -218,3 +218,4 @@ export { transformPapaParseError } from "./dist/index.js";
  *   }
  * }
  */
+export * from "./src/types/index.js";
