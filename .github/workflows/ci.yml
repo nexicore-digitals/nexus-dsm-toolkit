@@ -1,0 +1,94 @@
+name: Continuous Integration
+
+on:
+    push:
+        branches: ["main"]
+    pull_request:
+        branches: ["main"]
+
+jobs:
+    setup:
+        runs-on: ubuntu-latest
+        outputs:
+            cache-key: ${{ steps.cache.outputs.cache-hit }}
+        steps:
+            - name: Checkout Repository
+              uses: actions/checkout@v4
+
+            - name: Setup PNPM
+              uses: pnpm/action-setup@v2
+              with:
+                  version: 10
+
+            - name: Cache dependencies
+              uses: actions/cache@v3
+              id: cache
+              with:
+                  path: ~/.pnpm-store
+                  key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+                  restore-keys: |
+                      ${{ runner.os }}-pnpm-
+
+            - name: Install dependencies
+              run: pnpm install
+              shell: bash
+
+    typecheck:
+        needs: setup
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout Repository
+              uses: actions/checkout@v4
+
+            - name: Setup PNPM
+              uses: pnpm/action-setup@v2
+              with:
+                  version: 10
+
+            - name: Install dependencies
+              run: pnpm install
+              shell: bash
+
+            - name: Typecheck
+              run: pnpm typecheck
+              shell: bash
+
+    lint-format:
+        needs: setup
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout Repository
+              uses: actions/checkout@v4
+
+            - name: Setup PNPM
+              uses: pnpm/action-setup@v2
+              with:
+                  version: 10
+
+            - name: Install dependencies
+              run: pnpm install
+              shell: bash
+
+            - name: Format & Lint
+              run: pnpm format && pnpm lint
+              shell: bash
+
+    test:
+        needs: setup
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout Repository
+              uses: actions/checkout@v4
+
+            - name: Setup PNPM
+              uses: pnpm/action-setup@v2
+              with:
+                  version: 10
+
+            - name: Install dependencies
+              run: pnpm install
+              shell: bash
+
+            - name: Test
+              run: pnpm test
+              shell: bash
