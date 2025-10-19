@@ -37,8 +37,24 @@ if ! grep -q "$VERSION" CHANGELOG.md; then
 fi
 
 echo "✅ All checks passed. Tagging release..."
-git tag "$VERSION"
-git push origin "$VERSION"
+echo "🔍 Checking if tag $VERSION already exists..."
+if git rev-parse "$VERSION" >/dev/null 2>&1; then
+  TAG_COMMIT=$(git rev-parse "$VERSION")
+  HEAD_COMMIT=$(git rev-parse HEAD)
+
+  if [[ "$TAG_COMMIT" == "$HEAD_COMMIT" ]]; then
+    echo "ℹ️ Tag $VERSION already exists and points to the current commit. Skipping tag creation."
+  else
+    echo "❌ Tag $VERSION exists but points to a different commit."
+    echo "🛑 Refusing to overwrite an existing tag. Please delete or rename it manually if needed."
+    exit 1
+  fi
+else
+  echo "✅ Tag $VERSION does not exist. Creating it now..."
+  git tag "$VERSION"
+  git push origin "$VERSION"
+fi
+
 
 echo "🛠 Building package..."
 pnpm build
