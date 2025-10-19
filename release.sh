@@ -43,7 +43,20 @@ git push origin "$VERSION"
 echo "🛠 Building package..."
 pnpm build
 
-echo "🚀 Ready to publish to npm"
+echo "🔐 Verifying npm login status..."
+if ! npm whoami > /dev/null 2>&1; then
+  echo "ℹ️ You are not logged into npm. Please follow the prompts to log in."
+  npm adduser
+  if ! npm whoami > /dev/null 2>&1; then
+    echo "❌ npm login failed. Please try again."
+    exit 1
+  fi
+fi
+
+LOGGED_IN_USER=$(npm whoami)
+echo "✅ Logged in as '$LOGGED_IN_USER'."
+
+echo "� Ready to publish to npm"
 read -p "Publish to npm now? (y/N): " CONFIRM
 if [[ "$CONFIRM" == "y" || "$CONFIRM" == "Y" ]]; then
   pnpm publish --access public

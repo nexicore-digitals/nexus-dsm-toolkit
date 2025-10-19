@@ -1,8 +1,9 @@
 # 🌐 Nexus DSM – Dataset Management Toolkit
 
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-![Node.js](https://img.shields.io/badge/node-%3E=18.0.0-brightgreen)
-![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
+[![Node.js](https://img.shields.io/badge/node-%3E=18.0.0-brightgreen)](https://nodejs.org/)
+[![CI](https://github.com/nexicore-digitals/nexus-dsm-toolkit/actions/workflows/ci.yml/badge.svg)](https://github.com/nexicore-digitals/nexus-dsm-toolkit/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/nexicore-digitals/nexus-dsm-toolkit/actions/workflows/codeql.yml/badge.svg)](https://github.com/nexicore-digitals/nexus-dsm-toolkit/actions/workflows/codeql.yml)
 ![Modular DX](https://img.shields.io/badge/modular-DX-blue)
 ![Beginner Friendly](https://img.shields.io/badge/beginner-friendly-green)
 ![Nexi Inside](https://img.shields.io/badge/Nexi-AI-blue)
