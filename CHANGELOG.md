@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.1.0] - YYYY-MM-DD
+## [v1.1.0] - YYYY-MM-DD
 
 ### Added
 
@@ -19,7 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - The main entry point (`src/index.ts`) now exports the new converter functions.
 
-## [1.0.0] - 2025-10-17
+## [v1.0.0] - 2025-10-17
 
 This is the initial major release, introducing a comprehensive metadata generation system and a significant architectural refactoring to support a developer-assisted validation workflow.
 
@@ -31,8 +31,8 @@ This is the initial major release, introducing a comprehensive metadata generati
 - **New File-Level Errors:** Added `FileTooLargeError`, `FileNotFoundError`, and `FileReadError` for more robust file handling.
 - **Testing:** Added new tests to `csv-parser.test.ts` to validate the structure and content of the new `meta` object.
 - **Documentation:**
-    - Added a comprehensive `ROADMAP.md` to outline the project's trajectory.
-    - Created `bug_report.md` and `feature_request.md` issue templates for GitHub.
+  - Added a comprehensive `ROADMAP.md` to outline the project's trajectory.
+  - Created `bug_report.md` and `feature_request.md` issue templates for GitHub.
 
 ### Changed
 
