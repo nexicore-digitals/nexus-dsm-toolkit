@@ -95,6 +95,30 @@ To maintain quality and clarity across the toolkit:
 
 ---
 
+## 🚀 Release Process (for Maintainers)
+
+To create a new release, use the provided `release.sh` script. This script automates version checks, changelog validation, building, and **publishing to npm**.
+
+1. **Ensure `main` is up-to-date and all checks are passing.**
+2. **Update `CHANGELOG.md`** with the new version and a summary of changes.
+3. **Update the `version`** in `package.json` and `jsr.json`.
+4. **Commit the version bump:**
+
+    ```bash
+    git add .
+    git commit -m "chore(release): Prepare for v1.2.0"
+    ```
+
+5. **Run the release script:**
+
+    ```bash
+    ./release.sh v1.2.0
+    ```
+
+The script will guide you through creating a git tag and publishing to **npm**. Pushing the new tag to GitHub will automatically trigger the `publish.yml` workflow to publish to **JSR**.
+
+---
+
 ## 🤖 Nexi Is Here to Help
 
 If you're unsure where to start, open an issue or draft PR—Nexi (our AI guide) and the maintainers will help you navigate the toolkit, suggest improvements, and clarify architecture decisions.
