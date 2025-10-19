@@ -113,8 +113,10 @@ export type SpecificCsvError =
     | CsvUndetectableDelimiter
     | CsvNoHeadersError
     | CsvMissingHeaderValueError
-    | CsvNoValidDataRowsError
-    | CsvSyntaxError // This union includes InvalidQuotes and MissingQuotes
-    | CsvFieldMismatchError // This union includes TooFewFields and TooManyFields
+    | CsvNoValidDataRowsError // Direct error types are more efficient for the compiler
+    | CsvInvalidQuotesError
+    | CsvMissingQuotesError
+    | CsvTooFewFieldsError
+    | CsvTooManyFieldsError
     | CsvUnexpectedError
     | CsvFileLevelError;

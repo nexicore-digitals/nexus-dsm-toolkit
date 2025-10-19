@@ -1,0 +1,35 @@
+name: Publish to JSR
+on:
+    workflow_run:
+        workflows: ["Continuous Integration"]
+        types:
+            - completed
+
+jobs:
+    publish:
+        runs-on: ubuntu-latest
+        if: |
+            github.event.workflow_run.conclusion == 'success' &&
+            startsWith(github.event.workflow_run.head_branch, 'release/v')
+
+        permissions:
+            contents: read
+            id-token: write
+        steps:
+            - name: Check for the jsr CLI
+              run: |
+                  if ! command -v jsr &> /dev/null; then
+                      echo "ℹ️ jsr CLI not found. Installing it globally with npm..."
+                      npm install -g jsr
+                      echo "✅ jsr CLI installed successfully."
+                  fi
+
+            - name: Install dependencies
+              run: pnpm install
+
+            - name: Build
+              run: pnpm build
+
+            - uses: actions/checkout@v4
+            - name: Publish package
+              run: npx jsr publish

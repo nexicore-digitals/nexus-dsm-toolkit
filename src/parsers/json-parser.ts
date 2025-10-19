@@ -1,5 +1,9 @@
 import type { SpecificJsonError } from "../types/json-errors.js";
-import type { JsonResponse } from "../types/json-response.js";
+import type {
+    JsonErrorResponse,
+    JsonResponse,
+} from "../types/json-response.js";
+import { JsonParsedFileMeta } from "../types/meta.js";
 import {
     checkEmptyJson,
     checkForMultipleErrors,
@@ -11,6 +15,13 @@ import {
     validateJsonNoDataRows,
     validateJsonRootStructure,
 } from "../utils/json-utilities.js";
+import { ParsedFileMetaBuilder } from "../utils/parsed-file-meta-builder.js";
+import {
+    calculateNestingDepth,
+    checkKeyConsistency,
+    Obj,
+} from "../utils/json-analysis-utilities.js";
+import { JsonUnexpectedError } from "../types/json-errors.js";
 
 /**
  * Parses a JSON file from a file path or a raw string content.
@@ -44,26 +55,84 @@ import {
  *   console.log(responseFromString.data);
  * }
  */
-export default async function parseJSON(data: string): Promise<JsonResponse> {
+export default async function parseJSON(
+    data: string,
+    filePath?: string
+): Promise<JsonResponse> {
     let parsedData: unknown;
     const customErrors: SpecificJsonError[] = [];
+    const source = filePath ?? "string-input";
 
-    if (customErrors.length > 0) return createErrorResponse(customErrors);
+    try {
+        customErrors.push(...checkEmptyJson(data));
+        customErrors.push(...checkJsonSyntax(data));
 
-    customErrors.push(...checkEmptyJson(data));
-    customErrors.push(...checkJsonSyntax(data));
+        if (isJson(data)) parsedData = JSON.parse(data);
+        customErrors.push(...validateJsonRootStructure(parsedData));
 
-    if (isJson(data)) parsedData = JSON.parse(data);
-    customErrors.push(...validateJsonRootStructure(parsedData));
+        const dataAsArray = Array.isArray(parsedData)
+            ? (parsedData as object[])
+            : typeof parsedData === "object" && parsedData !== null
+              ? [parsedData]
+              : [];
 
-    if (Array.isArray(parsedData)) {
-        customErrors.push(...checkJsonNonObjectItem(parsedData));
-        customErrors.push(...validateJsonNoDataRows(parsedData));
-        customErrors.push(...validateJsonEmptyObjects(parsedData));
+        if (Array.isArray(parsedData)) {
+            customErrors.push(...checkJsonNonObjectItem(parsedData));
+            customErrors.push(...validateJsonNoDataRows(parsedData));
+            customErrors.push(...validateJsonEmptyObjects(parsedData));
+        }
+
+        customErrors.push(...checkForMultipleErrors(customErrors));
+
+        // Build metadata for context, even on failure.
+        const fields =
+            dataAsArray.length > 0 ? Object.keys(dataAsArray[0]) : [];
+        const validationFlags = {
+            isArrayOfObjects:
+                Array.isArray(parsedData) &&
+                dataAsArray.every(
+                    (item) => typeof item === "object" && item !== null
+                ),
+            hasConsistentKeys: checkKeyConsistency(dataAsArray),
+            hasValidRows:
+                dataAsArray.length > 0 &&
+                dataAsArray.some((obj) => Object.keys(obj).length > 0),
+        };
+
+        const parsedMeta: JsonParsedFileMeta = ParsedFileMetaBuilder.init(
+            source,
+            fields,
+            dataAsArray.length
+        )
+            .withJsonFlags(validationFlags)
+            .withJsonExtras({
+                structureType: Array.isArray(parsedData) ? "array" : "object",
+                nestingDepth: calculateNestingDepth(parsedData as Obj),
+            })
+            .withDiagnostics({
+                warnings: customErrors.map((e) => e.message),
+                errorCodes: customErrors.map((e) => e.code ?? "Unknown"),
+            })
+            .buildJson();
+
+        if (customErrors.length > 0) {
+            const errorResponse = createErrorResponse(customErrors);
+            (errorResponse as JsonErrorResponse).meta = parsedMeta;
+            return errorResponse;
+        }
+
+        return {
+            success: true,
+            data: parsedData as object | object[],
+            meta: parsedMeta,
+        };
+    } catch (error: unknown) {
+        const unexpectedError: JsonUnexpectedError = {
+            name: "JsonUnexpectedError",
+            message: `An unexpected error occurred: ${(error as Error).message}`,
+            type: "UnexpectedError",
+            code: "UnknownJsonError",
+        };
+        return createErrorResponse([unexpectedError]);
     }
-
-    customErrors.push(...checkForMultipleErrors(customErrors));
-
-    if (customErrors.length > 0) return createErrorResponse(customErrors);
-    else return { success: true, data: parsedData as object | object[] };
 }
