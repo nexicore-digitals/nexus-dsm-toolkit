@@ -5,6 +5,9 @@
     "exports": {
         ".": "./mod.ts"
     },
+    "publish": {
+        "include": ["dist/**", "mod.ts"]
+    },
     "keywords": [
         "csv",
         "json",
