@@ -7,6 +7,7 @@
     },
     "publish": {
         "include": ["dist/**", "mod.ts", "README.md", "package.json"]
+        "exclude": ["**", "!mod.ts", "!dist/index.js", "!dist/index.d.ts"]
     },
     "keywords": [
         "csv",
