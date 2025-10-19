@@ -7,7 +7,24 @@
  * @author Owen
  */
 
+/**
+ * The primary entry point for CSV parsing. It can process a CSV from a file path or a raw string.
+ * @see {@link parseCSV} for detailed documentation and examples.
+ */
 export { default as parseCSV } from "./csv-parser.js";
+
+/**
+ * The primary entry point for JSON parsing. It can process JSON from a file path or a raw string.
+ * @see {@link parseJSON} for detailed documentation and examples.
+ */
 export { default as parseJSON } from "./json-parser.js";
+
+/**
+ * An orchestration function that reads a CSV file, checks its size, and returns its content and initial diagnostics.
+ */
 export { default as analyzeCsvFile } from "./csv-parser-orchestration.js";
+
+/**
+ * An orchestration function that reads a JSON file from a path and passes its content to the core `parseJSON` function.
+ */
 export { default as parseJsonFromFile } from "./json-parser-orchestration.js";
