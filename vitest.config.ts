@@ -8,5 +8,12 @@ export default defineConfig({
             reporter: ["html", "text"],
             reportsDirectory: "./coverage",
         },
+        include: ["**/*.test.ts"],
+        exclude: [
+            "**/node_modules/**",
+            "**/dist/**",
+            "**/cypress/**",
+            "mod.ts",
+        ],
     },
 });

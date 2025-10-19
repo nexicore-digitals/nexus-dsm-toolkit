@@ -1,7 +1,5 @@
-export * from "@parsers/csv-parser.js";
+export * from "./parsers/index.js";
 
-export * from "@parsers/json-parser.js";
-
-export * from "@adapters/papaparse.adapter.js";
+export * from "@adapters/index.js";
 
 export * from "@converters/index.js";

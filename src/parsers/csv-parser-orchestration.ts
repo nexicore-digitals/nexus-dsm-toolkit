@@ -11,7 +11,7 @@ import {
 
 const MAX_SIZE_BYTES = 5 * 1024 * 1024; // 5MB
 
-export async function analyzeCsvFile(
+export default async function analyzeCsvFile(
     filePath: string
 ): Promise<CsvFileAnalysisResult> {
     if (filePath.trim().length === 0)

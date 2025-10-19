@@ -46,12 +46,23 @@ if git rev-parse "$VERSION" >/dev/null 2>&1; then
     echo "ℹ️ Tag $VERSION already exists and points to the current commit. Skipping tag creation."
   else
     echo "❌ Tag $VERSION exists but points to a different commit."
-    echo "🛑 Refusing to overwrite an existing tag. Please delete or rename it manually if needed."
-    read -p "Continue anyway? (y/N): " CONFIRM
+    read -p "Would you like to recreate the tag pointing to the current commit? (y/N): "
     if [[ "$CONFIRM" == "y" || "$CONFIRM" == "Y" ]]; then
-      echo "proceeding to building and publishing..."
+      git tag -d "$VERSION"
+      git push origin :refs/tags/"$VERSION"
+      git tag "$VERSION"
+      git push origin "$VERSION"
+      echo "✅ Tag $VERSION created."
+      CONFIRM=""
     else
-      exit 1
+      echo "ℹ️ Skipping tag creation."
+      CONFIRM=""
+        read -p "Continue to building and publishing? (y/N): " CONFIRM
+      if [[ "$CONFIRM" == "y" || "$CONFIRM" == "Y" ]]; then
+        echo "ℹ️ proceeding to building and publishing..."
+      else
+        exit 1
+      fi
     fi
     CONFIRM=""
   fi

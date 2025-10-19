@@ -14,7 +14,7 @@ import { transformPapaParseError } from "../adapters/papaparse.adapter.js";
 import { sortCsvErrorsByPriority } from "../utils/csv-error-priority.js";
 import { CsvParsedFileMeta } from "../types/meta.js";
 import { ParsedFileMetaBuilder } from "../utils/parsed-file-meta-builder.js";
-import { analyzeCsvFile } from "./csv-parser-orchestration.js";
+import { analyzeCsvFile } from "./index.js";
 
 /**
  * Parses a CSV file from a file path or a raw string content.
@@ -79,7 +79,9 @@ export default async function parseCSV(
             hasBalancedQuotes: true, // will be updated below
             hasValidRows: Array.isArray(data) && data.length > 0,
             hasCommentLines: csv.includes("#"),
-            hasEmptyLines: csv.split("\n").some((line) => line.trim() === ""),
+            hasEmptyLines: csv
+                .split("\n")
+                .some((line: string) => line.trim() === ""),
         };
 
         /* papaparse merged it's result.meta.errors into result.errors */
