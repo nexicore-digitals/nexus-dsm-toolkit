@@ -18,7 +18,8 @@
         "typescript",
         "esm",
         "nexus",
-        "nexicore"
+        "nexicore",
+        "nexicore digitals"
     ],
     "license": "MIT",
     "repository": {
