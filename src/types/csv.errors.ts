@@ -1,4 +1,4 @@
-import { ParseError } from "./errors.ts";
+import { ParseError } from "./errors.js";
 
 /**
  * The base interface for all CSV-specific parsing errors.
@@ -93,9 +93,11 @@ export interface CsvUnexpectedError extends CsvError {
 }
 
 // --- Union Types (Groupings for Type Safety - order here does not affect priority) ---
-type CsvSyntaxError = CsvInvalidQuotesError | CsvMissingQuotesError;
+export type CsvSyntaxError = CsvInvalidQuotesError | CsvMissingQuotesError;
 
-type CsvFieldMismatchError = CsvTooFewFieldsError | CsvTooManyFieldsError;
+export type CsvFieldMismatchError =
+    | CsvTooFewFieldsError
+    | CsvTooManyFieldsError;
 
 export type CsvFileLevelError =
     | CsvEmptyFileError

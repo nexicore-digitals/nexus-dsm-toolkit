@@ -1,4 +1,4 @@
-import { ValidResponse, ErrorResponse } from "./response.ts";
+import { ValidResponse, ErrorResponse } from "./response.js";
 
 /**
  * Represents a successful JSON parsing operation.

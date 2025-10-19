@@ -1,5 +1,5 @@
-import { ParseError } from "./errors.ts";
-import { AnyParsedFileMeta } from "./meta.ts";
+import { ParseError } from "./errors.js";
+import { AnyParsedFileMeta } from "./meta.js";
 
 /**
  * The most basic response structure, used to discriminate between success and failure.

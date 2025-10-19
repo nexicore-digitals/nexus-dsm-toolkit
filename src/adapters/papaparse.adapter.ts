@@ -1,6 +1,6 @@
 // import from @types/papaparse/index.d.ts
 import { ParseError as PapaParseRawError } from "papaparse";
-import {
+import type {
     CsvInvalidQuotesError,
     CsvMissingQuotesError,
     CsvTooFewFieldsError,
@@ -8,7 +8,7 @@ import {
     CsvUndetectableDelimiter,
     CsvUnexpectedError,
     SpecificCsvError,
-} from "../types/csv.errors.ts";
+} from "../types/csv.errors.js";
 
 /**
  * Adapts a single raw error object from Papa Parse into a specific,
@@ -23,7 +23,7 @@ import {
  * conforming to the ParseError hierarchy.
  */
 export function transformPapaParseError(
-    papaError: PapaParseRawError,
+    papaError: PapaParseRawError
 ): SpecificCsvError {
     switch (papaError.code) {
         case "MissingQuotes":

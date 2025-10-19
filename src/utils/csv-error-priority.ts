@@ -1,6 +1,6 @@
 // src/utils/error-sorter.ts
 
-import { SpecificCsvError } from "../types/csv.errors.ts";
+import type { SpecificCsvError } from "../types/csv.errors.js";
 
 // Define the priority for each error code.
 // Lower number = Higher priority.
@@ -36,7 +36,7 @@ const ERROR_PRIORITY_MAP: { [code: string]: number } = {
  * @returns A new array with the errors sorted by priority.
  */
 export function sortCsvErrorsByPriority(
-    errors: SpecificCsvError[],
+    errors: SpecificCsvError[]
 ): SpecificCsvError[] {
     // Create a shallow copy to avoid modifying the original array
     const sortedErrors = [...errors];

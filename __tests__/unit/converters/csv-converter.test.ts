@@ -2,8 +2,8 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import {
     convertCsvStructure,
     convertToCsv,
-} from "../../../src/converters/csv-converter.ts";
-import { CsvResponse } from "../../../src/types/csv.response.ts";
+} from "../../../src/converters/csv-converter.js";
+import { CsvResponse } from "../../../src/types/csv.response.js";
 
 vi.useFakeTimers();
 vi.setSystemTime(new Date("2023-01-01T00:00:00.000Z"));

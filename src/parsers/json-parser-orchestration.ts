@@ -1,16 +1,16 @@
 import fs from "fs/promises";
-import { JsonResponse } from "../types/json-response.ts";
-import parseJSON from "./json-parser.ts";
+import type { JsonResponse } from "../types/json-response.js";
+import parseJSON from "./json-parser.js";
 import {
     checkEmptyFile,
     createErrorResponse,
-} from "../utils/json-utilities.ts";
-import { SpecificJsonError } from "../types/json-errors.ts";
-import { jsonFileTooLargeError } from "../constants/json-custom-errors.ts";
+} from "../utils/json-utilities.js";
+import type { SpecificJsonError } from "../types/json-errors.js";
+import { jsonFileTooLargeError } from "../constants/json-custom-errors.js";
 import {
     fileNotFoundError,
     fileSystemError,
-} from "../constants/custom-errors.ts";
+} from "../constants/custom-errors.js";
 import path from "path";
 
 const MAX_SIZE_BYTES = 5 * 1024 * 1024; // 5MB
@@ -44,7 +44,7 @@ export default async function parseJsonFromFile(
         // Now, call the pure parseJSON function with the file content
         return await parseJSON(fileContent);
     } catch (err: unknown) {
-        if (err instanceof Error && "code" in err && err.code === "ENOENT") {
+        if ((err as Error & { code: string }).code === "ENOENT") {
             return createErrorResponse([
                 {
                     ...fileNotFoundError,

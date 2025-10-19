@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
-import { convertJsonStructure } from "../../../src/converters/json-converter.ts";
-import { JsonParsedFileMeta } from "../../../src/types/meta.ts";
+import { convertJsonStructure } from "../../../src/converters/json-converter.js";
+import { JsonParsedFileMeta } from "../../../src/types/meta.js";
 
 vi.useFakeTimers();
 vi.setSystemTime(new Date("2023-01-01T00:00:00.000Z"));
@@ -64,7 +64,7 @@ describe("convertJsonStructure", () => {
         expect(result.original).toBe(originalData);
         expect(result.conversionWarnings).toBeDefined();
         expect(result.conversionWarnings).toContain(
-            "Root is an object, not an array. Flattening may be lossy.",
+            "Root is an object, not an array. Flattening may be lossy."
         );
     });
 
@@ -150,7 +150,7 @@ describe("convertJsonStructure", () => {
         expect(result.rootItems.length).toBe(2);
         expect(result.conversionWarnings).toBeDefined();
         expect(result.conversionWarnings).toContain(
-            "Inconsistent keys detected across root items.",
+            "Inconsistent keys detected across root items."
         );
     });
 

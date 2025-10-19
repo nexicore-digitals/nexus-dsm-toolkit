@@ -1,0 +1,19 @@
+# Build output
+dist/
+coverage/
+
+# Node modules
+node_modules/
+
+# Lockfiles and configs
+pnpm-lock.yaml
+
+# Docs with intentional spacing
+*.md
+
+# Example fixtures where formatting might be important
+examples/*.json
+
+# Logs and environment variables
+*.log
+.env*

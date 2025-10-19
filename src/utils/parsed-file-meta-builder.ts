@@ -1,9 +1,9 @@
 import { ParseResult } from "papaparse";
-import {
+import type {
     CsvParsedFileMeta,
     JsonParsedFileMeta,
     ParsedFileMeta,
-} from "../types/meta.ts";
+} from "../types/meta.js";
 
 export class ParsedFileMetaBuilder {
     private base: Partial<ParsedFileMeta> = {
@@ -24,7 +24,7 @@ export class ParsedFileMetaBuilder {
     static init(
         source: string,
         fields: string[],
-        rowCount: number,
+        rowCount: number
     ): ParsedFileMetaBuilder {
         const builder = new ParsedFileMetaBuilder();
         builder.base.source = source;
@@ -44,14 +44,14 @@ export class ParsedFileMetaBuilder {
     }
 
     withCsvExtras(
-        extras: Pick<CsvParsedFileMeta, "delimiter" | "quoteChar" | "encoding">,
+        extras: Pick<CsvParsedFileMeta, "delimiter" | "quoteChar" | "encoding">
     ): this {
         this.csvExtras = extras;
         return this;
     }
 
     withJsonExtras(
-        extras: Pick<JsonParsedFileMeta, "structureType" | "nestingDepth">,
+        extras: Pick<JsonParsedFileMeta, "structureType" | "nestingDepth">
     ): this {
         this.jsonExtras = extras;
         return this;
@@ -96,7 +96,7 @@ export class ParsedFileMetaBuilder {
 
     static fromPapaResult(params: {
         source: string;
-        result: ParseResult<any>;
+        result: ParseResult<unknown>;
         validationFlags: CsvParsedFileMeta["validationFlags"];
         encoding?: string;
         diagnostics?: ParsedFileMeta["diagnostics"];

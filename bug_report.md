@@ -3,8 +3,7 @@ name: 🐞 Bug Report
 about: Create a report to help us improve the Nexus DSM Toolkit.
 title: "[BUG] A brief, descriptive title"
 labels: ["bug", "needs-triage"]
-assignees: ''
-
+assignees: ""
 ---
 
 **Thank you for helping us improve Nexus DSM! Please provide the following details to help us understand and resolve the issue.**

@@ -1,5 +1,5 @@
-import { SpecificJsonError } from "../types/json-errors.ts";
-import { JsonResponse } from "../types/json-response.ts";
+import type { SpecificJsonError } from "../types/json-errors.js";
+import type { JsonResponse } from "../types/json-response.js";
 import {
     checkEmptyJson,
     checkForMultipleErrors,
@@ -10,7 +10,7 @@ import {
     validateJsonEmptyObjects,
     validateJsonNoDataRows,
     validateJsonRootStructure,
-} from "../utils/json-utilities.ts";
+} from "../utils/json-utilities.js";
 
 /**
  * Parses a JSON file from a file path or a raw string content.

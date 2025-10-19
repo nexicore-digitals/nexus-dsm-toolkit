@@ -2,9 +2,9 @@
 import {
     VALID_ARRAY_OF_OBJECTS,
     ALL_EMPTY_OBJECTS,
-} from "../__tests__/fixtures/json/json-mock-data.ts";
-import parseJSON from "../src/parsers/json-parser.ts";
-import { logger } from "../src/utils/logger.ts";
+} from "../__tests__/fixtures/json/json-mock-data.js";
+import parseJSON from "@parsers/json-parser.js";
+import { logger } from "@utils/logger.js";
 
 async function main(data: string) {
     const result = await parseJSON(data);

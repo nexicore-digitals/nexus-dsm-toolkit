@@ -1,4 +1,4 @@
-import { FileNotFoundError, FileSystemError } from "../types/errors.ts";
+import type { FileNotFoundError, FileSystemError } from "../types/errors.js";
 
 export const fileSystemError: FileSystemError = {
     name: "FileSystemError",
