@@ -1,5 +1,9 @@
 /**
- * @file Barrel file for parsers and orchestration layers.
+ * @file Exports the core parsing and file analysis functions.
+ * @description This module provides the primary entry points for data parsing,
+ * including `parseCSV` and `parseJSON`. It also exports orchestration functions
+ * like `analyzeCsvFile` and `parseJsonFromFile` that handle file system
+ * interactions before passing content to the core parsers.
  * @author Owen
  */
 
