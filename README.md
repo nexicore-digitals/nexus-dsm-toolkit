@@ -12,8 +12,6 @@
 **Centralized tooling for parsing, validating, converting, and indexing structured datasets (`CSV` ↔ `JSON`).**  
 Built for modularity, clarity, and service-ready integration.
 
----
-
 ## ✨ Motivation: Building Trust in Your Data
 
 Most data tools promise seamless automation—but often operate as opaque black boxes. This obscures subtle quality issues and forces blind trust in processes that should be transparent. When working with critical datasets, that lack of visibility can lead to costly errors or endless manual review.
@@ -145,11 +143,9 @@ pnpm test
 | `parseCSV(file)`               | Parses CSV input, validates syntax, and outputs structured data              |
 | `parseJSON(file)`              | Parses structured JSON arrays into rows and fields                           |
 | `validateSchema(data, schema)` | Validates parsed data against a predefined schema (e.g., Zod or JSON Schema) |
-| `convertToCSV(meta)`           | Converts parsed JSON into CSV (requires `ParsedFileMeta`)                    |
-| `convertToJSON(meta)`          | Converts parsed CSV into JSON (requires `ParsedFileMeta`)                    |
+| `convertToCsv(response)`       | Converts a parsed JSON response into a CSV string                            |
+| `convertFromJson(response)`    | Converts a parsed CSV response into a JSON string                            |
 | `indexFile(data)`              | _(Planned)_ Indexing module for chaining and querying parsed dataset output  |
-
----
 
 ## ⚙️ Workflow Overview
 
