@@ -16,13 +16,24 @@ jobs:
             contents: read
             id-token: write
         steps:
-            - name: Check for the jsr CLI
+            - uses: pnpm/action-setup@v3
+              name: Install pnpm
+              with:
+                  version: 8
+                  run_install: false
+
+            - name: Get pnpm store directory
+              shell: bash
               run: |
-                  if ! command -v jsr &> /dev/null; then
-                      echo "ℹ️ jsr CLI not found. Installing it globally with npm..."
-                      npm install -g jsr
-                      echo "✅ jsr CLI installed successfully."
-                  fi
+                  echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+            - uses: actions/cache@v3
+              name: Setup pnpm cache
+              with:
+                  path: ${{ env.STORE_PATH }}
+                  key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+                  restore-keys: |
+                      ${{ runner.os }}-pnpm-store-
 
             - name: Install dependencies
               run: pnpm install
