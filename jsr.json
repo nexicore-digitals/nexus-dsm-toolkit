@@ -6,7 +6,7 @@
         ".": "./mod.ts"
     },
     "publish": {
-        "include": ["dist/**", "mod.ts", "README.md", "package.json"],
+        "include": ["dist/**", "mod.ts", "README.md", "main.ts"],
         "exclude": ["**", "!mod.ts", "!dist/index.js", "!dist/index.d.ts"]
     },
     "keywords": [
@@ -18,7 +18,8 @@
         "typescript",
         "esm",
         "nexus",
-        "nexicore"
+        "nexicore",
+        "nexicore digitals"
     ],
     "license": "MIT",
     "repository": {
