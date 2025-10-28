@@ -1,10 +1,14 @@
 /**
- * @file Contains the logic for converting parsed JSON data to other formats.
+ * @file Contains the logic for converting parsed CSV data to JSON format.
  * @author Owen
  */
 
-import type { JsonResponse } from "../types/json-response.js";
-import type { JsonConversionResult } from "../types/conversion.js";
+import type { CsvResponse } from "../types/csv.response.js";
+import { convertCsvStructure } from "./csv-converter.js";
+import type {
+    JsonConversionResult,
+    SuccessfulJsonConversionResult,
+} from "../types/conversion.js";
 import type { JsonParsedFileMeta } from "../types/meta.js";
 
 export interface JsonStructureConversionPayload {
@@ -65,33 +69,38 @@ export function convertJsonStructure(
 }
 
 /**
- * Converts a parsed JSON response into a structured result with a JSON string.
+ * Converts a parsed CSV response into a pretty-printed JSON string.
  *
- * This function takes the successful result from `parseJSON`, checks for conversion
- * eligibility, and produces a `SuccessfulJsonConversionResult` containing a
- * pretty-printed JSON string and detailed structural metadata.
+ * This function takes the successful result from `parseCSV`, checks for conversion
+ * eligibility, and serializes the data into a JSON string.
  *
- * @param response The `JsonResponse` from the parsing stage.
+ * @param response The `CsvResponse` from the parsing stage.
  * @returns A `JsonConversionResult` which is either a `SuccessfulJsonConversionResult`
  *          or a `FailedConversionResult`.
  */
-export function convertFromJson(response: JsonResponse): JsonConversionResult {
+export function convertToJson(response: CsvResponse): JsonConversionResult {
     if (!response.success || !response.meta?.eligibleForConversion) {
         return {
             success: false,
             message:
-                "JSON data is not eligible for conversion. It may contain structural errors or inconsistencies.",
+                "CSV data is not eligible for conversion. It may contain structural errors or inconsistencies.",
         };
     }
 
-    const payload = convertJsonStructure(
-        response.data,
-        response.meta as JsonParsedFileMeta
-    );
+    const tabularResult = convertCsvStructure(response);
+    if (!tabularResult.success) return tabularResult;
 
-    return {
+    const { flatRecords, columnNames, rowCount } = tabularResult;
+
+    const result: SuccessfulJsonConversionResult = {
         success: true,
-        content: JSON.stringify(payload.original, null, 2), // The stringified content
-        ...payload,
+        content: JSON.stringify(flatRecords, null, 2),
+        structureType: "array", // CSV data is always an array of objects
+        rootLength: rowCount,
+        nestingDepth: 1, // CSV is always flat
+        keySet: columnNames,
+        rootItems: flatRecords,
+        original: flatRecords,
     };
+    return result;
 }

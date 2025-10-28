@@ -97,19 +97,19 @@ export { convertToCsv } from "./src/converters/index.js";
  * it serializes the data into a JSON string.
  *
  * @param {CsvResponse} response - The successful response object from `parseCSV`.
- * @returns {JsonConversionResult} A result object containing the JSON string content on success, or an error message on failure.
+ * @returns {JsonConversionResult} A result object containing the JSON string content on success or an error message on failure.
  *
  * @example
- * import { parseCSV, convertFromJson } from 'nexus-dsm';
+ * import { parseCSV, convertToJson } from 'nexus-dsm';
  *
  * const csvResponse = await parseCSV('id,name\n1,test');
- * const jsonResult = convertFromJson(csvResponse);
+ * const jsonResult = convertToJson(csvResponse);
  *
  * if (jsonResult.success) {
  *   console.log(jsonResult.content); // '[\n  {\n    "id": 1,\n    "name": "test"\n  }\n]'
  * }
  */
-export { convertFromJson } from "./src/converters/index.js";
+export { convertToJson } from "./src/converters/index.js";
 
 // --- Utilities ---
 
@@ -185,21 +185,13 @@ export { convertCsvStructure } from "./src/converters/index.js";
 
 /**
  * Normalizes a parsed JSON response into a structure-aware payload.
- * This is an intermediate step used by `convertFromJson` and is useful for custom transformations.
+ * This is an intermediate step used by `convertToJson` and is useful for custom transformations.
  *
  * @param {unknown} original - The original parsed JSON data from a `JsonResponse`.
  * @param {JsonParsedFileMeta} meta - The metadata from a `JsonResponse`.
  * @returns {JsonStructureConversionPayload} A normalized payload with structure details.
  */
 export { convertJsonStructure } from "./src/converters/index.js";
-
-/**
- * Adapts a raw error from the PapaParse library into a standardized Nexus DSM error format.
- *
- * @param {PapaParseRawError} papaError - The raw error object from PapaParse.
- * @returns {SpecificCsvError} A specific, standardized error object.
- */
-export { transformPapaParseError } from "./src/adapters/index.js";
 
 // --- Type Definitions ---
 

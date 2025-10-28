@@ -27,3 +27,5 @@ Thumbs.db
 # Temporary files
 commit.txt
 *.tmp
+# Snyk Security Extension - AI Rules (auto-generated)
+.github/instructions/snyk_rules.instructions.md

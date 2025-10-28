@@ -4,7 +4,7 @@
 [![Node.js](https://img.shields.io/badge/node-%3E=18.0.0-brightgreen)](https://nodejs.org/)
 [![CI](https://github.com/nexicore-digitals/nexus-dsm-toolkit/actions/workflows/ci.yml/badge.svg)](https://github.com/nexicore-digitals/nexus-dsm-toolkit/actions/workflows/ci.yml)
 [![CodeQL](https://github.com/nexicore-digitals/nexus-dsm-toolkit/actions/workflows/codeql.yml/badge.svg)](https://github.com/nexicore-digitals/nexus-dsm-toolkit/actions/workflows/codeql.yml)
-[![Build Status](https://img.shields.io/github/actions/workflow/status/nexicore-digitals/nexus-dsm-toolkit/publish.yml?branch=release/v1.2.0)](https://github.com/nexicore-digitals/nexus-dsm-toolkit/actions/workflows/publish.yml)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/nexicore-digitals/nexus-dsm-toolkit/publish.yml?branch=release/v1.3.0)](https://github.com/nexicore-digitals/nexus-dsm-toolkit/actions/workflows/publish.yml)
 ![Modular DX](https://img.shields.io/badge/modular-DX-blue)
 ![Beginner Friendly](https://img.shields.io/badge/beginner-friendly-green)
 ![Nexi Inside](https://img.shields.io/badge/Nexi-AI-blue)
@@ -101,24 +101,31 @@ if (response.success) {
 ### Converting Data
 
 After parsing, you can convert between CSV and JSON formats using the conversion functions.
+The conversion functions take the entire successful response object from the parser.
 
 ```typescript
-import { convertToCsv, convertToJSON } from "nexus-dsm";
+import { parseJSON, convertToCsv, parseCSV, convertToJson } from "nexus-dsm";
 
-const response = await convertToCsv(parsedData);
-
-if (response.success) {
-    console.log("Converted CSV:", response.data);
-} else {
-    console.error("Conversion Failed:", response.message);
+// Example: Convert JSON to CSV
+const jsonResponse = await parseJSON('[{"id":1,"name":"test"}]');
+if (jsonResponse.success) {
+    const csvResult = convertToCsv(jsonResponse);
+    if (csvResult.success) {
+        console.log("Converted CSV:", csvResult.content); // "id,name\r\n1,test"
+    } else {
+        console.error("CSV Conversion Failed:", csvResult.message);
+    }
 }
 
-const jsonResponse = await convertToJSON(parsedData);
-
-if (jsonResponse.success) {
-    console.log("Converted JSON:", jsonResponse.data);
-} else {
-    console.error("Conversion Failed:", jsonResponse.message);
+// Example: Convert CSV to JSON
+const csvResponse = await parseCSV('id,name\n1,test');
+if (csvResponse.success) {
+    const jsonResult = convertToJson(csvResponse);
+    if (jsonResult.success) {
+        console.log("Converted JSON:", jsonResult.content); // Pretty-printed JSON string
+    } else {
+        console.error("JSON Conversion Failed:", jsonResult.message);
+    }
 }
 ```
 
@@ -148,7 +155,7 @@ pnpm test
 | `parseJSON(file)`              | Parses structured JSON arrays into rows and fields                           |
 | `validateSchema(data, schema)` | Validates parsed data against a predefined schema (e.g., Zod or JSON Schema) |
 | `convertToCsv(response)`       | Converts a parsed JSON response into a CSV string                            |
-| `convertFromJson(response)`    | Converts a parsed CSV response into a JSON string                            |
+| `convertToJson(response)`      | Converts a parsed CSV response into a JSON string                            |
 | `indexFile(data)`              | _(Planned)_ Indexing module for chaining and querying parsed dataset output  |
 
 ## ⚙️ Workflow Overview

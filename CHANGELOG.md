@@ -5,6 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.3.0] - 2025-10-28
+
+### BREAKING CHANGES
+
+- **API Renaming:** Renamed `convertFromJson` to `convertToJson` to accurately reflect its function of converting a parsed CSV response into a JSON string. Consumers must update their code to use the new function name.
+
+### Added
+
+- **New Conversion Examples:** Added `examples/convert-to-csv.ts` and `examples/convert-to-json.ts` to demonstrate the full parse-then-convert workflow for both directions.
+- **Public Structure Converters:** The `convertCsvStructure` and `convertJsonStructure` functions are now officially part of the public API, allowing developers to access normalized data structures for advanced use cases.
+
+### Changed
+
+- **Conversion Logic Overhaul:**
+  - `convertToCsv` now correctly converts a parsed `JsonResponse` into a CSV string.
+  - `convertToJson` now correctly converts a parsed `CsvResponse` into a JSON string.
+- **Internal Integration:** `convertToCsv` now internally uses `convertJsonStructure` to normalize data before serialization, aligning with the library's modular architecture.
+- **Documentation:** Updated `README.md` and all relevant JSDoc comments to reflect the corrected conversion logic and API renaming.
+
+### Fixed
+
+- **Runtime Import Error:** Fixed a `SyntaxError` at runtime by changing the `papaparse` import from a named import (`unparse`) to a default import (`Papa.unparse`).
+- **Unit Test Correction:** Corrected the `convertToCsv` unit test for handling empty data to align with the new JSON-to-CSV logic and `papaparse`'s behavior.
+
 ## [v1.2.2] - 2025-10-20
 
 ### Fixed (v1.2.2)
