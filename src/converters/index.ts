@@ -14,7 +14,7 @@
 export * from "./csv-converter.js";
 
 /**
- * Provides `convertFromJson` for serializing data into a JSON string, and
+ * Provides `convertToJson` for serializing data into a JSON string, and
  * `convertJsonStructure` for creating a normalized, structure-aware payload
  * from parsed JSON data.
  */

@@ -1,10 +1,13 @@
+import { JsonParsedFileMeta } from "./meta.js";
 import { ValidResponse, ErrorResponse } from "./response.js";
 
 /**
  * Represents a successful JSON parsing operation.
  * It contains the parsed data and will eventually hold a metadata report.
  */
-export interface JsonValidResponse extends ValidResponse {}
+export interface JsonValidResponse extends ValidResponse {
+    meta: JsonParsedFileMeta;
+}
 
 /**
  * Represents a failed JSON parsing operation.
