@@ -33,7 +33,7 @@ import { JsonUnexpectedError } from "../types/json-errors.js";
  *
  * A detailed `meta` object is attached to the response to provide diagnostic context.
  *
- * @param data - The raw JSON string content. To be used if `filePath` is not provided.
+ * @param data - The raw JSON string or a pre-parsed JavaScript object/array.
  * @param filePath - The path to the JSON file. If provided, it takes precedence over `data`.
  * @returns A promise that resolves to a `JsonResponse` object.
  *
@@ -56,18 +56,28 @@ import { JsonUnexpectedError } from "../types/json-errors.js";
  * }
  */
 export default async function parseJSON(
-    data: string,
+    data: string | object | object[],
     filePath?: string
 ): Promise<JsonResponse> {
     let parsedData: unknown;
     const customErrors: SpecificJsonError[] = [];
-    const source = filePath ?? "string-input";
+    const source =
+        filePath ??
+        (typeof data === "string" ? "string-input" : "object-input");
 
     try {
-        customErrors.push(...checkEmptyJson(data));
-        customErrors.push(...checkJsonSyntax(data));
+        if (typeof data === "string") {
+            // Handle raw string input
+            customErrors.push(...checkEmptyJson(data));
+            customErrors.push(...checkJsonSyntax(data));
+            if (isJson(data)) {
+                parsedData = JSON.parse(data);
+            }
+        } else if (typeof data === "object" && data !== null) {
+            // Handle pre-parsed object/array input
+            parsedData = data;
+        }
 
-        if (isJson(data)) parsedData = JSON.parse(data);
         customErrors.push(...validateJsonRootStructure(parsedData));
 
         const dataAsArray = Array.isArray(parsedData)
@@ -112,7 +122,8 @@ export default async function parseJSON(
         const parsedMeta: JsonParsedFileMeta = ParsedFileMetaBuilder.init(
             source,
             fields,
-            dataAsArray.length
+            dataAsArray.length,
+            "json"
         )
             .withJsonFlags(validationFlags)
             .withJsonExtras({

@@ -19,8 +19,11 @@
  * Even on failure, a `meta` object is attached to the response to provide
  * as much diagnostic context as possible.
  *
- * @param {string | undefined} data - The raw CSV string content. Use `undefined` if providing a `filePath`.
- * @param {string | undefined} filePath - The path to the CSV file. If provided, it takes precedence over `data`.
+ * This function automatically detects delimiters, including tabs for TSV files,
+ * and reports the format in the response metadata.
+ *
+ * @param {string | undefined} data - The raw CSV or TSV string content. Use `undefined` if providing a `filePath`.
+ * @param {string | undefined} filePath - The path to the CSV or TSV file. If provided, it takes precedence over `data`.
  * @returns {Promise<CsvResponse>} A promise that resolves to a `CsvResponse` object.
  *
  * @example
@@ -47,21 +50,22 @@ export { parseCSV } from "./src/parsers/index.js";
  *
  * A detailed `meta` object is attached to the response to provide diagnostic context.
  *
- * @param {string} data - The raw JSON string content.
+ * @param {string | object | object[]} data - The raw JSON string or a pre-parsed JavaScript object/array.
  * @param {string | undefined} [filePath] - The path to the JSON file. If provided, it takes precedence over `data`.
  * @returns {Promise<JsonResponse>} A promise that resolves to a `JsonResponse` object.
  *
  * @example
  * import { parseJSON } from 'nexus-dsm';
  *
- * const jsonString = `[{"id": 1, "name": "Alice"}]`;
- * const response = await parseJSON(jsonString);
- * if (response.success) {
- *   console.log("Parsed Data:", response.data);
- *   console.log("Structure Type:", response.meta.structureType);
- * } else {
- *   console.error("Parsing Failed:", response.message);
- * }
+ * // --- Parsing from a raw string ---
+ * const jsonString = '[{"id": 1}]';
+ * const responseFromString = await parseJSON(jsonString);
+ * console.log(responseFromString.success); // true
+ *
+ * // --- Parsing from a pre-parsed object (more efficient) ---
+ * const jsonObject = [{ id: 1 }];
+ * const responseFromObject = await parseJSON(jsonObject);
+ * console.log(responseFromObject.success); // true
  */
 export { parseJSON } from "./src/parsers/index.js";
 

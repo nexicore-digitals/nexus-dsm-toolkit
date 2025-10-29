@@ -100,4 +100,13 @@ describe("JSON parsing tests", () => {
             }
         });
     });
+
+    it("should correctly label the format as 'json' in metadata", async () => {
+        const result = await parseJSON(VALID_ARRAY_OF_OBJECTS.content);
+
+        expect(result.success).toBe(true);
+        if (!result.success) return;
+
+        expect(result.meta.format).toBe("json");
+    });
 });

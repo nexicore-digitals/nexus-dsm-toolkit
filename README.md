@@ -8,6 +8,8 @@
 ![Modular DX](https://img.shields.io/badge/modular-DX-blue)
 ![Beginner Friendly](https://img.shields.io/badge/beginner-friendly-green)
 ![Nexi Inside](https://img.shields.io/badge/Nexi-AI-blue)
+![Parser Core: PapaParse](https://img.shields.io/badge/parser%20core-PapaParse-blue)
+![DX Layer: nexus-dsm](https://img.shields.io/badge/DX%20layer-nexus--dsm-brightgreen)
 [![JSR](https://jsr.io/badges/@nexicore/nexus-dsm)](https://jsr.io/@nexicore/nexus-dsm)
 ![npm version](https://img.shields.io/npm/v/nexus-dsm)
 
@@ -90,8 +92,8 @@ The `parseJSON` function handles JSON files with a root-level array of objects o
 ```typescript
 import { parseJSON } from "nexus-dsm";
 
-const jsonString = '[{"id": 1, "name": "Alice"}]';
-const response = await parseJSON(jsonString);
+const jsonObject = [{ id: 1, name: "Alice" }];
+const response = await parseJSON(jsonObject);
 
 if (response.success) {
     console.log("Parsed Data:", response.data);
@@ -156,8 +158,8 @@ These are the main functions intended for everyday use.
 
 | Function | Description |
 | :--- | :--- |
-| `parseCSV(data?, filePath?)` | Parses a CSV string or file, validates its structure, and returns a detailed response object. |
-| `parseJSON(data, filePath?)` | Parses a JSON string or file, analyzes its structure, and returns a detailed response object. |
+| `parseCSV(data?, filePath?)` | Parses a CSV or TSV string/file, validates its structure, and returns a detailed response object. |
+| `parseJSON(data, filePath?)` | Parses a JSON string or a pre-parsed object/array, analyzes its structure, and returns a detailed response object. |
 | `convertToCsv(response, options)` | Converts a parsed JSON response into a CSV string, with "shallow" (default) or "deep" flattening. |
 | `convertToJson(response, options)` | Converts a parsed CSV response into a JSON string, with automatic "un-flattening" of deep CSVs. |
 
@@ -250,6 +252,14 @@ Use `__tests__` with fixtures to simulate:
 ## 🤝 Contribution
 
 We welcome PRs, issues, and architectural suggestions. Whether you're extending validation stages, improving conversion logic, or building new adapters—your input helps make Nexus DSM more robust and accessible.
+
+---
+
+## 🙏 Acknowledgements
+
+This toolkit's powerful and reliable CSV parsing capabilities are made possible by **[Papa Parse](http://papaparse.com)**, the fastest in-browser CSV parser for JavaScript.
+
+![Parser Core: PapaParse](https://img.shields.io/badge/parser%20core-PapaParse-blue)
 
 ---
 

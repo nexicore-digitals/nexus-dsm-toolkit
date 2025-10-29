@@ -36,12 +36,14 @@ export class ParsedFileMetaBuilder {
     static init(
         source: string,
         fields: string[],
-        rowCount: number
+        rowCount: number,
+        format: ParsedFileMeta["format"]
     ): ParsedFileMetaBuilder {
         const builder = new ParsedFileMetaBuilder();
         builder.base.source = source;
         builder.base.fields = fields;
         builder.base.rowCount = rowCount;
+        builder.base.format = format;
         return builder;
     }
 
@@ -113,6 +115,7 @@ export class ParsedFileMetaBuilder {
 
         return {
             ...this.base,
+            format: this.csvExtras.delimiter === "\t" ? "tsv" : "csv",
             ...this.csvExtras,
             validationFlags: this.csvFlags,
             eligibleForConversion:
@@ -136,6 +139,7 @@ export class ParsedFileMetaBuilder {
 
         return {
             ...this.base,
+            format: "json",
             ...this.jsonExtras,
             validationFlags: this.jsonFlags,
             eligibleForConversion:
@@ -162,7 +166,12 @@ export class ParsedFileMetaBuilder {
         const fields = result.meta.fields ?? [];
         const rowCount = Array.isArray(result.data) ? result.data.length : 0;
 
-        return ParsedFileMetaBuilder.init(source, fields, rowCount)
+        return ParsedFileMetaBuilder.init(
+            source,
+            fields,
+            rowCount,
+            result.meta.delimiter === "\t" ? "tsv" : "csv" // Centralized format detection
+        )
             .withCsvFlags(validationFlags)
             .withCsvExtras({
                 delimiter: result.meta.delimiter ?? ",",

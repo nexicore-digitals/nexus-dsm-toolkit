@@ -14,6 +14,7 @@ async function runShallow() {
     const csvResponse = await parseCSV(shallowCsvString);
 
     if (csvResponse.success) {
+        console.log("Parsed Format:", csvResponse.meta.format);
         // 3. Convert the successful parse result to JSON.
         const jsonResult = convertToJson(csvResponse);
 
@@ -41,6 +42,7 @@ async function runDeep() {
     const csvResponse = await parseCSV(deepCsvString);
 
     if (csvResponse.success) {
+        console.log("Parsed Format:", csvResponse.meta.format);
         // 3. Convert the successful parse result to JSON.
         // The function now automatically detects flattened headers and un-flattens by default.
         const nestedResult = convertToJson(csvResponse);
@@ -82,6 +84,7 @@ async function runFailure() {
     const csvResponse = await parseCSV(badCsvString);
 
     // The parser might still succeed but flag the data as invalid.
+    console.log("Parsed Format:", csvResponse.meta?.format);
     console.log(
         "CSV parsing finished. Eligibility:",
         csvResponse.meta?.eligibleForConversion
@@ -99,3 +102,30 @@ async function runFailure() {
 
 runAllSuccess();
 runFailure();
+
+console.log("\n--- Running TSV to JSON Conversion Example ---");
+
+// 1. Define a TSV string
+const tsvString = `id\tname\tage\n1\tAlice\t30\n2\tBob\t25`;
+
+async function runTsvExample() {
+    // 2. Parse the TSV string.
+    const tsvResponse = await parseCSV(tsvString);
+
+    if (tsvResponse.success) {
+        console.log("✅ TSV Parsing successful!");
+        console.log("Parsed Format:", tsvResponse.meta.format); // Should be 'tsv'
+        console.log("Delimiter:", tsvResponse.meta.delimiter); // Should be '\t'
+        console.log("Data:", tsvResponse.data);
+
+        // Convert TSV data to JSON (should work automatically)
+        const jsonResult = convertToJson(tsvResponse);
+        if (jsonResult.success) {
+            console.log("\n✅ TSV to JSON Conversion successful!");
+            console.log("JSON Content:", jsonResult.content);
+        }
+    } else {
+        console.error("❌ TSV Parsing Failed:", tsvResponse.message);
+    }
+}
+runTsvExample();
