@@ -10,6 +10,9 @@ exports[`CSV Conversion Logic > should match snapshot for full conversion result
   "content": ""id","name","active"
 "1","Alice","true"
 "2","Bob","false"",
+  "conversionMeta": {
+    "flattening": "shallow",
+  },
   "delimiter": ",",
   "flatRecords": [
     {

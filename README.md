@@ -4,7 +4,7 @@
 [![Node.js](https://img.shields.io/badge/node-%3E=18.0.0-brightgreen)](https://nodejs.org/)
 [![CI](https://github.com/nexicore-digitals/nexus-dsm-toolkit/actions/workflows/ci.yml/badge.svg)](https://github.com/nexicore-digitals/nexus-dsm-toolkit/actions/workflows/ci.yml)
 [![CodeQL](https://github.com/nexicore-digitals/nexus-dsm-toolkit/actions/workflows/codeql.yml/badge.svg)](https://github.com/nexicore-digitals/nexus-dsm-toolkit/actions/workflows/codeql.yml)
-[![Build Status](https://img.shields.io/github/actions/workflow/status/nexicore-digitals/nexus-dsm-toolkit/publish.yml?branch=release/v1.3.0)](https://github.com/nexicore-digitals/nexus-dsm-toolkit/actions/workflows/publish.yml)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/nexicore-digitals/nexus-dsm-toolkit/publish.yml?branch=release/v1.4.0)](https://github.com/nexicore-digitals/nexus-dsm-toolkit/actions/workflows/publish.yml)
 ![Modular DX](https://img.shields.io/badge/modular-DX-blue)
 ![Beginner Friendly](https://img.shields.io/badge/beginner-friendly-green)
 ![Nexi Inside](https://img.shields.io/badge/Nexi-AI-blue)
@@ -13,7 +13,7 @@
 
 ---
 
-**Centralized tooling for parsing, validating, converting, and indexing structured datasets (`CSV` ↔ `JSON`).**  
+**Centralized tooling for parsing, validating, converting, and indexing structured datasets (`CSV`, `JSON`, and planned `TSV`).**
 Built for modularity, clarity, and service-ready integration.
 
 ## ✨ Motivation: Building Trust in Your Data
@@ -42,9 +42,14 @@ This repository contains the **core logic** for:
 
 ---
 
-## ️ Roadmap
+## 📚 Project Documentation
 
-Our development trajectory, planned features, and long-term goals are detailed in our official **Project Roadmap**. We welcome community feedback and contributions to help shape the future of the toolkit.
+For more detailed information about the project's direction, contribution guidelines, and version history, please see the following documents:
+
+- **Project Roadmap** - Our vision and development phases.
+- **Changelog** - A detailed log of all version changes.
+- **Contribution Guide** - How to get involved and contribute to the project.
+- **Security Policy** - Our policy for reporting security vulnerabilities.
 
 ---
 
@@ -54,7 +59,7 @@ Our development trajectory, planned features, and long-term goals are detailed i
 
 ```bash
 npm install nexus-dsm # or pnpm add nexus-dsm
-```
+````
 
 ### Parsing a CSV
 
@@ -98,65 +103,89 @@ if (response.success) {
 
 ---
 
-### Converting Data
+## 🔁 Converting Data
 
 After parsing, you can convert between CSV and JSON formats using the conversion functions.
 The conversion functions take the entire successful response object from the parser.
 
+### JSON to CSV Conversion
+
+The `convertToCsv` function can perform a "shallow" conversion (default) or a "deep" conversion.
+
 ```typescript
-import { parseJSON, convertToCsv, parseCSV, convertToJson } from "nexus-dsm";
+import { parseJSON, convertToCsv } from "nexus-dsm";
 
-// Example: Convert JSON to CSV
-const jsonResponse = await parseJSON('[{"id":1,"name":"test"}]');
-if (jsonResponse.success) {
-    const csvResult = convertToCsv(jsonResponse);
-    if (csvResult.success) {
-        console.log("Converted CSV:", csvResult.content); // "id,name\r\n1,test"
-    } else {
-        console.error("CSV Conversion Failed:", csvResult.message);
-    }
-}
+const nestedJson = `[{"name":"Alice","profile":{"age":30},"tags":["dev"]}]`;
+const jsonResponse = await parseJSON(nestedJson);
 
-// Example: Convert CSV to JSON
-const csvResponse = await parseCSV('id,name\n1,test');
-if (csvResponse.success) {
-    const jsonResult = convertToJson(csvResponse);
-    if (jsonResult.success) {
-        console.log("Converted JSON:", jsonResult.content); // Pretty-printed JSON string
-    } else {
-        console.error("JSON Conversion Failed:", jsonResult.message);
-    }
-}
+// Shallow conversion (default)
+const shallow = convertToCsv(jsonResponse);
+// shallow.content is: name,profile,tags\r\nAlice,"{""age"":30}","[""dev""]"
+
+// Deep conversion
+const deep = convertToCsv(jsonResponse, { flattening: 'deep' });
+// deep.content is: name,profile.age,tags[0]\r\nAlice,30,dev
+```
+
+### CSV to JSON Conversion
+
+The `convertToJson` function automatically detects flattened headers (e.g., `user.name`) and reconstructs the nested JSON structure by default.
+
+```typescript
+import { parseCSV, convertToJson } from "nexus-dsm";
+
+const flatCsv = 'user.name,user.id\nAlice,1';
+const csvResponse = await parseCSV(flatCsv);
+
+// The function detects flattened headers and un-flattens by default.
+const nestedJson = convertToJson(csvResponse);
+// nestedJson.content is: '[{"user":{"name":"Alice","id":1}}]'
+
+// To prevent this and get a flat JSON, pass `unflatten: false`.
+const flatJson = convertToJson(csvResponse, { unflatten: false });
+// flatJson.content is: '[{"user.name":"Alice","user.id":1}]'
 ```
 
 ---
 
-## 💻 Development
+## 🧠 API Reference
 
-```bash
-# Clone and install
-git clone https://github.com/nexicore-digitals/nexus-dsm-toolkit.git
-cd nexus-dsm-toolkit
-pnpm install
+### Primary API
 
-# Run tests
-pnpm test
-```
+These are the main functions intended for everyday use.
 
-> CLI and API layers are optional — core functions are usable as a library.
+| Function | Description |
+| :--- | :--- |
+| `parseCSV(data?, filePath?)` | Parses a CSV string or file, validates its structure, and returns a detailed response object. |
+| `parseJSON(data, filePath?)` | Parses a JSON string or file, analyzes its structure, and returns a detailed response object. |
+| `convertToCsv(response, options)` | Converts a parsed JSON response into a CSV string, with "shallow" (default) or "deep" flattening. |
+| `convertToJson(response, options)` | Converts a parsed CSV response into a JSON string, with automatic "un-flattening" of deep CSVs. |
+
+### Advanced & Utility API
+
+These functions and classes provide lower-level access for custom workflows and analysis.
+
+| Function/Class | Description |
+| :--- | :--- |
+| `convertCsvStructure(response)` | Normalizes a `CsvResponse` into a standard tabular payload, ready for transformation. |
+| `convertJsonStructure(data, meta)` | Normalizes a `JsonResponse` into a structure-aware payload with detailed metadata. |
+| `ParsedFileMetaBuilder` | A fluent builder class to programmatically construct metadata objects for testing or custom parsing. |
+| `calculateNestingDepth(obj)` | Computes the maximum nesting depth of a JSON object or array (e.g., a flat object is depth 1). |
+| `checkKeyConsistency(array)` | Verifies if all objects in an array share the same keys and returns a list of any inconsistent keys. |
 
 ---
 
-## 🧠 Core Capabilities
+### 📊 Feature Comparison Table
 
-| Function                       | Description                                                                  |
-| ------------------------------ | ---------------------------------------------------------------------------- |
-| `parseCSV(file)`               | Parses CSV input, validates syntax, and outputs structured data              |
-| `parseJSON(file)`              | Parses structured JSON arrays into rows and fields                           |
-| `validateSchema(data, schema)` | Validates parsed data against a predefined schema (e.g., Zod or JSON Schema) |
-| `convertToCsv(response)`       | Converts a parsed JSON response into a CSV string                            |
-| `convertToJson(response)`      | Converts a parsed CSV response into a JSON string                            |
-| `indexFile(data)`              | _(Planned)_ Indexing module for chaining and querying parsed dataset output  |
+| Library         | Best For | DX Simplicity | Streaming | Nested Support | Metadata | Validation | UI Pairing Potential |
+|----------------|----------|----------------|-----------|----------------|----------|------------|-----------------------|
+| **nexus-dsm**  | DX-first conversion, contributor tooling | ⭐⭐⭐⭐⭐ | ✅ (planned) | ✅ Deep + Shallow | ✅ Rich | ✅ Detailed | ✅ High |
+| **PapaParse**  | Browser-based parsing, quick CSV import | ⭐⭐⭐⭐  | ✅ Step-wise | ❌ (flat only) | ⚠️ Minimal | ❌ | ⚠️ Limited |
+| **csvtojson**  | Quick CLI conversions, Node pipelines | ⭐⭐⭐   | ✅ Stream | ⚠️ Partial flattening | ⚠️ Basic | ⚠️ Basic | ❌ |
+| **fast-csv**   | High-performance streaming in Node | ⭐⭐    | ✅ Stream | ❌ | ❌ | ❌ | ❌ |
+| **csv-parse**  | Configurable parsing, large datasets | ⭐⭐⭐   | ✅ Stream | ⚠️ Manual flattening | ⚠️ Basic | ⚠️ Manual | ❌ |
+
+---
 
 ## ⚙️ Workflow Overview
 
@@ -218,22 +247,11 @@ Use `__tests__` with fixtures to simulate:
 
 ---
 
-## 🔭 Future Enhancements
-
-- ✅ Metadata-guarded conversion logic
-- 🧠 Full metadata schema (`ParsedFileMeta`) with eligibility flags and validation results
-- 🗂 Dataset indexing (column hashing, structure mapping)
-- ⚡ CLI command dispatcher (`parse`, `convert`, `index`, `validate-schema`)
-- 📡 API interface for remote orchestration
-- 🖼 UI repo for visualization: [`nexus-dsm-ui`](https://github.com/nexicore-digitals/nexus-dsm-ui)
-
----
-
 ## 🤝 Contribution
 
 We welcome PRs, issues, and architectural suggestions. Whether you're extending validation stages, improving conversion logic, or building new adapters—your input helps make Nexus DSM more robust and accessible.
 
 ---
 
-**_Modular, testable, and orchestration-ready._**  
-**_Built by Nexicore Digitals to empower developers with clarity and control._**
+_**Modular, testable, and orchestration-ready.**_
+_**Built by Nexicore Digitals to empower developers with clarity and control.**_

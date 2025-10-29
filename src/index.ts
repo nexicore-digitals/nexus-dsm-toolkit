@@ -1,7 +1,8 @@
 /**
  * @file Main entry point for the Nexus DSM toolkit.
- * @description This file exports all public-facing functions and types,
- * serving as the primary module for consumers of the `nexus-dsm` package.
+ * @description This file aggregates and exports all public-facing modules,
+ * functions, and types, serving as the primary internal entry point before
+ * being re-exported by `main.ts`.
  * @author Owen
  */
 

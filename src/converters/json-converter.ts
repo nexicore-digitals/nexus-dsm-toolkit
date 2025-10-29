@@ -6,6 +6,7 @@
 import type { CsvResponse } from "../types/csv.response.js";
 import { convertCsvStructure } from "./csv-converter.js";
 import type {
+    JsonConversionOptions,
     JsonConversionResult,
     SuccessfulJsonConversionResult,
 } from "../types/conversion.js";
@@ -75,32 +76,97 @@ export function convertJsonStructure(
  * eligibility, and serializes the data into a JSON string.
  *
  * @param response The `CsvResponse` from the parsing stage.
+ * @param options Configuration for the conversion, such as un-flattening strategy.
  * @returns A `JsonConversionResult` which is either a `SuccessfulJsonConversionResult`
  *          or a `FailedConversionResult`.
  */
-export function convertToJson(response: CsvResponse): JsonConversionResult {
+export function convertToJson(
+    response: CsvResponse,
+    options?: JsonConversionOptions
+): JsonConversionResult {
     if (!response.success || !response.meta?.eligibleForConversion) {
+        const hints: string[] = [];
+        if (!response.success) {
+            hints.push(
+                "The initial CSV parsing failed. Please check the original data for syntax errors."
+            );
+        } else if (response.meta) {
+            const { validationFlags } = response.meta;
+            if (!validationFlags.hasHeaders) {
+                hints.push("The CSV must have a valid header row.");
+            }
+            if (!validationFlags.hasValidRows) {
+                hints.push("The CSV does not contain any valid data rows.");
+            }
+        }
         return {
             success: false,
             message:
                 "CSV data is not eligible for conversion. It may contain structural errors or inconsistencies.",
+            hints,
         };
     }
 
     const tabularResult = convertCsvStructure(response);
     if (!tabularResult.success) return tabularResult;
 
-    const { flatRecords, columnNames, rowCount } = tabularResult;
+    const { columnNames } = tabularResult;
+
+    // Check if headers suggest a flattened structure.
+    const headersLookFlattened = columnNames.some(
+        (header) => header.includes(".") || header.includes("[")
+    );
+
+    // Un-flatten if the option is explicitly true, or if it's not explicitly false and headers look flattened.
+    const shouldUnflatten =
+        options?.unflatten === true ||
+        (options?.unflatten !== false && headersLookFlattened);
+
+    let finalRecords = tabularResult.flatRecords;
+    if (shouldUnflatten) {
+        finalRecords = tabularResult.flatRecords.map((record) => {
+            const nestedRecord: Record<string, any> = {};
+            for (const key in record) {
+                // This regex splits keys like 'profile.age' and 'matrix[0][1]'
+                const path = key.match(/[^.\[\]]+/g) || [];
+                let current = nestedRecord;
+
+                for (let i = 0; i < path.length; i++) {
+                    const part = path[i];
+                    const nextPart = path[i + 1];
+
+                    if (i === path.length - 1) {
+                        current[part] = (record as Record<string, any>)[key];
+                    } else {
+                        const isNextPartNumeric = /^\d+$/.test(nextPart);
+                        if (
+                            !current[part] ||
+                            typeof current[part] !== "object"
+                        ) {
+                            current[part] = isNextPartNumeric ? [] : {};
+                        }
+                        current = current[part];
+                    }
+                }
+            }
+            return nestedRecord;
+        });
+    }
+
+    const { rowCount } = tabularResult;
 
     const result: SuccessfulJsonConversionResult = {
         success: true,
-        content: JSON.stringify(flatRecords, null, 2),
+        content: JSON.stringify(finalRecords, null, 2),
         structureType: "array", // CSV data is always an array of objects
         rootLength: rowCount,
         nestingDepth: 1, // CSV is always flat
         keySet: columnNames,
-        rootItems: flatRecords,
-        original: flatRecords,
+        rootItems: finalRecords,
+        original: finalRecords,
+        conversionMeta: {
+            unflatten: shouldUnflatten,
+        },
     };
     return result;
 }

@@ -20,6 +20,8 @@ export interface ParsedFileMeta {
     diagnostics?: {
         warnings?: string[];
         notes?: string[];
+        /** A summary of why the data is not eligible for conversion. */
+        eligibilityReason?: string;
         errorCodes?: string[];
     };
 }
@@ -58,6 +60,8 @@ export interface JsonParsedFileMeta extends ParsedFileMeta {
         isArrayOfObjects: boolean;
         hasConsistentKeys: boolean;
         hasValidRows: boolean;
+        /** A list of keys that are not present in all objects of the array. */
+        inconsistentKeys?: string[];
     };
 }
 

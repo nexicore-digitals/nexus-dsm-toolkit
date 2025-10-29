@@ -5,18 +5,43 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.4.0] - 2025-10-29
+
+### Added (v1.4.0)
+
+- **Flexible JSON to CSV Flattening:** The `convertToCsv` function now accepts an `options` object with a `flattening` strategy.
+  - `'shallow'` (default): Stringifies nested objects and arrays into a single cell.
+  - `'deep'`: Recursively flattens nested structures into separate columns using dot (`profile.age`) and bracket (`tags[0]`) notation for objects and arrays.
+- **Advanced CSV to JSON Un-flattening:** The `convertToJson` function now accepts an `options` object with an `unflatten` flag to control the output structure.
+- **Enhanced Diagnostic Metadata:** The metadata returned by parsers is now significantly more expressive.
+  - `meta.diagnostics` now includes an `eligibilityReason` string that clearly explains why data cannot be converted.
+  - `meta.validationFlags` now includes an `inconsistentKeys` array, listing the specific keys that cause structural validation to fail.
+  - `FailedConversionResult` now includes a `hints` array, providing actionable suggestions to fix ineligible data.
+- **Conversion Process Metadata:** Successful conversion results now include a `conversionMeta` object, transparently reporting the `flattening` or `unflatten` strategy that was used.
+
+### Changed (v1.4.0)
+
+- **Smart Un-flattening by Default:** `convertToJson` now automatically detects flattened CSV headers (e.g., `user.name`, `tags[0]`) and reconstructs the original nested JSON object. This provides a seamless round-trip conversion for deep-flattened data. The old behavior can be forced by passing `{ unflatten: false }`.
+- **Examples:** All examples have been updated to demonstrate how to access and log the new rich diagnostic and metadata properties.
+
+### Fixed (v1.4.0)
+
+- **Unit Test Corrections:** Updated multiple unit tests to correctly assert against `papaparse`'s default behavior of quoting all fields, resolving previously failing tests.
+- **Recursive Flattener:** Implemented and tested a robust recursive flattener that correctly handles deeply nested objects and multi-level arrays.
+- **Type Safety:** Corrected a TypeScript error in `convertToCsv` where the `conversionMeta` property was missing in the return path for empty datasets, ensuring consistent return types.
+
 ## [v1.3.0] - 2025-10-28
 
-### BREAKING CHANGES
+### BREAKING CHANGES (v1.3.0)
 
 - **API Renaming:** Renamed `convertFromJson` to `convertToJson` to accurately reflect its function of converting a parsed CSV response into a JSON string. Consumers must update their code to use the new function name.
 
-### Added
+### Added (v1.3.0)
 
 - **New Conversion Examples:** Added `examples/convert-to-csv.ts` and `examples/convert-to-json.ts` to demonstrate the full parse-then-convert workflow for both directions.
 - **Public Structure Converters:** The `convertCsvStructure` and `convertJsonStructure` functions are now officially part of the public API, allowing developers to access normalized data structures for advanced use cases.
 
-### Changed
+### Changed (v1.3.0)
 
 - **Conversion Logic Overhaul:**
   - `convertToCsv` now correctly converts a parsed `JsonResponse` into a CSV string.
@@ -24,7 +49,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Internal Integration:** `convertToCsv` now internally uses `convertJsonStructure` to normalize data before serialization, aligning with the library's modular architecture.
 - **Documentation:** Updated `README.md` and all relevant JSDoc comments to reflect the corrected conversion logic and API renaming.
 
-### Fixed
+### Fixed (v1.3.0)
 
 - **Runtime Import Error:** Fixed a `SyntaxError` at runtime by changing the `papaparse` import from a named import (`unparse`) to a default import (`Papa.unparse`).
 - **Unit Test Correction:** Corrected the `convertToCsv` unit test for handling empty data to align with the new JSON-to-CSV logic and `papaparse`'s behavior.
@@ -47,7 +72,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Configuration:** Refined `jsr.json` to exclude the `dist` directory, aligning with JSR's source-first publishing model.
 - **Code Quality:** Simplified complex type unions in `csv.errors.ts` to improve TypeScript compiler performance and made the public API for the `utils` module more explicit.
 
-### Removed
+### Removed (v1.2.1)
 
 - Deleted unused types in `filereader.ts` and the corresponding unused `eligibility.util.ts` utility and its test file to clean up the codebase.
 

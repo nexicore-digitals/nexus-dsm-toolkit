@@ -18,6 +18,11 @@ export interface SuccessfulJsonConversionResult {
     rootItems: object[];
     /** Preserves original JSON structure if it was a single object. */
     original: unknown;
+    /** Details about the conversion process. */
+    conversionMeta: {
+        /** The strategy used to handle nested structures. */
+        unflatten: boolean;
+    };
 }
 
 /**
@@ -34,6 +39,34 @@ export interface SuccessfulCsvConversionResult {
     delimiter: string;
     quoteChar?: string;
     encoding?: string;
+    /** Details about the conversion process. */
+    conversionMeta: {
+        /** The strategy used to handle nested structures. */
+        flattening: "deep" | "shallow";
+    };
+}
+
+/**
+ * Defines the options available for converting JSON to CSV.
+ */
+export interface CsvConversionOptions {
+    /**
+     * Specifies the strategy for handling nested objects within the JSON data.
+     * - `'shallow'` (default): Stringifies nested objects into a single cell.
+     * - `'deep'`: Recursively flattens nested objects into separate columns with dot notation (e.g., 'user.name').
+     */
+    flattening?: "deep" | "shallow";
+}
+
+/**
+ * Defines the options available for converting CSV to JSON.
+ */
+export interface JsonConversionOptions {
+    /**
+     * If `true`, attempts to reconstruct a nested JSON object from flattened
+     * CSV headers (e.g., 'user.name' or 'tags[0]'). Defaults to `false`.
+     */
+    unflatten?: boolean;
 }
 
 /**
@@ -43,6 +76,8 @@ export interface FailedConversionResult {
     success: false;
     /** A detailed message explaining why the conversion failed. */
     message: string;
+    /** An array of strings providing specific reasons or suggestions for the failure. */
+    hints?: string[];
 }
 
 /**

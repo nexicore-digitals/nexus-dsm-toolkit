@@ -65,6 +65,71 @@ describe("CSV Conversion Logic", () => {
         expect(result.rowCount).toBe(2);
     });
 
+    it("should stringify nested objects by default (shallow conversion)", () => {
+        const nestedJsonResponse: JsonResponse = {
+            success: true,
+            data: [
+                { name: "Alice", profile: { age: 30, registered: true } },
+                { name: "Bob", profile: { age: 25, registered: false } },
+            ],
+            meta: {
+                source: "nested.json",
+                fields: ["name", "profile"],
+                rowCount: 2,
+                eligibleForConversion: true,
+                createdAt: "2023-01-01T00:00:00.000Z",
+                structureType: "array",
+                nestingDepth: 2,
+                validationFlags: {
+                    isArrayOfObjects: true,
+                    hasConsistentKeys: true,
+                    hasValidRows: true,
+                },
+            } as JsonParsedFileMeta,
+        };
+
+        const result = convertToCsv(nestedJsonResponse);
+        expect(result.success).toBe(true);
+        if (!result.success) return;
+        expect(result.content).toContain('"name","profile"');
+        // The assertion needs to account for quotes around all fields
+        expect(result.content).toContain(
+            '"Alice","{""age"":30,""registered"":true}"'
+        );
+    });
+
+    it("should deeply flatten nested objects when 'deep' option is used", () => {
+        const nestedJsonResponse: JsonResponse = {
+            success: true,
+            data: [
+                { name: "Alice", profile: { age: 30, registered: true } },
+                { name: "Bob", profile: { age: 25, registered: false } },
+            ],
+            meta: {
+                source: "nested.json",
+                fields: ["name", "profile"],
+                rowCount: 2,
+                eligibleForConversion: true,
+                createdAt: "2023-01-01T00:00:00.000Z",
+                structureType: "array",
+                nestingDepth: 2,
+                validationFlags: {
+                    isArrayOfObjects: true,
+                    hasConsistentKeys: true,
+                    hasValidRows: true,
+                },
+            } as JsonParsedFileMeta,
+        };
+
+        const result = convertToCsv(nestedJsonResponse, { flattening: "deep" });
+        expect(result.success).toBe(true);
+        if (!result.success) return;
+
+        const expectedCsv = `name,profile.age,profile.registered\r\nAlice,30,true\r\nBob,25,false`;
+        const simplifiedContent = result.content.replace(/"/g, "");
+        expect(simplifiedContent).toBe(expectedCsv);
+    });
+
     it("should fail serialization if structure conversion fails", () => {
         const ineligible: Partial<JsonResponse> = {
             ...mockJsonResponse,
@@ -90,10 +155,7 @@ describe("CSV Conversion Logic", () => {
         const result = convertToCsv(emptyResponse);
         expect(result.success).toBe(true);
         if (!result.success) return;
-        // When converting an empty JSON array with defined fields,
-        // the desired output is a CSV with only a header row.
-        // Papaparse's unparse with an empty array produces an empty string,
-        // so we expect the header string to be generated.
+        // When converting an empty JSON array, the result should be an empty CSV string.
         expect(result.content).toBe("");
         expect(result.content).not.toContain("Alice");
         expect(result.rowCount).toBe(0);
@@ -102,5 +164,84 @@ describe("CSV Conversion Logic", () => {
     it("should match snapshot for full conversion result", () => {
         const result = convertToCsv(mockJsonResponse);
         expect(result).toMatchSnapshot();
+    });
+
+    it("should deeply flatten arrays with bracket notation", () => {
+        const jsonWithArray: JsonResponse = {
+            success: true,
+            data: [
+                { id: 1, tags: ["admin", "editor"] },
+                { id: 2, tags: ["viewer"] },
+            ],
+            meta: {
+                source: "array.json",
+                fields: ["id", "tags"],
+                rowCount: 2,
+                eligibleForConversion: true,
+                createdAt: "2023-01-01T00:00:00.000Z",
+                structureType: "array",
+                nestingDepth: 2,
+                validationFlags: {
+                    isArrayOfObjects: true,
+                    hasConsistentKeys: true,
+                    hasValidRows: true,
+                },
+            } as JsonParsedFileMeta,
+        };
+
+        const result = convertToCsv(jsonWithArray, { flattening: "deep" });
+        expect(result.success).toBe(true);
+        if (!result.success) return;
+
+        expect(result.columnNames).toEqual(["id", "tags[0]", "tags[1]"]);
+        // The assertion needs to account for quotes around all fields
+        expect(result.content).toContain('"1","admin","editor"');
+    });
+
+    it("should deeply flatten multi-level nested arrays with bracket notation", () => {
+        const jsonWithNestedArray: JsonResponse = {
+            success: true,
+            data: [
+                {
+                    id: 1,
+                    matrix: [
+                        [1, 2],
+                        [3, 4],
+                    ],
+                },
+                { id: 2, matrix: [[5, 6]] },
+            ],
+            meta: {
+                source: "matrix.json",
+                fields: ["id", "matrix"],
+                rowCount: 2,
+                eligibleForConversion: true,
+                createdAt: "2023-01-01T00:00:00.000Z",
+                structureType: "array",
+                nestingDepth: 3,
+                validationFlags: {
+                    isArrayOfObjects: true,
+                    hasConsistentKeys: true,
+                    hasValidRows: true,
+                },
+            } as JsonParsedFileMeta,
+        };
+
+        const result = convertToCsv(jsonWithNestedArray, {
+            flattening: "deep",
+        });
+        expect(result.success).toBe(true);
+        if (!result.success) return;
+
+        expect(result.columnNames).toEqual([
+            "id",
+            "matrix[0][0]",
+            "matrix[0][1]",
+            "matrix[1][0]",
+            "matrix[1][1]",
+        ]);
+        // The assertion needs to account for quotes around all fields
+        expect(result.content).toContain('"1","1","2","3","4"');
+        expect(result.content).toContain('"2","5","6",,');
     });
 });
