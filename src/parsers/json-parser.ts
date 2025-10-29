@@ -87,17 +87,27 @@ export default async function parseJSON(
         // Build metadata for context, even on failure.
         const fields =
             dataAsArray.length > 0 ? Object.keys(dataAsArray[0]) : [];
+        const keyConsistencyResult = checkKeyConsistency(dataAsArray);
+
         const validationFlags = {
             isArrayOfObjects:
                 Array.isArray(parsedData) &&
                 dataAsArray.every(
                     (item) => typeof item === "object" && item !== null
                 ),
-            hasConsistentKeys: checkKeyConsistency(dataAsArray),
+            hasConsistentKeys: keyConsistencyResult.consistent,
             hasValidRows:
                 dataAsArray.length > 0 &&
                 dataAsArray.some((obj) => Object.keys(obj).length > 0),
+            inconsistentKeys: keyConsistencyResult.inconsistentKeys,
         };
+
+        let eligibilityReason: string | undefined;
+        if (!validationFlags.hasConsistentKeys) {
+            eligibilityReason = "Inconsistent keys found across JSON objects.";
+        } else if (!validationFlags.isArrayOfObjects) {
+            eligibilityReason = "JSON root is not an array of objects.";
+        }
 
         const parsedMeta: JsonParsedFileMeta = ParsedFileMetaBuilder.init(
             source,
@@ -111,6 +121,7 @@ export default async function parseJSON(
             })
             .withDiagnostics({
                 warnings: customErrors.map((e) => e.message),
+                eligibilityReason,
                 errorCodes: customErrors.map((e) => e.code ?? "Unknown"),
             })
             .buildJson();

@@ -1,6 +1,6 @@
 {
     "name": "@nexicore/nexus-dsm",
-    "version": "1.3.0",
+    "version": "1.4.0",
     "description": "Modular toolkit for parsing, validating, and converting structured datasets (CSV ↔ JSON) with reviewer clarity.",
     "exports": {
         ".": "./mod.ts"
