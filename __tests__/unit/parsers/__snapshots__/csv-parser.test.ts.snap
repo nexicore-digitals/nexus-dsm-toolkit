@@ -15,6 +15,7 @@ exports[`CSV Parsing tests > should match metadata snapshot for valid sample 1`]
     "name",
     "email",
   ],
+  "format": "csv",
   "rowCount": 2,
   "source": "",
   "validationFlags": {

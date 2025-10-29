@@ -1,6 +1,6 @@
 import { parseJSON, convertToCsv } from "../main.js";
 
-console.log("--- Running JSON to CSV Conversion Example ---");
+console.log("--- Running JSON to CSV/TSV Conversion Example ---");
 
 // 1. Define a JSON string with deeply nested objects and multi-level nested arrays.
 const jsonString = `[
@@ -21,6 +21,7 @@ async function runSuccess() {
     const jsonResponse = await parseJSON(jsonString);
 
     if (jsonResponse.success) {
+        console.log("Parsed JSON Format:", jsonResponse.meta.format);
         // 3. Convert the successful parse result to CSV.
         // By default, it performs a "shallow" conversion.
         const shallowResult = convertToCsv(jsonResponse);
@@ -63,6 +64,7 @@ async function runFailure() {
     const jsonResponse = await parseJSON(badJsonString);
 
     if (jsonResponse.success) {
+        console.log("Parsed JSON Format:", jsonResponse.meta.format);
         console.log(
             "JSON parsing succeeded, but data is not eligible for conversion."
         );
@@ -89,3 +91,39 @@ async function runFailure() {
 
 runSuccess();
 runFailure();
+
+console.log("\n--- Running TSV Conversion Example ---");
+
+// 1. Define a TSV string
+const tsvString = `id\tname\tage\n1\tAlice\t30\n2\tBob\t25`;
+
+async function runTsvExample() {
+    // 2. Parse the TSV string.
+    const tsvResponse = await parseCSV(tsvString);
+
+    if (tsvResponse.success) {
+        console.log("✅ TSV Parsing successful!");
+        console.log("Parsed Format:", tsvResponse.meta.format); // Should be 'tsv'
+        console.log("Delimiter:", tsvResponse.meta.delimiter); // Should be '\t'
+        console.log("Data:", tsvResponse.data);
+
+        // Convert TSV data to JSON
+        const jsonResult = convertToJson(tsvResponse);
+        if (jsonResult.success) {
+            console.log("\n✅ TSV to JSON Conversion successful!");
+            console.log("JSON Content:", jsonResult.content);
+        } else {
+            console.error(
+                "❌ TSV to JSON Conversion Failed:",
+                jsonResult.message
+            );
+        }
+    } else {
+        console.error("❌ TSV Parsing Failed:", tsvResponse.message);
+        console.log("Diagnostics:", tsvResponse.meta?.diagnostics);
+    }
+}
+
+// Assuming convertToJson is imported from main.js
+import { convertToJson, parseCSV } from "../main.js";
+runTsvExample();

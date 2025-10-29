@@ -25,6 +25,7 @@ describe("convertJsonStructure", () => {
                 hasConsistentKeys: true,
                 hasValidRows: true,
             },
+            format: "json",
         };
 
         const result = convertJsonStructure(originalData, meta);
@@ -53,6 +54,7 @@ describe("convertJsonStructure", () => {
                 hasConsistentKeys: true,
                 hasValidRows: true,
             },
+            format: "json",
         };
 
         const result = convertJsonStructure(originalData, meta);
@@ -84,6 +86,7 @@ describe("convertJsonStructure", () => {
                 hasConsistentKeys: true,
                 hasValidRows: false, // No rows
             },
+            format: "json",
         };
 
         const result = convertJsonStructure(originalData, meta);
@@ -112,6 +115,7 @@ describe("convertJsonStructure", () => {
                 hasConsistentKeys: true,
                 hasValidRows: true,
             },
+            format: "json",
         };
 
         const result = convertJsonStructure(originalData, meta);
@@ -142,6 +146,7 @@ describe("convertJsonStructure", () => {
                 hasConsistentKeys: false,
                 hasValidRows: true,
             },
+            format: "json",
         };
 
         const result = convertJsonStructure(originalData, meta);
@@ -173,6 +178,7 @@ describe("convertJsonStructure", () => {
                 hasConsistentKeys: true,
                 hasValidRows: true,
             },
+            format: "json",
         };
 
         const result = convertJsonStructure(originalData, meta);
@@ -201,6 +207,7 @@ describe("convertJsonStructure", () => {
                 hasConsistentKeys: true,
                 hasValidRows: true,
             },
+            format: "json",
         };
 
         const result = convertJsonStructure(originalData, meta);

@@ -24,6 +24,8 @@ export interface ParsedFileMeta {
         eligibilityReason?: string;
         errorCodes?: string[];
     };
+    /** The detected format of the file. */
+    format: "csv" | "tsv" | "json";
 }
 
 /**
@@ -34,9 +36,10 @@ export interface CsvParseMeta extends ParseMeta {
 }
 
 /**
- * A specialized metadata object for successfully parsed CSV files.
+ * A specialized metadata object for successfully parsed CSV/TSV files.
  */
 export interface CsvParsedFileMeta extends ParsedFileMeta {
+    format: "csv" | "tsv"; // Narrow the format for CSV/TSV
     delimiter: string; // detected delimiter (e.g. ',', ';', '\t')
     quoteChar?: string; // detected quote character (e.g. '"')
     encoding?: string; // UTF-8, ISO-8859-1, etc.
@@ -54,8 +57,9 @@ export interface CsvParsedFileMeta extends ParsedFileMeta {
  * A specialized metadata object for successfully parsed JSON files.
  */
 export interface JsonParsedFileMeta extends ParsedFileMeta {
+    format: "json"; // Explicitly set for JSON files
     structureType: "array" | "object"; // JSON root structure
-    nestingDepth: number; // max depth of nested objects
+    nestingDepth: number; // max depth of nested objectss
     validationFlags: {
         isArrayOfObjects: boolean;
         hasConsistentKeys: boolean;

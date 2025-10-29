@@ -67,3 +67,10 @@ export const UNEXPECTED_FORMAT = {
     success: false,
     content: "# This file is corrupted value: missing, headers", // → UnknownError
 };
+
+export const TSV_SAMPLE = {
+    content: `id\tname\tage\n1\tAlice\t30\n2\tBob\t25`,
+    meta: {
+        delimiter: "\t",
+    },
+};

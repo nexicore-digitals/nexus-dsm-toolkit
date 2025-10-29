@@ -7,7 +7,12 @@ vi.setSystemTime(new Date("2023-01-01T00:00:00.000Z"));
 describe("ParsedFileMetaBuilder", () => {
     describe("CSV Eligibility", () => {
         it("should be eligible for conversion when all CSV flags are true", () => {
-            const meta = ParsedFileMetaBuilder.init("test.csv", ["h1"], 1)
+            const meta = ParsedFileMetaBuilder.init(
+                "test.csv",
+                ["h1"],
+                1,
+                "csv"
+            )
                 .withCsvFlags({
                     hasHeaders: true,
                     hasBalancedQuotes: true,
@@ -20,7 +25,7 @@ describe("ParsedFileMetaBuilder", () => {
         });
 
         it("should NOT be eligible for conversion if hasHeaders is false", () => {
-            const meta = ParsedFileMetaBuilder.init("test.csv", [], 0)
+            const meta = ParsedFileMetaBuilder.init("test.csv", [], 0, "csv")
                 .withCsvFlags({
                     hasHeaders: false,
                     hasBalancedQuotes: true,
@@ -33,7 +38,12 @@ describe("ParsedFileMetaBuilder", () => {
         });
 
         it("should NOT be eligible for conversion if hasBalancedQuotes is false", () => {
-            const meta = ParsedFileMetaBuilder.init("test.csv", ["h1"], 1)
+            const meta = ParsedFileMetaBuilder.init(
+                "test.csv",
+                ["h1"],
+                1,
+                "csv"
+            )
                 .withCsvFlags({
                     hasHeaders: true,
                     hasBalancedQuotes: false,
@@ -46,7 +56,12 @@ describe("ParsedFileMetaBuilder", () => {
         });
 
         it("should NOT be eligible for conversion if hasValidRows is false", () => {
-            const meta = ParsedFileMetaBuilder.init("test.csv", ["h1"], 0)
+            const meta = ParsedFileMetaBuilder.init(
+                "test.csv",
+                ["h1"],
+                0,
+                "csv"
+            )
                 .withCsvFlags({
                     hasHeaders: true,
                     hasBalancedQuotes: true,
@@ -61,7 +76,12 @@ describe("ParsedFileMetaBuilder", () => {
 
     describe("JSON Eligibility", () => {
         it("should be eligible for conversion when all JSON flags are true", () => {
-            const meta = ParsedFileMetaBuilder.init("test.json", ["k1"], 1)
+            const meta = ParsedFileMetaBuilder.init(
+                "test.json",
+                ["k1"],
+                1,
+                "json"
+            )
                 .withJsonFlags({
                     isArrayOfObjects: true,
                     hasConsistentKeys: true,
@@ -74,7 +94,12 @@ describe("ParsedFileMetaBuilder", () => {
         });
 
         it("should NOT be eligible for conversion if isArrayOfObjects is false", () => {
-            const meta = ParsedFileMetaBuilder.init("test.json", ["k1"], 1)
+            const meta = ParsedFileMetaBuilder.init(
+                "test.json",
+                ["k1"],
+                1,
+                "json"
+            )
                 .withJsonFlags({
                     isArrayOfObjects: false,
                     hasConsistentKeys: true,
@@ -90,7 +115,8 @@ describe("ParsedFileMetaBuilder", () => {
             const meta = ParsedFileMetaBuilder.init(
                 "test.json",
                 ["k1", "k2"],
-                2
+                2,
+                "json"
             )
                 .withJsonFlags({
                     isArrayOfObjects: true,

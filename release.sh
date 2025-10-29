@@ -46,7 +46,7 @@ if git rev-parse "$VERSION" >/dev/null 2>&1; then
     echo "ℹ️ Tag $VERSION already exists and points to the current commit. Skipping tag creation."
   else
     echo "❌ Tag $VERSION exists but points to a different commit."
-    read -p "Would you like to recreate the tag pointing to the current commit? (y/N): "
+    read -p "Would you like to recreate the tag pointing to the current commit? (y/N): " CONFIRM
     if [[ "$CONFIRM" == "y" || "$CONFIRM" == "Y" ]]; then
       git tag -d "$VERSION"
       git push origin :refs/tags/"$VERSION"

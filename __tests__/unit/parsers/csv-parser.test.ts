@@ -1,6 +1,7 @@
 import Papa from "papaparse";
 import { describe, it, expect, vi } from "vitest";
 import {
+    TSV_SAMPLE,
     EMPTY_FILE,
     INVALID_QUOTES,
     MISSING_HEADER_VALUE,
@@ -144,6 +145,26 @@ describe("CSV Parsing tests", () => {
             expect(result.meta).toBeUndefined(); // fallback path skips meta
         }
     });
+
+    it("should correctly detect and label TSV format", async () => {
+        const result = await parseCSV(TSV_SAMPLE.content);
+
+        expect(result.success).toBe(true);
+        if (!result.success) return;
+
+        expect(result.meta.format).toBe("tsv");
+        expect(result.meta.delimiter).toBe("\t");
+    });
+
+    it("should correctly label CSV format for comma-delimited files", async () => {
+        const result = await parseCSV(VALID_SAMPLE.content);
+
+        expect(result.success).toBe(true);
+        if (!result.success) return;
+
+        expect(result.meta.format).toBe("csv");
+    });
+
     it("should match metadata snapshot for valid sample", async () => {
         const result = await parseCSV(VALID_SAMPLE.content);
         expect(result.success).toBe(true);

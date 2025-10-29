@@ -121,8 +121,8 @@ export default async function parseCSV(
         // Build metadata
         const parsedMeta: CsvParsedFileMeta =
             ParsedFileMetaBuilder.fromPapaResult({
-                source: filePath ?? "",
                 result,
+                source: filePath ?? "",
                 validationFlags,
                 encoding: (await fileResponse).encoding,
                 diagnostics: {
@@ -181,7 +181,8 @@ export default async function parseCSV(
             const parsedMeta: CsvParsedFileMeta = ParsedFileMetaBuilder.init(
                 filePath ?? "",
                 [],
-                0
+                0,
+                "csv" // Default to 'csv' in this fallback case
             )
                 .withCsvFlags({
                     hasHeaders: false,
