@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.6.0] - 2025-11-03
+
+### Added (v1.6.0)
+
+- **Environment Checks:** Added runtime checks to `parseCsvFromFile` and `parseJsonFromFile` to prevent their use in browser environments and provide clear, actionable error messages.
+- **Unit Tests:** Added unit tests to verify the new environment checks, ensuring they fail gracefully in a simulated browser environment.
+
+### Changed (v1.6.0)
+
+- **Browser Compatibility:** Refactored the core `parseCSV` function to be environment-agnostic by separating file system logic into a Node.js-specific `parseCsvFromFile` function. This makes the core parser safely importable in browser environments.
+
+### Fixed (v1.6.0)
+
+- **CSV Parser Robustness:** Resolved multiple test failures by improving header validation and empty file handling, making the CSV parser more reliable against common edge cases like trailing newlines.
+- **Consistent Error Responses:** Corrected the error response shape for `parseCsvFromFile` to ensure it always returns a complete `CsvErrorResponse`, including the `detailedErrors` property for consistency.
+
+---
+
 ## [v1.5.0] - 2025-10-29
 
 ### Added (v1.5.0)

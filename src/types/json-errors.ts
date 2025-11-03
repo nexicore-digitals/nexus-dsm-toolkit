@@ -54,6 +54,14 @@ export interface JsonFileTooLargeError extends ParseError {
 }
 
 /**
+ * Error for when a function is called in an unsupported environment (e.g., Node.js function in a browser).
+ */
+export interface JsonEnvironmentErrorType extends ParseError {
+    type: "EnvironmentError";
+    code: "EnvironmentMismatch";
+}
+
+/**
  * A discriminated union of all specific, concrete JSON error types.
  */
 export type SpecificJsonError =

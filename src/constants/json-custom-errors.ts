@@ -7,6 +7,7 @@ import type {
     JsonUnexpectedError as JsonUnexpectedErrorType,
     JsonValidationFailedError as JsonValidationFailedErrorType,
     JsonFileTooLargeError as JsonFileTooLargeErrorType,
+    JsonEnvironmentErrorType,
 } from "../types/json-errors.js";
 
 export const jsonEmptyFileError: JsonEmptyFileErrorType = {
@@ -66,6 +67,13 @@ export const jsonValidationFailedError: JsonValidationFailedErrorType = {
     message: "JSON dataset failed one or more validation checks.",
     type: "JsonValidation",
     code: "JsonValidationFailed",
+};
+
+export const jsonEnvironmentError: JsonEnvironmentErrorType = {
+    name: "JsonEnvironmentError",
+    message: "This function is designed for Node.js environments only.",
+    type: "EnvironmentError",
+    code: "EnvironmentMismatch",
 };
 
 // Also consider if you need a base interface for JSON errors, if they differ from ParseError,

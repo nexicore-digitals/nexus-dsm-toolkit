@@ -4,7 +4,7 @@
 [![Node.js](https://img.shields.io/badge/node-%3E=18.0.0-brightgreen)](https://nodejs.org/)
 [![CI](https://github.com/nexicore-digitals/nexus-dsm-toolkit/actions/workflows/ci.yml/badge.svg)](https://github.com/nexicore-digitals/nexus-dsm-toolkit/actions/workflows/ci.yml)
 [![CodeQL](https://github.com/nexicore-digitals/nexus-dsm-toolkit/actions/workflows/codeql.yml/badge.svg)](https://github.com/nexicore-digitals/nexus-dsm-toolkit/actions/workflows/codeql.yml)
-[![Build Status](https://img.shields.io/github/actions/workflow/status/nexicore-digitals/nexus-dsm-toolkit/publish.yml?branch=release/v1.4.0)](https://github.com/nexicore-digitals/nexus-dsm-toolkit/actions/workflows/publish.yml)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/nexicore-digitals/nexus-dsm-toolkit/publish.yml?branch=release/v1.6.0)](https://github.com/nexicore-digitals/nexus-dsm-toolkit/actions/workflows/publish.yml)
 ![Modular DX](https://img.shields.io/badge/modular-DX-blue)
 ![Beginner Friendly](https://img.shields.io/badge/beginner-friendly-green)
 ![Nexi Inside](https://img.shields.io/badge/Nexi-AI-blue)
@@ -65,13 +65,13 @@ npm install nexus-dsm # or pnpm add nexus-dsm
 
 ### Parsing a CSV
 
-The `parseCSV` function can process a CSV from a file path or a raw string. It returns a detailed response object with the parsed data and rich metadata.
+The `parseCSV` function processes a raw CSV string and returns a detailed response object with the parsed data and rich metadata. For file system operations in Node.js, use `parseCsvFromFile`.
 
 ```typescript
-import { parseCSV } from "nexus-dsm";
+import { parseCsvFromFile } from "nexus-dsm";
 
 // From a file path
-const response = await parseCSV(undefined, "./data/sample.csv");
+const response = await parseCsvFromFile("./data/sample.csv");
 
 if (response.success) {
     console.log("Parsed Data:", response.data);
@@ -87,13 +87,13 @@ if (response.success) {
 
 ### Parsing a JSON
 
-The `parseJSON` function handles JSON files with a root-level array of objects or a single root object.
+The `parseJSON` function handles raw JSON strings or pre-parsed objects. For file system operations in Node.js, use `parseJsonFromFile`.
 
 ```typescript
 import { parseJSON } from "nexus-dsm";
 
 const jsonObject = [{ id: 1, name: "Alice" }];
-const response = await parseJSON(jsonObject);
+const response = await parseJSON(jsonObject, "my-object");
 
 if (response.success) {
     console.log("Parsed Data:", response.data);
@@ -158,8 +158,10 @@ These are the main functions intended for everyday use.
 
 | Function | Description |
 | :--- | :--- |
-| `parseCSV(data?, filePath?)` | Parses a CSV or TSV string/file, validates its structure, and returns a detailed response object. |
-| `parseJSON(data, filePath?)` | Parses a JSON string or a pre-parsed object/array, analyzes its structure, and returns a detailed response object. |
+| `parseCSV(csv, source?)` | Parses a CSV or TSV string, validates its structure, and returns a detailed response object. |
+| `parseCsvFromFile(filePath)` | **Node.js only.** Reads and parses a CSV/TSV file from the filesystem. |
+| `parseJSON(data, source?)` | Parses a JSON string or a pre-parsed object/array, analyzes its structure, and returns a detailed response object. |
+| `parseJsonFromFile(filePath)` | **Node.js only.** Reads and parses a JSON file from the filesystem. |
 | `convertToCsv(response, options)` | Converts a parsed JSON response into a CSV string, with "shallow" (default) or "deep" flattening. |
 | `convertToJson(response, options)` | Converts a parsed CSV response into a JSON string, with automatic "un-flattening" of deep CSVs. |
 

@@ -1,20 +1,19 @@
 /**
  * @file Main entry point for the Nexus DSM toolkit.
  * @description This file provides a fully-documented, comprehensive export of all
- * public-facing functions, classes, and types from the `nexus-dsm` library.
- * It is designed to offer a clear and discoverable API for developers.
+ * public-facing functions, classes, and types from the `nexus-dsm` library,
+ * designed to offer a clear and discoverable API.
  * @author Owen
  */
 
 // --- Core Parsers ---
 
 /**
- * Parses a CSV file from a file path or a raw string content.
+ * Parses a CSV or TSV string, validates its structure, and returns a detailed response.
  *
  * This function serves as the primary entry point for CSV parsing. It orchestrates
- * file reading, validation, and metadata generation. It returns a discriminated union
- * `CsvResponse` which is either a `CsvValidResponse` on success or a `CsvErrorResponse`
- * on failure.
+ * validation and metadata generation, returning a `CsvResponse` which is either a
+ * `CsvValidResponse` on success or a `CsvErrorResponse` on failure.
  *
  * Even on failure, a `meta` object is attached to the response to provide
  * as much diagnostic context as possible.
@@ -22,14 +21,13 @@
  * This function automatically detects delimiters, including tabs for TSV files,
  * and reports the format in the response metadata.
  *
- * @param {string | undefined} data - The raw CSV or TSV string content. Use `undefined` if providing a `filePath`.
- * @param {string | undefined} filePath - The path to the CSV or TSV file. If provided, it takes precedence over `data`.
+ * @param {string} csv - The raw CSV or TSV string content.
+ * @param {string} [source="string-input"] - An optional identifier for the data source (e.g., a filename or URL).
  * @returns {Promise<CsvResponse>} A promise that resolves to a `CsvResponse` object.
  *
  * @example
  * import { parseCSV } from 'nexus-dsm';
- *
- * const response = await parseCSV(undefined, './data/my-file.csv');
+ * const response = await parseCSV('header1,header2\nval1,val2');
  * if (response.success) {
  *   console.log("Parsed Data:", response.data);
  *   console.log("Eligibility:", response.meta.eligibleForConversion);
@@ -38,20 +36,37 @@
  *   console.log("Error Codes:", response.meta.diagnostics?.errorCodes);
  * }
  */
-export { parseCSV } from "./src/parsers/index.js";
+export { parseCSV, parseCsvFromFile } from "./src/parsers/index.js";
 
 /**
- * Parses a JSON file from a file path or a raw string content.
+ * Parses a CSV file from a file path (Node.js only).
+ *
+ * This function is designed for Node.js environments. It reads a file from the
+ * filesystem and then uses the core `parseCSV` engine to process it.
+ *
+ * @param {string} filePath - The path to the CSV or TSV file.
+ * @returns {Promise<CsvResponse>} A promise that resolves to a `CsvResponse` object.
+ *
+ * @example
+ * import { parseCsvFromFile } from 'nexus-dsm';
+ *
+ * const response = await parseCsvFromFile('./data/my-file.csv');
+ * // ... handle response
+ */
+// The actual export is handled by the line `export { parseCSV, parseCsvFromFile } from "./src/parsers/index.js";`
+
+/**
+ * Parses a JSON string or a pre-parsed JavaScript object/array.
  *
  * This function serves as the primary entry point for JSON parsing. It supports
  * JSON files with a root-level array of objects or a single root object. It returns
  * a discriminated union `JsonResponse` which is either a `JsonValidResponse` on
  * success or a `JsonErrorResponse` on failure.
  *
- * A detailed `meta` object is attached to the response to provide diagnostic context.
+ * A detailed `meta` object is attached to every response to provide diagnostic context.
  *
- * @param {string | object | object[]} data - The raw JSON string or a pre-parsed JavaScript object/array.
- * @param {string | undefined} [filePath] - The path to the JSON file. If provided, it takes precedence over `data`.
+ * @param {string | object | object[]} data - The raw JSON string or a pre-parsed JavaScript object or array.
+ * @param {string} [source="string-input"] - An optional identifier for the data source (e.g., a filename or URL).
  * @returns {Promise<JsonResponse>} A promise that resolves to a `JsonResponse` object.
  *
  * @example

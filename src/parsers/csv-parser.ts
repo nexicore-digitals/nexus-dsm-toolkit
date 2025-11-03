@@ -14,59 +14,49 @@ import { transformPapaParseError } from "../adapters/papaparse.adapter.js";
 import { sortCsvErrorsByPriority } from "../utils/csv-error-priority.js";
 import { CsvParsedFileMeta } from "../types/meta.js";
 import { ParsedFileMetaBuilder } from "../utils/parsed-file-meta-builder.js";
-import { analyzeCsvFile } from "./index.js";
 
 /**
- * Parses a CSV file from a file path or a raw string content.
+ * Parses a CSV or TSV string, validates its structure, and returns a detailed response.
  *
- * This function serves as the primary entry point for CSV parsing. It orchestrates
- * file reading, validation, and metadata generation. It returns a discriminated union
- * `CsvResponse` which is either a `CsvValidResponse` on success or a `CsvErrorResponse`
- * on failure.
+ * This function serves as the core CSV parsing engine. It returns a discriminated
+ * union `CsvResponse` which is either a `CsvValidResponse` on success or a
+ * `CsvErrorResponse` on failure.
  *
  * Even on failure, a `meta` object is attached to the response to provide
  * as much diagnostic context as possible.
  *
- * @param data - The raw CSV string content. To be used if `filePath` is not provided.
- * @param filePath - The path to the CSV file. If provided, it takes precedence over `data`.
+ * @param csv - The raw CSV string content.
+ * @param source - An optional identifier for the data source (e.g., a filename or URL).
  * @returns A promise that resolves to a `CsvResponse` object.
  *
  * @example
- * // --- Parsing from a file path ---
- * const response = await parseCSV(undefined, './data/my-file.csv');
+ * const csvString = `id,name\n1,Alice\n2,Bob`;
+ * const response = await parseCSV(csvString);
  * if (response.success) {
  *   console.log("Parsed Data:", response.data);
  *   console.log("Eligibility:", response.meta.eligibleForConversion);
  * } else {
  *   console.error("Parsing Failed:", response.message);
- *   console.log("Error Codes:", response.meta.diagnostics?.errorCodes);
- * }
- *
- * @example
- * // --- Parsing from a string ---
- * const csvString = `id,name\n1,Alice\n2,Bob`;
- * const responseFromString = await parseCSV(csvString);
- * if (responseFromString.success) {
- *   console.log(responseFromString.data);
+ *   console.log("Error Details:", response.meta.diagnostics);
  * }
  */
 export default async function parseCSV(
-    data?: string,
-    filePath?: string
+    csv: string,
+    source = "string-input"
 ): Promise<CsvResponse> {
     const customErrors: SpecificCsvError[] = [];
-    const fileResponse = analyzeCsvFile(filePath ?? "");
-    const csv = filePath ? (await fileResponse)?.content : (data ?? "");
-    customErrors.push(
-        ...((await fileResponse).diagnostics as SpecificCsvError[])
-    );
 
+    if (csv.trim().length === 0) {
+        customErrors.push(csvEmptyFileError);
+        // Immediately return an error response for an empty file
+        return createErrorResponse(customErrors, source);
+    }
     // check for empty files
-    if (csv.trim().length === 0) customErrors.push(csvEmptyFileError);
     try {
         const result = Papa.parse(csv, {
             dynamicTyping: true,
             header: true,
+            skipEmptyLines: true,
             comments: "#",
         });
 
@@ -74,14 +64,17 @@ export default async function parseCSV(
         const fields = meta?.fields ?? [];
 
         // Validation flags
+        const nonEmptyLines = csv
+            .split("\n")
+            .filter((line) => line.trim() !== "").length;
+        const hasDataRows = nonEmptyLines > 1;
+
         const validationFlags = {
             hasHeaders: fields.length > 0,
             hasBalancedQuotes: true, // will be updated below
-            hasValidRows: Array.isArray(data) && data.length > 0,
+            hasValidRows: hasDataRows,
             hasCommentLines: csv.includes("#"),
-            hasEmptyLines: csv
-                .split("\n")
-                .some((line: string) => line.trim() === ""),
+            hasEmptyLines: /\n\s*\n/.test(csv),
         };
 
         /* papaparse merged it's result.meta.errors into result.errors */
@@ -122,9 +115,12 @@ export default async function parseCSV(
         const parsedMeta: CsvParsedFileMeta =
             ParsedFileMetaBuilder.fromPapaResult({
                 result,
-                source: filePath ?? "",
-                validationFlags,
-                encoding: (await fileResponse).encoding,
+                source,
+                validationFlags: {
+                    ...validationFlags,
+                    hasValidRows:
+                        data.length > 0 && validationFlags.hasValidRows,
+                },
                 diagnostics: {
                     warnings: customErrors.map((e) => e.message),
                     errorCodes: customErrors.map((e) => e.code),
@@ -134,7 +130,7 @@ export default async function parseCSV(
         if (customErrors.length === 0) {
             const customResult: CsvResponse = {
                 meta: parsedMeta,
-                data,
+                data: data,
                 success: true,
             };
             return customResult;
@@ -179,7 +175,7 @@ export default async function parseCSV(
             }; // Returns failure
         } else {
             const parsedMeta: CsvParsedFileMeta = ParsedFileMetaBuilder.init(
-                filePath ?? "",
+                source,
                 [],
                 0,
                 "csv" // Default to 'csv' in this fallback case
@@ -194,4 +190,26 @@ export default async function parseCSV(
             return { success: true, data: [], meta: parsedMeta }; // Only returns success if NO errors were detected
         }
     }
+}
+
+function createErrorResponse(
+    errors: SpecificCsvError[],
+    source: string
+): CsvErrorResponse {
+    const sortedErrors = sortCsvErrorsByPriority(errors);
+    const primaryError = sortedErrors[0];
+
+    const meta = ParsedFileMetaBuilder.init(source, [], 0, "csv")
+        .withCsvFlags({
+            hasHeaders: false,
+            hasBalancedQuotes: false,
+            hasValidRows: false,
+            hasCommentLines: false,
+            hasEmptyLines: true,
+        })
+        .withCsvExtras({ delimiter: ",", encoding: "" })
+        .withDiagnostics({ errorCodes: errors.map((e) => e.code) })
+        .buildCsv();
+
+    return { ...primaryError, success: false, meta, detailedErrors: errors };
 }

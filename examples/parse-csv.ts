@@ -1,4 +1,3 @@
-// examples/parse.ts
 import {
     VALID_SAMPLE,
     EMPTY_FILE,
@@ -6,8 +5,8 @@ import {
 import parseCSV from "@parsers/csv-parser.js";
 import { logger } from "@utils/logger.js";
 
-async function main(data: string) {
-    const result = await parseCSV(data);
+async function main(data: string, source?: string) {
+    const result = await parseCSV(data, source);
 
     if (result.success) {
         logger.info("Parsed Result:", result.meta);
@@ -20,6 +19,7 @@ async function run() {
     await main(VALID_SAMPLE.content);
     logger.info("\n-----------\n");
     await main(EMPTY_FILE.content);
+    logger.info("\n-----------\n");
 }
 
 run();

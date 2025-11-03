@@ -164,7 +164,9 @@ export class ParsedFileMetaBuilder {
         const { source, result, validationFlags, encoding, diagnostics } =
             params;
         const fields = result.meta.fields ?? [];
-        const rowCount = Array.isArray(result.data) ? result.data.length : 0;
+        const rowCount = Array.isArray(result.data)
+            ? result.data.length + (fields.length > 0 ? 1 : 0)
+            : 0;
 
         return ParsedFileMetaBuilder.init(
             source,

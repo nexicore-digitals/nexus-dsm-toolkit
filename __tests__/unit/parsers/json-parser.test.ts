@@ -11,16 +11,32 @@ import {
     VALID_SINGLE_OBJECT,
     WHITESPACE_FILE,
 } from "../../fixtures/json/json-mock-data.js";
-import parseJsonFromFile from "../../../src/parsers/json-parser-orchestration.js";
+import { parseJsonFromFile } from "../../../src/parsers/index.js";
 
 describe("JSON parsing tests", () => {
-    it("should enforce the file limit", async () => {
-        const filePath = "./__tests__/fixtures/json/large-test.json";
-        const result = await parseJsonFromFile(filePath);
-        if (!result.success) {
-            expect(result.name).toBe("JsonFileTooLargeError");
-            expect(result.code).toBe("FileTooLarge");
-        }
+    describe("parseJsonFromFile", () => {
+        it("should enforce the file limit", async () => {
+            const filePath = "./__tests__/fixtures/json/large-test.json";
+            const result = await parseJsonFromFile(filePath);
+            if (!result.success) {
+                expect(result.name).toBe("JsonFileTooLargeError");
+                expect(result.code).toBe("FileTooLarge");
+            }
+        });
+
+        it("should return an environment error if run in a browser-like environment", async () => {
+            // Simulate a browser environment
+            (global as any).window = {};
+
+            const result = await parseJsonFromFile("dummy-path.json");
+            expect(result.success).toBe(false);
+            if (!result.success) {
+                expect(result.code).toBe("EnvironmentMismatch");
+            }
+
+            // Clean up the global scope
+            delete (global as any).window;
+        });
     });
     it("should gracefully handle empty JSON file", async () => {
         const result = await parseJSON(EMPTY_FILE.content);
