@@ -22,7 +22,10 @@ export { default as parseJSON } from "./json-parser.js";
 /**
  * An orchestration function that reads a CSV file, checks its size, and returns its content and initial diagnostics.
  */
-export { default as analyzeCsvFile } from "./csv-parser-orchestration.js";
+export {
+    default as analyzeCsvFile,
+    parseCsvFromFile,
+} from "./csv-parser-orchestration.js";
 
 /**
  * An orchestration function that reads a JSON file from a path and passes its content to the core `parseJSON` function.

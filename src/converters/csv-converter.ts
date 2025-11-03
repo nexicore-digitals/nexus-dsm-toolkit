@@ -51,10 +51,15 @@ function flattenObject(
 }
 
 /**
- * Converts parsed CSV data into a normalized tabular payload.
- * This function prepares the data for inspection, transformation, or re-serialization.
+ * Normalizes a parsed CSV response into a structured tabular payload.
  *
- * @param response The parsed CSV response.
+ * This is a lower-level function used internally by `convertToJson`. It takes a
+ * successful `CsvResponse` and transforms it into a `CsvTabularConversion` object,
+ * which contains the data as an array of records, a list of column names, and
+ * other relevant metadata. This standardized structure is ideal for inspection,
+ * transformation, or final serialization into another format.
+ *
+ * @param response The successful `CsvResponse` object from the `parseCSV` function.
  * @returns A structured tabular conversion result.
  */
 export function convertCsvStructure(
@@ -86,15 +91,27 @@ export function convertCsvStructure(
 }
 
 /**
- * Converts a parsed JSON response into a well-formed CSV string.
+ * Converts a parsed JSON response into a well-formed CSV string, with options for deep or shallow flattening.
  *
  * This function takes the successful result from `parseJSON`, checks for conversion
- * eligibility, and uses `papaparse` to serialize the data into a CSV string.
+ * eligibility, and uses `papaparse` to serialize the data.
+ *
+ * It supports two flattening strategies:
+ * - **'shallow' (default):** Nested objects and arrays are stringified into a single cell.
+ * - **'deep':** Nested structures are recursively flattened into separate columns using dot and bracket notation (e.g., `profile.age`, `tags[0]`).
  *
  * @param response The `JsonResponse` from the parsing stage.
  * @param options Configuration for the conversion, such as flattening strategy.
  * @returns A `CsvConversionResult` which is either a `SuccessfulCsvConversionResult`
  *          containing the string content, or a `FailedConversionResult`.
+ *
+ * @example
+ * const nestedJson = `[{"name":"Alice","profile":{"age":30}}]`;
+ * const jsonResponse = await parseJSON(nestedJson);
+ *
+ * // Deep conversion
+ * const deep = convertToCsv(jsonResponse, { flattening: 'deep' });
+ * // deep.content is: name,profile.age\r\nAlice,30
  */
 export function convertToCsv(
     response: JsonResponse,

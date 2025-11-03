@@ -9,15 +9,15 @@ exports[`CSV Parsing tests > should match metadata snapshot for valid sample 1`]
     "warnings": [],
   },
   "eligibleForConversion": true,
-  "encoding": "",
+  "encoding": undefined,
   "fields": [
     "id",
     "name",
     "email",
   ],
   "format": "csv",
-  "rowCount": 2,
-  "source": "",
+  "rowCount": 3,
+  "source": "string-input",
   "validationFlags": {
     "hasBalancedQuotes": true,
     "hasCommentLines": false,

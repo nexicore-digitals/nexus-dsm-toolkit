@@ -6,7 +6,10 @@ import {
     createErrorResponse,
 } from "../utils/json-utilities.js";
 import type { SpecificJsonError } from "../types/json-errors.js";
-import { jsonFileTooLargeError } from "../constants/json-custom-errors.js";
+import {
+    jsonEnvironmentError,
+    jsonFileTooLargeError,
+} from "../constants/json-custom-errors.js";
 import {
     fileNotFoundError,
     fileSystemError,
@@ -18,6 +21,15 @@ const MAX_SIZE_BYTES = 5 * 1024 * 1024; // 5MB
 export default async function parseJsonFromFile(
     filePath: string
 ): Promise<JsonResponse> {
+    // Environment check: This function is Node.js-specific.
+    if (typeof window !== "undefined") {
+        return {
+            ...jsonEnvironmentError,
+            success: false,
+            detailedErrors: [jsonEnvironmentError],
+        };
+    }
+
     const absolutePath = path.resolve(filePath);
     const customErrors: SpecificJsonError[] = [];
 

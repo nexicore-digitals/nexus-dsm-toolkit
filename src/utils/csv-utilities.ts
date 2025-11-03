@@ -31,14 +31,12 @@ export function validateQuoteBalance(data: object[]): SpecificCsvError[] {
 
 export function validateHeaders(fields?: string[]): SpecificCsvError | null {
     if (!fields || fields.length === 0) return csvNoHeadersError;
-    else if (fields && fields.some((field) => field === ""))
+    else if (
+        fields &&
+        fields.some((field) => field === "" || !isNaN(Number(field)))
+    )
         return csvMissingHeaderValueError;
-
-    const looksLikeData = fields.some(
-        (field) => /^[A-Z]/.test(field.trim()) || !isNaN(Number(field))
-    );
-
-    return looksLikeData ? csvNoHeadersError : null;
+    return null;
 }
 
 export function validateDataRows(

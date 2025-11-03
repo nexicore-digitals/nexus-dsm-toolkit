@@ -19,7 +19,8 @@ export interface ParseError extends Error {
         | "FileSystemError"
         | "FileNotFoundError"
         | "FileSizeError"
-        | "OperationalError";
+        | "OperationalError"
+        | "EnvironmentError";
     message: string;
     code?: string;
 }

@@ -1,5 +1,6 @@
 import type {
     CsvEmptyFileError,
+    CsvEnvironmentErrorType,
     CsvFileNotFoundError,
     CsvFileSystemError,
     CsvFileTooLargeError,
@@ -57,4 +58,11 @@ export const csvNoValidDataRowsError: CsvNoValidDataRowsError = {
         "CSV file contains headers but no valid data rows could be parsed.",
     type: "NoValidDataRowsError",
     code: "InvalidDataRows",
+};
+
+export const csvEnvironmentError: CsvEnvironmentErrorType = {
+    name: "CSVEnvironmentError",
+    message: "This function is designed for Node.js environments only.",
+    type: "EnvironmentError",
+    code: "EnvironmentMismatch",
 };

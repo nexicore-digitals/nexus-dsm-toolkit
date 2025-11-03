@@ -23,10 +23,15 @@ export interface JsonStructureConversionPayload {
 }
 
 /**
- * Converts parsed JSON data into a normalized structure-aware payload.
- * This function assumes the input has already passed eligibility checks.
+ * Normalizes parsed JSON data into a structure-aware payload, preparing it for conversion.
  *
- * @param original The original parsed JSON data.
+ * This function is a lower-level utility used internally by `convertToCsv`. It takes the
+ * raw data and metadata from a successful `parseJSON` response and organizes it into a
+ * standardized `JsonStructureConversionPayload`. This payload includes details like the
+ * root structure type, nesting depth, and a clean array of root-level objects, making
+ * it easier to process for serialization.
+ *
+ * @param original The original parsed JSON data from a `JsonResponse`.
  * @param meta Metadata extracted during parsing.
  * @returns A normalized conversion payload with structure details.
  */
@@ -70,15 +75,28 @@ export function convertJsonStructure(
 }
 
 /**
- * Converts a parsed CSV response into a pretty-printed JSON string.
+ * Converts a parsed CSV response into a well-formed, pretty-printed JSON string.
  *
- * This function takes the successful result from `parseCSV`, checks for conversion
- * eligibility, and serializes the data into a JSON string.
+ * This function takes the entire successful response object from `parseCSV`. It first
+ * checks the `eligibleForConversion` flag in the metadata. If eligible, it serializes
+ * the data into a JSON string.
+ *
+ * By default, it automatically detects flattened CSV headers (e.g., `user.name` or
+ * `tags[0]`) and reconstructs a nested JSON object. This behavior can be disabled
+ * via the `options` parameter.
  *
  * @param response The `CsvResponse` from the parsing stage.
  * @param options Configuration for the conversion, such as un-flattening strategy.
  * @returns A `JsonConversionResult` which is either a `SuccessfulJsonConversionResult`
  *          or a `FailedConversionResult`.
+ *
+ * @example
+ * const flatCsv = 'user.name,user.id\nAlice,1';
+ * const csvResponse = await parseCSV(flatCsv);
+ *
+ * // Automatically detects flattened headers and un-flattens by default.
+ * const nestedJson = convertToJson(csvResponse);
+ * // nestedJson.content is: '[{"user":{"name":"Alice","id":1}}]'
  */
 export function convertToJson(
     response: CsvResponse,

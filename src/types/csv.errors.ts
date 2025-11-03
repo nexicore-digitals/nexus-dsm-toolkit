@@ -85,6 +85,14 @@ export interface CsvTooManyFieldsError extends CsvError {
     code: "TooManyFields";
 }
 
+/**
+ * Error for when a function is called in an unsupported environment (e.g., Node.js function in a browser).
+ */
+export interface CsvEnvironmentErrorType extends CsvError {
+    type: "EnvironmentError";
+    code: "EnvironmentMismatch";
+}
+
 // 4. Catch-all / Unexpected Errors
 /** A fallback error for any unexpected issues during CSV parsing. */
 export interface CsvUnexpectedError extends CsvError {

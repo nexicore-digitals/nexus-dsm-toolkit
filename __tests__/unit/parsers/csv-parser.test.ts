@@ -12,7 +12,7 @@ import {
     UNDETECTABLE_DELIMITER,
     VALID_SAMPLE,
 } from "../../fixtures/csv/csv-mock-data.js";
-import parseCSV from "../../../src/parsers/csv-parser.js";
+import { parseCSV, parseCsvFromFile } from "../../../src/parsers/index.js";
 
 vi.useFakeTimers();
 vi.setSystemTime(new Date("2023-01-01T00:00:00.000Z"));
@@ -31,8 +31,8 @@ describe("CSV Parsing tests", () => {
             const result = await parseCSV(NO_HEADERS.content);
             expect(result.success).toBe(false);
             if (!result.success) {
-                expect(result.name).toBe("CSVNoHeadersError");
-                expect(result.code).toBe("NoHeaders");
+                expect(result.name).toBe("CSVMissingHeaderValueError");
+                expect(result.code).toBe("MissingHeaderValue");
             }
         });
         it("should handle CSV file with no headers #MissingHeaderValue", async () => {
@@ -173,4 +173,20 @@ describe("CSV Parsing tests", () => {
         }
     });
     vi.resetAllMocks();
+
+    describe("parseCsvFromFile", () => {
+        it("should return an environment error if run in a browser-like environment", async () => {
+            // Simulate a browser environment
+            (global as any).window = {};
+
+            const result = await parseCsvFromFile("dummy-path.csv");
+            expect(result.success).toBe(false);
+            if (!result.success) {
+                expect(result.code).toBe("EnvironmentMismatch");
+            }
+
+            // Clean up the global scope
+            delete (global as any).window;
+        });
+    });
 });
