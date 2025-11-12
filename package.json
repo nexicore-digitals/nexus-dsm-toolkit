@@ -1,6 +1,6 @@
 {
     "name": "nexus-dsm",
-    "version": "2.1.0",
+    "version": "2.1.1",
     "description": "Modular toolkit for parsing, validating, and converting structured datasets (CSV ↔ JSON) with reviewer clarity.",
     "type": "module",
     "license": "MIT",
@@ -17,7 +17,7 @@
         "maintainer": "Owen • Nexicore Digital",
         "description": "Modular toolkit for parsing, validating, and converting structured datasets (CSV ↔ JSON) with reviewer clarity.",
         "license": "MIT",
-        "version": "2.1.0",
+        "version": "2.1.1",
         "bin": {
             "nexus-dsm": "./dist/cli.js"
         },

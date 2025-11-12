@@ -215,11 +215,18 @@ async function main() {
             "parse-json <input>",
             "Parse a JSON file and log its metadata",
             (yargs) => {
-                return yargs.positional("input", {
-                    describe: "Path to the JSON file to parse",
-                    type: "string",
-                    demandOption: true,
-                });
+                return yargs
+                    .positional("input", {
+                        describe: "Path to the JSON file to parse",
+                        type: "string",
+                        demandOption: true,
+                    })
+                    .option("stream", {
+                        describe:
+                            "Stream the input file, bypassing the default size limit",
+                        type: "boolean",
+                        default: false,
+                    });
             },
             async (argv) => {
                 const spinner = ora(`Parsing JSON file: ${argv.input}`).start();

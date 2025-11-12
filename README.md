@@ -4,7 +4,6 @@
 [![Node.js](https://img.shields.io/badge/node-%3E=18.0.0-brightgreen)](https://nodejs.org/)
 [![CI](https://github.com/nexicore-digitals/nexus-dsm-toolkit/actions/workflows/ci.yml/badge.svg)](https://github.com/nexicore-digitals/nexus-dsm-toolkit/actions/workflows/ci.yml)
 [![CodeQL](https://github.com/nexicore-digitals/nexus-dsm-toolkit/actions/workflows/codeql.yml/badge.svg)](https://github.com/nexicore-digitals/nexus-dsm-toolkit/actions/workflows/codeql.yml)
-[![Build Status](https://img.shields.io/github/actions/workflow/status/nexicore-digitals/nexus-dsm-toolkit/publish.yml?branch=release/v2.1.0)](https://github.com/nexicore-digitals/nexus-dsm-toolkit/actions/workflows/publish.yml)
 ![Modular DX](https://img.shields.io/badge/modular-DX-blue)
 ![Beginner Friendly](https://img.shields.io/badge/beginner-friendly-green)
 ![Nexi Inside](https://img.shields.io/badge/Nexi-AI-blue)

@@ -19,6 +19,7 @@ import {
 } from "../../src/utils/file-analysis.js";
 import { createReadStream } from "fs";
 import { parseJsonStream } from "./json-stream-parser.js";
+import path from "path";
 
 const MAX_SIZE_BYTES = 50 * 1024 * 1024; // 50MB
 
@@ -43,6 +44,15 @@ export default async function parseJsonFromFile(
             success: false,
             detailedErrors: [jsonEnvironmentError],
         };
+    }
+
+    // If streaming is explicitly requested, bypass the initial metadata analysis for size
+    // and go directly to the streaming parser.
+    if (options?.stream) {
+        const readStream = createReadStream(filePath, {
+            encoding: "utf8",
+        });
+        return parseJsonStream(readStream, path.basename(filePath));
     }
 
     const customErrors: SpecificJsonError[] = [];

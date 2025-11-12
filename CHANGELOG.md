@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v2.1.1] - 2025-11-12
+
+### 🐛 Bug Fixes (v2.1.1)
+
+- **CLI Streaming Logic**: Fixed a critical bug where the `--stream` flag was ignored by the `parse-json` command, causing it to incorrectly throw a `FileTooLarge` error instead of entering streaming mode. The orchestration logic in `parseJsonFromFile` has been updated to prioritize the stream flag over initial file size checks. **This fix has also been applied to `parseCsvFromFile` to ensure consistent streaming behavior for CSV files.**
+- **Flexible JSON Streaming**: The streaming JSON parser (`parseJsonStream`) has been updated to correctly handle streams of multiple, distinct JSON objects (e.g., NDJSON or concatenated objects) by using `stream-json`'s `streamValues` and `jsonStreaming: true` options. This resolves syntax errors when parsing large files that are not a single, self-contained JSON array.
+- **ESM Import Fix**: Corrected named import errors for `stream-chain` and `stream-json` by switching to default imports, resolving a `SyntaxError` when running in a pure ESM environment.
+
+---
+
 ## [v2.1.0] - 2025-11-12
 
 ### ✨ Features (v2.1.0)

@@ -14,6 +14,7 @@ import {
 } from "../../src/utils/file-analysis.js";
 import { sortCsvErrorsByPriority } from "../utils/csv-error-priority.js";
 import { createReadStream } from "fs";
+import path from "path";
 
 const MAX_SIZE_BYTES = 5 * 1024 * 1024; // 5MB (kept for consistency, but `analyzeFileMetadata` also uses it)
 
@@ -49,6 +50,15 @@ export async function parseCsvFromFile(
             success: false,
             detailedErrors: [csvEnvironmentError],
         };
+    }
+
+    // If streaming is explicitly requested, bypass the initial metadata analysis for size
+    // and go directly to the streaming parser.
+    if (options?.stream) {
+        const readStream = createReadStream(filePath, {
+            encoding: "utf8",
+        });
+        return parseCsvStream(readStream, path.basename(filePath));
     }
 
     const fileMetadata = await analyzeFileMetadata(filePath);
