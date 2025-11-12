@@ -32,4 +32,5 @@ export {
 /**
  * An orchestration function that reads a JSON file from a path and passes its content to the core `parseJSON` function.
  */
-export { default as parseJsonFromFile } from "./json-parser-orchestration.js"; // File-based JSON parser (can use streaming)
+export { default as parseJsonFromFile } from "./json-parser-orchestration.js";
+export { parseJsonStream } from "./json-stream-parser.js";

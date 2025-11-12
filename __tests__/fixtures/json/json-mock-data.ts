@@ -82,3 +82,14 @@ export const VALID_SINGLE_OBJECT = {
     "email": "alice@example.com"
   }`,
 };
+
+const largeName = "Charlie".repeat(10_000_000); // ~70MB string
+
+export const JSON_TOO_LARGE = {
+    success: true,
+    content: JSON.stringify([
+        { id: 1, name: "Alice", email: "alice@example.com" },
+        { id: 2, name: "Bob", email: "bob@example.com" },
+        { id: 3, name: largeName, email: "charlie@example.com" },
+    ]),
+};

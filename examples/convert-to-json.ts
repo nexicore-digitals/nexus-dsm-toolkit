@@ -24,7 +24,7 @@ async function runShallow() {
             logger.info("Un-flattened:", jsonResult.conversionMeta.unflatten);
             logger.info(jsonResult.content);
         } else {
-            console.error("❌ JSON Conversion Failed:", jsonResult.message);
+            logger.error("❌ JSON Conversion Failed:", jsonResult.message);
         }
     }
 }
@@ -59,10 +59,7 @@ async function runDeep() {
             unflatten: false,
         });
         if (!flatResult.success) {
-            console.error(
-                "❌ Flat JSON Conversion Failed:",
-                flatResult.message
-            );
+            logger.error("❌ Flat JSON Conversion Failed:", flatResult.message);
             return;
         }
         logger.info("\n✅ Deep CSV to Flat JSON (with unflatten: false):");
@@ -125,7 +122,7 @@ async function runTsvExample() {
             logger.info("JSON Content:", jsonResult.content);
         }
     } else {
-        console.error("❌ TSV Parsing Failed:", tsvResponse.message);
+        logger.error("❌ TSV Parsing Failed:", tsvResponse.message);
     }
 }
 

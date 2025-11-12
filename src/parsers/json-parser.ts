@@ -44,7 +44,7 @@ import { JsonUnexpectedError } from "../types/json-errors.js";
  *   logger.info("Parsed Data:", response.data);
  *   logger.info("Structure Type:", response.meta.structureType);
  * } else {
- *   console.error("Parsing Failed:", response.message);
+ *   logger.error("Parsing Failed:", response.message);
  * }
  *
  * @example

@@ -5,6 +5,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v2.1.0] - 2025-11-12
+
+### ✨ Features (v2.1.0)
+
+- **Intelligent File Parsing Orchestration**: The `parseCsvFromFile` and `parseJsonFromFile` functions now automatically detect large files (exceeding 50MB) and intelligently switch to stream-based processing to improve performance and reduce memory footprint for initial file loading.
+- **Streaming JSON Parser (`parseJsonStream`)**: Introduced a new, dedicated streaming parser for JSON files (`src/parsers/json-stream-parser.ts`), leveraging `stream-json` and `stream-chain` for efficient, memory-optimized processing of very large JSON datasets. This function is also exposed in the public API.
+- **CLI Stream Option**: The `nexus-dsm convert` and `nexus-dsm parse-json` CLI commands now support a `--stream` flag, allowing users to explicitly force streaming mode for JSON files, regardless of size.
+
+### ♻️ Refactoring (v2.1.0)
+
+- **CSV Stream Parser Rework**: The internal `parseCsvStream` implementation has been refactored to first read the entire input stream into a string before parsing with Papa Parse. This change simplifies the parsing logic for `parseCsvStream` but means it no longer processes CSV data in a true streaming fashion but rather as a buffered string, which may impact memory usage for very large files, but still good enough for most use cases.
+- **JSON Streaming Integration**: Integrated `stream-json` and `stream-chain` as new dependencies to enable robust streaming JSON parsing.
+- **Metadata Consistency**: Ensured consistent encoding metadata (`"utf-8"`) in the `ParsedFileMetaBuilder` for string-based CSV parsing.
+- **Test Fixtures & Mocks**: Expanded test fixtures with `EMPTY_LINES`, `CSV_WITH_COMMENTS`, `CSV_TOO_LARGE`, and `JSON_TOO_LARGE` to improve test coverage for various file conditions and performance scenarios. Implemented `fs` and `fileAnalysis` mocks in tests for better isolation and control over file system interactions.
+
+### 📦 Dependencies (v2.1.0)
+
+- Added `stream-chain` (`^2.2.5`) and `stream-json` (`^1.9.1`) for streaming JSON parsing.
+- Updated `@types/jsonstream`, `@types/stream-chain`, and `@types/stream-json` for type safety.
+
+---
+
 ## [v2.0.0] - 2025-11-11
 
 ### 💥 Breaking Changes (v2.0.0)
@@ -19,7 +41,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - **Improved Error Handling**: The CLI provides clearer error messages and correctly exits with a non-zero status code on failure, making it reliable for scripting.
   - **Loading Indicator**: Added a visual spinner (`ora`) to provide feedback during operations.
 - **File Output Option**: Both `convertToCsv` and `convertToJson` now support a `writeToFile: true` option, allowing users to write the output directly to a file instead of returning it as a string. The output file path can be specified via the `outputFilePath` option; if not provided, a default path is generated.
-- **Logger Integration**: Introduced a centralized `winston` logger for consistent logging across the library and CLI, replacing all `console.log` statements.
+- **Logger Integration**: Introduced a centralized `winston` logger for consistent logging across the library and CLI, replacing all `logger.info` statements.
 - **Example Updates**: All examples have been updated to demonstrate the new asynchronous API and file output capabilities.
 - **New CLI Features**: Added a command-line interface with streaming support, smarter input handling, improved error messages, and a loading spinner.
 - **Debian Package Build**: Added a `build-deb` script to generate a Debian package (`.deb`) for easy installation on Debian-based systems.
@@ -33,7 +55,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### ♻️ Refactoring (v2.0.0)
 
 - **File I/O Abstraction**: Centralized file system operations into a new `file-analysis.ts` utility, separating file reading from core parsing logic.
-- **Logger Integration**: Replaced all `console.log` calls with a centralized `winston` logger for consistent, formatted output.
+- **Logger Integration**: Replaced all `logger.info` calls with a centralized `winston` logger for consistent, formatted output.
 - **Codebase Cleanup**: Removed deprecated functions and types, and improved code organization for better maintainability.
 
 ---
