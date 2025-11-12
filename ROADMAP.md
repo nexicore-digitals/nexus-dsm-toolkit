@@ -9,15 +9,15 @@ Our development trajectory is focused on building a comprehensive, developer-fir
 - **Intelligent Conversion:** Full round-trip conversion between CSV and JSON with smart defaults and flexible options (`deep`/`shallow` flattening and un-flattening).
 - **Developer-First Diagnostics:** Provide expressive error messages, hints, and eligibility reasons to make debugging data issues fast and intuitive.
 
-## ⏳ **Phase 2: Advanced Validation & Indexing (In Progress)**
+## ✅ **Phase 2: Advanced Validation & Tooling (Complete)**
+
+- **CLI (Command-Line Interface):** Built a powerful CLI for performing parsing, conversion, and validation directly from the terminal, with streaming support for large files.
+- **Expanded Format Support:** Added full parsing and conversion support for Tab-Separated Values (`.tsv`).
+
+## ⏳ **Phase 3: Service & Advanced Validation (In Progress)**
 
 - **Schema Validation:** Integrate support for `zod` and `JSON Schema` to validate data against predefined structures.
 - **Dataset Indexing:** Develop an indexing module for creating searchable, hash-based maps of datasets, enabling efficient querying and lookups.
-- **Expanded Format Support:** Add parsing and conversion support for Tab-Separated Values (`.tsv`).
-
-## 🚀 **Phase 3: Service & Tooling Layers (Planned)**
-
-- **CLI (Command-Line Interface):** Build a powerful CLI for performing parsing, conversion, and validation directly from the terminal.
 - **API Layer:** Expose the toolkit's functionality via a RESTful API for remote orchestration and integration with other services.
 - **UI Integration:** Continue to support and align with the separate `nexus-dsm-ui` project for visualization and interactive use.
 

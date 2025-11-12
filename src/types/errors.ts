@@ -20,7 +20,8 @@ export interface ParseError extends Error {
         | "FileNotFoundError"
         | "FileSizeError"
         | "OperationalError"
-        | "EnvironmentError";
+        | "EnvironmentError"
+        | "FileTooLargeError";
     message: string;
     code?: string;
 }
@@ -39,4 +40,12 @@ export interface FileSystemError extends ParseError {
 export interface FileNotFoundError extends ParseError {
     type: "FileNotFoundError";
     code: "FileNotFound";
+}
+
+/**
+ * An error for when a file is too large to process.
+ */
+export interface FileTooLargeError extends ParseError {
+    type: "FileTooLargeError";
+    code: "FileTooLarge";
 }

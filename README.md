@@ -4,7 +4,7 @@
 [![Node.js](https://img.shields.io/badge/node-%3E=18.0.0-brightgreen)](https://nodejs.org/)
 [![CI](https://github.com/nexicore-digitals/nexus-dsm-toolkit/actions/workflows/ci.yml/badge.svg)](https://github.com/nexicore-digitals/nexus-dsm-toolkit/actions/workflows/ci.yml)
 [![CodeQL](https://github.com/nexicore-digitals/nexus-dsm-toolkit/actions/workflows/codeql.yml/badge.svg)](https://github.com/nexicore-digitals/nexus-dsm-toolkit/actions/workflows/codeql.yml)
-[![Build Status](https://img.shields.io/github/actions/workflow/status/nexicore-digitals/nexus-dsm-toolkit/publish.yml?branch=release/v1.6.0)](https://github.com/nexicore-digitals/nexus-dsm-toolkit/actions/workflows/publish.yml)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/nexicore-digitals/nexus-dsm-toolkit/publish.yml?branch=release/v2.0.0)](https://github.com/nexicore-digitals/nexus-dsm-toolkit/actions/workflows/publish.yml)
 ![Modular DX](https://img.shields.io/badge/modular-DX-blue)
 ![Beginner Friendly](https://img.shields.io/badge/beginner-friendly-green)
 ![Nexi Inside](https://img.shields.io/badge/Nexi-AI-blue)
@@ -12,6 +12,8 @@
 ![DX Layer: nexus-dsm](https://img.shields.io/badge/DX%20layer-nexus--dsm-brightgreen)
 [![JSR](https://jsr.io/badges/@nexicore/nexus-dsm)](https://jsr.io/@nexicore/nexus-dsm)
 ![npm version](https://img.shields.io/npm/v/nexus-dsm)
+![Repo Size](https://img.shields.io/github/repo-size/nexicore-digitals/nexus-dsm-toolkit)
+![Release](https://img.shields.io/github/v/release/nexicore-digitals/nexus-dsm-toolkit)
 
 ---
 
@@ -74,32 +76,51 @@ import { parseCsvFromFile } from "nexus-dsm";
 const response = await parseCsvFromFile("./data/sample.csv");
 
 if (response.success) {
-    console.log("Parsed Data:", response.data);
-    console.log(
+    logger.info("Parsed Data:", response.data);
+    logger.info(
         "Is eligible for conversion?",
         response.meta.eligibleForConversion
     );
 } else {
-    console.error("Parsing Failed:", response.message);
-    console.log("Error Details:", response.meta.diagnostics);
+    logger.error("Parsing Failed:", response.message);
+    logger.info("Error Details:", response.meta.diagnostics);
 }
 ```
 
 ### Parsing a JSON
 
-The `parseJSON` function handles raw JSON strings or pre-parsed objects. For file system operations in Node.js, use `parseJsonFromFile`.
+The `parseJSON` function processes a raw JSON string or object/array and returns a detailed response object with the parsed data and rich metadata. For file system operations in Node.js, use `parseJsonFromFile`.
 
 ```typescript
-import { parseJSON } from "nexus-dsm";
+import { parseJSON, parseJsonFromFile } from "nexus-dsm";
 
-const jsonObject = [{ id: 1, name: "Alice" }];
-const response = await parseJSON(jsonObject, "my-object");
+// From a string
+const jsonString = `[{"id":1,"name":"Test"}]`;
+const responseFromString = await parseJSON(jsonString);
 
-if (response.success) {
-    console.log("Parsed Data:", response.data);
-    console.log("Structure Type:", response.meta.structureType);
+if (responseFromString.success) {
+    logger.info("Parsed Data:", responseFromString.data);
+    logger.info(
+        "Nesting Depth:",
+        responseFromString.meta.nestingDepth
+    );
 } else {
-    console.error("Parsing Failed:", response.message);
+    logger.error("Parsing Failed:", responseFromString.message);
+    logger.info("Error Details:", responseFromString.meta.diagnostics);
+}
+
+// From a file path
+const responseFromFile = await parseJsonFromFile("./data/sample.json");
+
+if (responseFromFile.success) {
+    logger.info("Parsed Data:", responseFromFile.data);
+    logger.info(
+        "Is eligible for conversion?",
+        responseFromFile.meta.eligibleForConversion
+    );
+} else {
+    logger.error("Parsing Failed:", responseFromFile.message);
+    logger.info("Error Details:", responseFromFile.meta.diagnostics);
 }
 ```
 
@@ -112,7 +133,7 @@ The conversion functions take the entire successful response object from the par
 
 ### JSON to CSV Conversion
 
-The `convertToCsv` function can perform a "shallow" conversion (default) or a "deep" conversion.
+You can choose between "shallow" and "deep" flattening strategies when converting JSON to CSV. The default is "shallow", which keeps nested objects and arrays as stringified JSON.
 
 ```typescript
 import { parseJSON, convertToCsv } from "nexus-dsm";
@@ -121,11 +142,11 @@ const nestedJson = `[{"name":"Alice","profile":{"age":30},"tags":["dev"]}]`;
 const jsonResponse = await parseJSON(nestedJson);
 
 // Shallow conversion (default)
-const shallow = convertToCsv(jsonResponse);
+const shallow = await convertToCsv(jsonResponse);
 // shallow.content is: name,profile,tags\r\nAlice,"{""age"":30}","[""dev""]"
 
 // Deep conversion
-const deep = convertToCsv(jsonResponse, { flattening: 'deep' });
+const deep = await convertToCsv(jsonResponse, { flattening: 'deep' });
 // deep.content is: name,profile.age,tags[0]\r\nAlice,30,dev
 ```
 
@@ -136,16 +157,59 @@ The `convertToJson` function automatically detects flattened headers (e.g., `use
 ```typescript
 import { parseCSV, convertToJson } from "nexus-dsm";
 
-const flatCsv = 'user.name,user.id\nAlice,1';
-const csvResponse = await parseCSV(flatCsv);
+const flattenedCsv = `name,profile.age,tags[0]\r\nAlice,30,dev`;
+const csvResponse = await parseCSV(flattenedCsv);
 
-// The function detects flattened headers and un-flattens by default.
-const nestedJson = convertToJson(csvResponse);
-// nestedJson.content is: '[{"user":{"name":"Alice","id":1}}]'
+// Automatic un-flattening (default)
+const unflattened = await convertToJson(csvResponse);
+// unflattened.content is: [{"name":"Alice","profile":{"age":30},"tags":["dev"]}]
 
-// To prevent this and get a flat JSON, pass `unflatten: false`.
-const flatJson = convertToJson(csvResponse, { unflatten: false });
-// flatJson.content is: '[{"user.name":"Alice","user.id":1}]'
+// Disable un-flattening
+const flat = await convertToJson(csvResponse, { unflatten: false });
+// flat.content is: [{"name":"Alice","profile.age":"30","tags[0]":"dev"}]
+
+```
+
+---
+
+Perfect—here’s a clean, contributor-friendly section you can add to your README or GitHub release notes to guide users on how to install and use your `.deb` CLI package:
+
+---
+
+## 📦 Installation Instructions (Debian/Ubuntu)
+
+### ✅ Option 1: Manual Install
+
+Download the `.deb` file from [GitHub Releases](https://github.com/nexicore-digitals/nexus-dsm-toolkit/releases), then run:
+
+```bash
+sudo dpkg -i nexus-dsm.deb
+sudo apt-get install -f  # Fix any missing dependencies
+```
+
+This installs the CLI globally as `nexus-dsm`.
+
+---
+
+### ✅ Option 2: Install via download the `.deb` from GitHub Releases
+
+You can download the latest `.deb` package directly from the [GitHub Releases](https://github.com/nexicore-digitals/nexus-dsm-toolkit/releases) and install [manual install](#-option-1-manual-install).
+
+---
+
+## 🚀 Usage (CLI Wrapper)
+
+After install, run:
+
+```bash
+nexus-dsm --help
+```
+
+Example commands:
+
+```bash
+nexus-dsm parse --input data.csv
+nexus-dsm convert --from json --to csv --input data.json
 ```
 
 ---

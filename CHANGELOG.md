@@ -5,6 +5,39 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v2.0.0] - 2025-11-11
+
+### 💥 Breaking Changes (v2.0.0)
+
+- **Fully Asynchronous API**: The core conversion functions `convertToCsv` and `convertToJson` have been refactored to be fully asynchronous and now return a `Promise`. This change was made to properly support I/O operations (like `writeToFile: true`) without blocking the main thread. All calls to these functions must now use `await`.
+
+### ✨ Features (v2.0.0)
+
+- **TSV Support**: The `convertToCsv` function now fully supports Tab-Separated Values (TSV) output via the `{ tsv: true }` option. The parser also automatically detects TSV files.
+  - **Streaming for CSV**: Added a `--stream` flag to process large CSV files efficiently.
+  - **Smarter Input**: The CLI now accepts the input file as a direct positional argument (e.g., `nexus-dsm convert <path-to-file>`).
+  - **Improved Error Handling**: The CLI provides clearer error messages and correctly exits with a non-zero status code on failure, making it reliable for scripting.
+  - **Loading Indicator**: Added a visual spinner (`ora`) to provide feedback during operations.
+- **File Output Option**: Both `convertToCsv` and `convertToJson` now support a `writeToFile: true` option, allowing users to write the output directly to a file instead of returning it as a string. The output file path can be specified via the `outputFilePath` option; if not provided, a default path is generated.
+- **Logger Integration**: Introduced a centralized `winston` logger for consistent logging across the library and CLI, replacing all `console.log` statements.
+- **Example Updates**: All examples have been updated to demonstrate the new asynchronous API and file output capabilities.
+- **New CLI Features**: Added a command-line interface with streaming support, smarter input handling, improved error messages, and a loading spinner.
+- **Debian Package Build**: Added a `build-deb` script to generate a Debian package (`.deb`) for easy installation on Debian-based systems.
+
+### 🐛 Bug fixtures (v2.0.0)
+
+- **TSV/CSV Quoting and Spacing**: Definitively resolved formatting issues by implementing an intelligent quoting strategy in `papaparse`. Fields are now only quoted when necessary, ensuring clean and correct output.
+- **Hanging Process on Exit**: Fixed a critical bug where scripts would hang after completion. This was resolved by ensuring all asynchronous operations are properly `await`-ed and that file/stream resources are correctly closed.
+- **Test Suite Alignment**: Updated unit tests and snapshots to match the new asynchronous API and the improved quoting logic.
+
+### ♻️ Refactoring (v2.0.0)
+
+- **File I/O Abstraction**: Centralized file system operations into a new `file-analysis.ts` utility, separating file reading from core parsing logic.
+- **Logger Integration**: Replaced all `console.log` calls with a centralized `winston` logger for consistent, formatted output.
+- **Codebase Cleanup**: Removed deprecated functions and types, and improved code organization for better maintainability.
+
+---
+
 ## [v1.6.0] - 2025-11-03
 
 ### Added (v1.6.0)

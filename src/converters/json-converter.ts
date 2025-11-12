@@ -11,6 +11,7 @@ import type {
     SuccessfulJsonConversionResult,
 } from "../types/conversion.js";
 import type { JsonParsedFileMeta } from "../types/meta.js";
+import { writeToFile } from "../../src/utils/file-writer.js";
 
 export interface JsonStructureConversionPayload {
     structureType: "array" | "object";
@@ -87,8 +88,8 @@ export function convertJsonStructure(
  *
  * @param response The `CsvResponse` from the parsing stage.
  * @param options Configuration for the conversion, such as un-flattening strategy.
- * @returns A `JsonConversionResult` which is either a `SuccessfulJsonConversionResult`
- *          or a `FailedConversionResult`.
+ * @returns A `Promise` that resolves to a `JsonConversionResult`, which is either a
+ *          `SuccessfulJsonConversionResult` or a `FailedConversionResult`.
  *
  * @example
  * const flatCsv = 'user.name,user.id\nAlice,1';
@@ -98,10 +99,10 @@ export function convertJsonStructure(
  * const nestedJson = convertToJson(csvResponse);
  * // nestedJson.content is: '[{"user":{"name":"Alice","id":1}}]'
  */
-export function convertToJson(
+export async function convertToJson(
     response: CsvResponse,
     options?: JsonConversionOptions
-): JsonConversionResult {
+): Promise<JsonConversionResult> {
     if (!response.success || !response.meta?.eligibleForConversion) {
         const hints: string[] = [];
         if (!response.success) {
@@ -175,7 +176,7 @@ export function convertToJson(
 
     const result: SuccessfulJsonConversionResult = {
         success: true,
-        content: JSON.stringify(finalRecords, null, 2),
+        content: JSON.stringify(finalRecords),
         structureType: "array", // CSV data is always an array of objects
         rootLength: rowCount,
         nestingDepth: 1, // CSV is always flat
@@ -185,6 +186,16 @@ export function convertToJson(
         conversionMeta: {
             unflatten: shouldUnflatten,
         },
+        dataType: "json",
     };
+
+    if (options?.writeToFile === true) {
+        await writeToFile(
+            options?.outputPath ?? "output",
+            result.content,
+            result.dataType
+        );
+    }
+
     return result;
 }

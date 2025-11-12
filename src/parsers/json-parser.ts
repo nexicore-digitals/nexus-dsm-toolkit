@@ -41,8 +41,8 @@ import { JsonUnexpectedError } from "../types/json-errors.js";
  * // --- Parsing from a file path ---
  * const response = await parseJSON(undefined, './data/my-file.json');
  * if (response.success) {
- *   console.log("Parsed Data:", response.data);
- *   console.log("Structure Type:", response.meta.structureType);
+ *   logger.info("Parsed Data:", response.data);
+ *   logger.info("Structure Type:", response.meta.structureType);
  * } else {
  *   console.error("Parsing Failed:", response.message);
  * }
@@ -52,7 +52,7 @@ import { JsonUnexpectedError } from "../types/json-errors.js";
  * const jsonString = `[{"id": 1, "name": "Alice"}]`;
  * const responseFromString = await parseJSON(jsonString);
  * if (responseFromString.success) {
- *   console.log(responseFromString.data);
+ *   logger.info(responseFromString.data);
  * }
  */
 export default async function parseJSON(

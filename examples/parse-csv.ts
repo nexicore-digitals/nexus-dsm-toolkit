@@ -15,11 +15,11 @@ async function main(data: string, source?: string) {
     }
 }
 
-async function run() {
+async function runAllParsers() {
     await main(VALID_SAMPLE.content);
     logger.info("\n-----------\n");
     await main(EMPTY_FILE.content);
     logger.info("\n-----------\n");
 }
 
-run();
+runAllParsers();

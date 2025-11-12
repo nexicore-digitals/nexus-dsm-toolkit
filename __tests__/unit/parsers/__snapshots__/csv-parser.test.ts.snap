@@ -17,7 +17,7 @@ exports[`CSV Parsing tests > should match metadata snapshot for valid sample 1`]
   ],
   "format": "csv",
   "rowCount": 3,
-  "source": "string-input",
+  "source": "Unknown",
   "validationFlags": {
     "hasBalancedQuotes": true,
     "hasCommentLines": false,

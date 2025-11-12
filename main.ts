@@ -29,11 +29,11 @@
  * import { parseCSV } from 'nexus-dsm';
  * const response = await parseCSV('header1,header2\nval1,val2');
  * if (response.success) {
- *   console.log("Parsed Data:", response.data);
- *   console.log("Eligibility:", response.meta.eligibleForConversion);
+ *   logger.info("Parsed Data:", response.data);
+ *   logger.info("Eligibility:", response.meta.eligibleForConversion);
  * } else {
  *   console.error("Parsing Failed:", response.message);
- *   console.log("Error Codes:", response.meta.diagnostics?.errorCodes);
+ *   logger.info("Error Codes:", response.meta.diagnostics?.errorCodes);
  * }
  */
 export { parseCSV, parseCsvFromFile } from "./src/parsers/index.js";
@@ -75,12 +75,12 @@ export { parseCSV, parseCsvFromFile } from "./src/parsers/index.js";
  * // --- Parsing from a raw string ---
  * const jsonString = '[{"id": 1}]';
  * const responseFromString = await parseJSON(jsonString);
- * console.log(responseFromString.success); // true
+ * logger.info(responseFromString.success); // true
  *
  * // --- Parsing from a pre-parsed object (more efficient) ---
  * const jsonObject = [{ id: 1 }];
  * const responseFromObject = await parseJSON(jsonObject);
- * console.log(responseFromObject.success); // true
+ * logger.info(responseFromObject.success); // true
  */
 export { parseJSON } from "./src/parsers/index.js";
 
@@ -105,11 +105,11 @@ export { parseJSON } from "./src/parsers/index.js";
  *
  * // Shallow conversion (default)
  * const shallow = convertToCsv(jsonResponse);
- * console.log(shallow.content); // name,profile,tags\r\nAlice,"{""age"":30}","[""dev""]"
+ * logger.info(shallow.content); // name,profile,tags\r\nAlice,"{""age"":30}","[""dev""]"
  *
  * // Deep conversion
  * const deep = convertToCsv(jsonResponse, { flattening: 'deep' });
- * console.log(deep.content); // name,profile.age,tags[0]\r\nAlice,30,dev
+ * logger.info(deep.content); // name,profile.age,tags[0]\r\nAlice,30,dev
  */
 export { convertToCsv } from "./src/converters/index.js";
 
@@ -132,11 +132,11 @@ export { convertToCsv } from "./src/converters/index.js";
  *
  * // The function detects flattened headers (e.g., 'user.name') and un-flattens by default.
  * const nestedJson = convertToJson(csvResponse);
- * console.log(nestedJson.content); // '[{"user":{"name":"Alice","id":1}}]'
+ * logger.info(nestedJson.content); // '[{"user":{"name":"Alice","id":1}}]'
  *
  * // To prevent this and get a flat JSON object, pass `unflatten: false`.
  * const flatJson = convertToJson(csvResponse, { unflatten: false });
- * console.log(flatJson.content); // '[{"user.name":"Alice","user.id":1}]'
+ * logger.info(flatJson.content); // '[{"user.name":"Alice","user.id":1}]'
  */
 export { convertToJson } from "./src/converters/index.js";
 
@@ -164,7 +164,7 @@ export { convertToJson } from "./src/converters/index.js";
  *   .withCsvExtras({ delimiter: ',' })
  *   .buildCsv();
  *
- * console.log(meta.eligibleForConversion); // true
+ * logger.info(meta.eligibleForConversion); // true
  */
 export { ParsedFileMetaBuilder } from "./src/utils/index.js";
 
@@ -180,7 +180,7 @@ export { ParsedFileMetaBuilder } from "./src/utils/index.js";
  *
  * const data = { user: { profile: { name: "Alice" } } };
  * const depth = calculateNestingDepth(data);
- * console.log(depth); // 3
+ * logger.info(depth); // 3
  */
 export { calculateNestingDepth } from "./src/utils/index.js";
 
@@ -195,10 +195,10 @@ export { calculateNestingDepth } from "./src/utils/index.js";
  * import { checkKeyConsistency } from 'nexus-dsm';
  *
  * const consistent = [{ a: 1 }, { a: 2 }];
- * console.log(checkKeyConsistency(consistent).consistent); // true
+ * logger.info(checkKeyConsistency(consistent).consistent); // true
  *
  * const inconsistent = [{ a: 1 }, { b: 2 }];
- * console.log(checkKeyConsistency(inconsistent).inconsistentKeys); // ['a', 'b']
+ * logger.info(checkKeyConsistency(inconsistent).inconsistentKeys); // ['a', 'b']
  */
 export { checkKeyConsistency } from "./src/utils/index.js";
 
@@ -238,7 +238,7 @@ export { convertJsonStructure } from "./src/converters/index.js";
  *   if (response.success) {
  *     // response is now of type CsvValidResponse
  *     const meta: CsvParsedFileMeta = response.meta;
- *     console.log(meta.validationFlags.hasHeaders);
+ *     logger.info(meta.validationFlags.hasHeaders);
  *   }
  * }
  */

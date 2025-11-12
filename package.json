@@ -1,6 +1,6 @@
 {
     "name": "nexus-dsm",
-    "version": "1.6.0",
+    "version": "2.0.0",
     "description": "Modular toolkit for parsing, validating, and converting structured datasets (CSV ↔ JSON) with reviewer clarity.",
     "type": "module",
     "license": "MIT",
@@ -12,6 +12,17 @@
     "files": [
         "dist"
     ],
+    "node_deb": {
+        "executable_name": "nexus-dsm",
+        "install_dir": "/usr/bin",
+        "maintainer": "Owen • Nexicore Digital",
+        "description": "Modular toolkit for parsing, validating, and converting structured datasets (CSV ↔ JSON) with reviewer clarity.",
+        "license": "MIT",
+        "version": "2.0.0",
+        "entrypoints": {
+            "daemon": "/usr/bin/nexus-dsm"
+        }
+    },
     "repository": {
         "type": "git",
         "url": "https://github.com/nexicore-digitals/nexus-dsm-toolkit.git"
@@ -60,13 +71,18 @@
         "example:to-csv": "tsx examples/convert-to-csv.ts",
         "example:to-json": "tsx examples/convert-to-json.ts",
         "prepare": "husky",
-        "build": "tsup src/index.ts --format esm,cjs --dts --clean",
+        "build": "tsup src/index.ts --format esm,cjs --dts --clean && tsup ./cli.ts --format esm,cjs",
         "lint": "eslint . --ext .ts",
         "typecheck": "tsc --noEmit",
         "format": "prettier --write --cache .",
         "test:staged": "vitest run --changed --passWithNoTests",
         "test:node": "node --loader tsx src/index.ts",
-        "precommit": "pnpm format && pnpm lint && pnpm typecheck && pnpm test"
+        "checks": "pnpm format && pnpm lint && pnpm typecheck && pnpm test",
+        "nexus-dsm": "pnpm exec tsx ./dist/cli.ts",
+        "build-deb": "pnpm exec node-deb --init auto -- ."
+    },
+    "bin": {
+        "nexus-dsm": "./dist/cli.cjs"
     },
     "lint-staged": {
         "*.ts": [
@@ -79,11 +95,17 @@
         ]
     },
     "dependencies": {
-        "papaparse": "^5.5.3"
+        "@types/node": "^24.10.0",
+        "ora": "^9.0.0",
+        "papaparse": "^5.5.3",
+        "winston": "^3.18.3",
+        "yargs": "^18.0.0"
     },
     "devDependencies": {
         "@eslint/js": "^9.35.0",
+        "@types/jsonstream": "^0.8.33",
         "@types/papaparse": "^5.3.16",
+        "@types/yargs": "^17.0.34",
         "@typescript-eslint/eslint-plugin": "^8.46.1",
         "@typescript-eslint/parser": "^8.46.1",
         "eslint": "^9.38.0",
@@ -93,6 +115,7 @@
         "globals": "^16.4.0",
         "husky": "^9.1.7",
         "lint-staged": "^16.2.4",
+        "node-deb": "^0.10.7",
         "prettier": "^3.6.2",
         "tsup": "^8.5.0",
         "tsx": "^4.20.3",
