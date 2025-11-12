@@ -51,6 +51,7 @@ export interface SuccessfulCsvConversionResult {
 /**
  * Defines the options available for converting JSON to CSV.
  */
+
 export interface CsvConversionOptions {
     /**
      * Specifies the strategy for handling nested objects within the JSON data.

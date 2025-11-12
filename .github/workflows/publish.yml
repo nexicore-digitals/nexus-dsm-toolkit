@@ -2,8 +2,8 @@ name: Publish to JSR and GitHub Release
 
 on:
     push:
-        branches:
-            - "release/v*"
+        tags:
+            - "v*.*.*" # Triggers only on version tags like v2.0.0
 
 jobs:
     publish:
@@ -53,6 +53,7 @@ jobs:
               uses: softprops/action-gh-release@v2
               with:
                   files: nexus-dsm_*.deb
+
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
