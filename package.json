@@ -20,7 +20,8 @@
         "version": "2.0.0",
         "bin": {
             "nexus-dsm": "./dist/cli.js"
-        }
+        },
+        "entrypoint": "./dist/cli.cjs"
     },
     "repository": {
         "type": "git",
