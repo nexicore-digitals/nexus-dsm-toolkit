@@ -78,7 +78,7 @@
         "test:node": "node --loader tsx src/index.ts",
         "checks": "pnpm format && pnpm lint && pnpm typecheck && pnpm test",
         "nexus-dsm": "pnpm exec tsx ./dist/cli.ts",
-        "build-deb": "rm -rf /build && mkdir -p build/package && cp -r dist package.json README.md build/package && cd build/package && pnpm exec node-deb --init none -- ."
+        "build-deb": "rm -rf build && mkdir -p build/package && cp -r dist package.json README.md build/package && cd build/package && NODE_ENV=production npm pkg delete scripts.prepare && pnpm exec node-deb --init none -- ."
     },
     "bin": {
         "nexus-dsm": "./dist/cli.cjs"
