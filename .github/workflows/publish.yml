@@ -52,8 +52,12 @@ jobs:
             - name: 🚀 Upload .deb to GitHub Release
               uses: softprops/action-gh-release@v2
               with:
-                  files: nexus-dsm_*.deb
-
+                  files: build/package/nexus-dsm_*.deb
+                  body: |
+                      🎉 Release highlights:
+                      - CLI installable via `.deb`
+                      - CSV ↔ JSON conversion engine
+                      - Reviewer clarity overlays
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

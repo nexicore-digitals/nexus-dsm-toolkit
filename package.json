@@ -14,25 +14,13 @@
     ],
     "node_deb": {
         "executable_name": "nexus-dsm",
-        "install_dir": "/usr/bin",
         "maintainer": "Owen • Nexicore Digital",
         "description": "Modular toolkit for parsing, validating, and converting structured datasets (CSV ↔ JSON) with reviewer clarity.",
         "license": "MIT",
         "version": "2.0.0",
-        "entrypoints": {
-            "daemon": "/usr/bin/nexus-dsm"
-        },
         "bin": {
             "nexus-dsm": "./dist/cli.js"
-        },
-        "exclude": [
-            "src",
-            "node_modules",
-            ".git",
-            "test",
-            "docs",
-            "README.md"
-        ]
+        }
     },
     "repository": {
         "type": "git",
@@ -90,7 +78,7 @@
         "test:node": "node --loader tsx src/index.ts",
         "checks": "pnpm format && pnpm lint && pnpm typecheck && pnpm test",
         "nexus-dsm": "pnpm exec tsx ./dist/cli.ts",
-        "build-deb": "pnpm exec node-deb --init auto -- ."
+        "build-deb": "rm -rf /build && mkdir -p build/package && cp -r dist package.json README.md build/package && cd build/package && pnpm exec node-deb --init none -- ."
     },
     "bin": {
         "nexus-dsm": "./dist/cli.cjs"
