@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`CSV Parsing tests > should match metadata snapshot for valid sample 1`] = `
+exports[`parseCsvStream – milestone-driven tests > should match metadata snapshot for valid sample 1`] = `
 {
   "createdAt": "2023-01-01T00:00:00.000Z",
   "delimiter": ",",
@@ -9,7 +9,7 @@ exports[`CSV Parsing tests > should match metadata snapshot for valid sample 1`]
     "warnings": [],
   },
   "eligibleForConversion": true,
-  "encoding": "utf-8",
+  "encoding": undefined,
   "fields": [
     "id",
     "name",
@@ -17,7 +17,7 @@ exports[`CSV Parsing tests > should match metadata snapshot for valid sample 1`]
   ],
   "format": "csv",
   "rowCount": 3,
-  "source": "Unknown",
+  "source": "stream-input",
   "validationFlags": {
     "hasBalancedQuotes": true,
     "hasCommentLines": false,

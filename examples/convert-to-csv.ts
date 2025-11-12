@@ -49,7 +49,7 @@ async function runSuccess() {
             );
             logger.info(deepResult.content);
         } else {
-            console.error("❌ CSV Conversion Failed:", deepResult.message);
+            logger.error("❌ CSV Conversion Failed:", deepResult.message);
         }
     }
 }
@@ -113,13 +113,13 @@ async function runTsvExample() {
             logger.info("\n✅ TSV to JSON Conversion successful!");
             logger.info("JSON Content:", jsonResult.content);
         } else {
-            console.error(
+            logger.error(
                 "❌ TSV to JSON Conversion Failed:",
                 jsonResult.message
             );
         }
     } else {
-        console.error("❌ TSV Parsing Failed:", tsvResponse.message);
+        logger.error("❌ TSV Parsing Failed:", tsvResponse.message);
         logger.info("Diagnostics:", tsvResponse.meta?.diagnostics);
     }
 }

@@ -1,0 +1,28 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`JSON parsing tests > should return an error response for no content > parseJsonFromFile > should automatically use streaming for files larger than MAX_SIZE_BYTES 1`] = `
+{
+  "createdAt": "2023-01-01T00:00:00.000Z",
+  "diagnostics": {
+    "errorCodes": [],
+    "warnings": [],
+  },
+  "eligibleForConversion": true,
+  "fields": [
+    "id",
+    "name",
+    "email",
+  ],
+  "format": "json",
+  "nestingDepth": 2,
+  "rowCount": 3,
+  "source": "huge.json",
+  "structureType": "array",
+  "validationFlags": {
+    "hasConsistentKeys": true,
+    "hasValidRows": true,
+    "inconsistentKeys": undefined,
+    "isArrayOfObjects": true,
+  },
+}
+`;

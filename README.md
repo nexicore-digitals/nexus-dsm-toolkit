@@ -4,7 +4,7 @@
 [![Node.js](https://img.shields.io/badge/node-%3E=18.0.0-brightgreen)](https://nodejs.org/)
 [![CI](https://github.com/nexicore-digitals/nexus-dsm-toolkit/actions/workflows/ci.yml/badge.svg)](https://github.com/nexicore-digitals/nexus-dsm-toolkit/actions/workflows/ci.yml)
 [![CodeQL](https://github.com/nexicore-digitals/nexus-dsm-toolkit/actions/workflows/codeql.yml/badge.svg)](https://github.com/nexicore-digitals/nexus-dsm-toolkit/actions/workflows/codeql.yml)
-[![Build Status](https://img.shields.io/github/actions/workflow/status/nexicore-digitals/nexus-dsm-toolkit/publish.yml?branch=release/v2.0.0)](https://github.com/nexicore-digitals/nexus-dsm-toolkit/actions/workflows/publish.yml)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/nexicore-digitals/nexus-dsm-toolkit/publish.yml?branch=release/v2.1.0)](https://github.com/nexicore-digitals/nexus-dsm-toolkit/actions/workflows/publish.yml)
 ![Modular DX](https://img.shields.io/badge/modular-DX-blue)
 ![Beginner Friendly](https://img.shields.io/badge/beginner-friendly-green)
 ![Nexi Inside](https://img.shields.io/badge/Nexi-AI-blue)
@@ -12,8 +12,8 @@
 ![DX Layer: nexus-dsm](https://img.shields.io/badge/DX%20layer-nexus--dsm-brightgreen)
 [![JSR](https://jsr.io/badges/@nexicore/nexus-dsm)](https://jsr.io/@nexicore/nexus-dsm)
 ![npm version](https://img.shields.io/npm/v/nexus-dsm)
-![Repo Size](https://img.shields.io/github/repo-size/nexicore-digitals/nexus-dsm-toolkit)
-![Release](https://img.shields.io/github/v/release/nexicore-digitals/nexus-dsm-toolkit)
+![Repo Size](https://img.shields.io/github/repo-size/nexicore-digitals/nexus-dsm-toolkit?t=1)
+![Release](https://img.shields.io/github/v/release/nexicore-digitals/nexus-dsm-toolkit?t=1)
 
 ---
 
@@ -72,19 +72,37 @@ The `parseCSV` function processes a raw CSV string and returns a detailed respon
 ```typescript
 import { parseCsvFromFile } from "nexus-dsm";
 
-// From a file path
-const response = await parseCsvFromFile("./data/sample.csv");
+import { logger } from "./examples/utils"; // Assuming you have a logger utility
 
-if (response.success) {
-    logger.info("Parsed Data:", response.data);
+// From a string
+const csvString = `id,name\n1,Test`;
+const responseFromString = await parseCSV(csvString);
+
+if (responseFromString.success) {
+    logger.info("Parsed Data:", responseFromString.data);
     logger.info(
-        "Is eligible for conversion?",
-        response.meta.eligibleForConversion
+        "Headers:",
+        responseFromString.meta.headers
     );
 } else {
-    logger.error("Parsing Failed:", response.message);
-    logger.info("Error Details:", response.meta.diagnostics);
+    logger.error("Parsing Failed:", responseFromString.message);
+    logger.info("Error Details:", responseFromString.meta.diagnostics);
 }
+
+// From a file path
+const responseFromFile = await parseCsvFromFile("./data/sample.csv");
+
+if (responseFromFile.success) {
+    logger.info("Parsed Data:", responseFromFile.data);
+    logger.info(
+        "Is eligible for conversion?",
+        responseFromFile.meta.eligibleForConversion
+    );
+} else {
+    logger.error("Parsing Failed:", responseFromFile.message);
+    logger.info("Error Details:", responseFromFile.meta.diagnostics);
+}
+
 ```
 
 ### Parsing a JSON
@@ -122,6 +140,7 @@ if (responseFromFile.success) {
     logger.error("Parsing Failed:", responseFromFile.message);
     logger.info("Error Details:", responseFromFile.meta.diagnostics);
 }
+
 ```
 
 ---
@@ -148,6 +167,23 @@ const shallow = await convertToCsv(jsonResponse);
 // Deep conversion
 const deep = await convertToCsv(jsonResponse, { flattening: 'deep' });
 // deep.content is: name,profile.age,tags[0]\r\nAlice,30,dev
+```
+
+### JSON to TSV Conversion
+
+You can also convert JSON to Tab-Separated Values (TSV) using the same `convertToCsv` function by specifying the delimiter.
+
+```typescript
+import { parseJSON, convertToCsv } from "nexus-dsm";
+
+const nestedJson = `[{"name":"Alice","profile":{"age":30},"tags":["dev"]}]`;
+const jsonResponse = await parseJSON(nestedJson);
+
+// Convert to TSV
+const tsv = await convertToCsv(jsonResponse, { tsv: true, writeToFile: true, outputPath: 'my-data.tsv' });
+// tsv.content is: name\tprofile\ttags\r\nAlice\t"{""age"":30}"\t"[""dev""]"\r\n
+// tsv.filePath is the path to the written TSV file
+path to the written TSV file is output.tsv if not specified otherwise
 ```
 
 ### CSV to JSON Conversion
@@ -185,7 +221,7 @@ Download the `.deb` file from [GitHub Releases](https://github.com/nexicore-digi
 ```bash
 curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
 sudo apt install -y nodejs
-sudo dpkg -i nexus-dsm.deb
+sudo dpkg -i nexus-dsm-toolkit.deb
 sudo apt install -f  # Fix any missing dependencies
 ```
 
@@ -220,28 +256,16 @@ nexus-dsm convert --from json --to csv --input data.json
 
 ### Primary API
 
-These are the main functions intended for everyday use.
-
-| Function | Description |
-| :--- | :--- |
-| `parseCSV(csv, source?)` | Parses a CSV or TSV string, validates its structure, and returns a detailed response object. |
-| `parseCsvFromFile(filePath)` | **Node.js only.** Reads and parses a CSV/TSV file from the filesystem. |
-| `parseJSON(data, source?)` | Parses a JSON string or a pre-parsed object/array, analyzes its structure, and returns a detailed response object. |
-| `parseJsonFromFile(filePath)` | **Node.js only.** Reads and parses a JSON file from the filesystem. |
-| `convertToCsv(response, options)` | Converts a parsed JSON response into a CSV string, with "shallow" (default) or "deep" flattening. |
-| `convertToJson(response, options)` | Converts a parsed CSV response into a JSON string, with automatic "un-flattening" of deep CSVs. |
-
-### Advanced & Utility API
-
-These functions and classes provide lower-level access for custom workflows and analysis.
+These functions and classes are the main entry points for parsing CSV and JSON data, both from strings and streams.
 
 | Function/Class | Description |
 | :--- | :--- |
-| `convertCsvStructure(response)` | Normalizes a `CsvResponse` into a standard tabular payload, ready for transformation. |
-| `convertJsonStructure(data, meta)` | Normalizes a `JsonResponse` into a structure-aware payload with detailed metadata. |
-| `ParsedFileMetaBuilder` | A fluent builder class to programmatically construct metadata objects for testing or custom parsing. |
-| `calculateNestingDepth(obj)` | Computes the maximum nesting depth of a JSON object or array (e.g., a flat object is depth 1). |
-| `checkKeyConsistency(array)` | Verifies if all objects in an array share the same keys and returns a list of any inconsistent keys. |
+| `parseJsonStream(stream: Readable, source?)` | **Node.js only.** Reads and parses a large JSON file from the filesystem using a streaming approach. |
+| `parseCsvStream(stream: Readable, encoding?)` | Parses a CSV/TSV stream, suitable for large files or network streams. |
+| `parseCSV(csv, source?)` | Advanced CSV parser with custom options for delimiters, quote characters, and more. |
+| `parseJSON(data: string \| object \| object[],filePath?: string)` | Advanced JSON parser with options for handling large datasets and custom error handling. |
+| `ParseCsvFromFile(filePath: string, options?: ParseCsvOptions)` | **Node.js only.** Low-level function to read and parse CSV/TSV files with custom stream handling. |
+| `ParseJsonFromFile(filePath: string, options?: ParseJsonOptions)` | **Node.js only.** Low-level function to read and parse JSON files with custom stream handling. |
 
 ---
 
@@ -249,7 +273,7 @@ These functions and classes provide lower-level access for custom workflows and 
 
 | Library         | Best For | DX Simplicity | Streaming | Nested Support | Metadata | Validation | UI Pairing Potential |
 |----------------|----------|----------------|-----------|----------------|----------|------------|-----------------------|
-| **nexus-dsm**  | DX-first conversion, contributor tooling | ⭐⭐⭐⭐⭐ | ✅ (planned) | ✅ Deep + Shallow | ✅ Rich | ✅ Detailed | ✅ High |
+| **nexus-dsm**  | DX-first conversion, contributor tooling | ⭐⭐⭐⭐⭐ | ✅ (partial) | ✅ Deep + Shallow | ✅ Rich | ✅ Detailed | ✅ High |
 | **PapaParse**  | Browser-based parsing, quick CSV import | ⭐⭐⭐⭐  | ✅ Step-wise | ❌ (flat only) | ⚠️ Minimal | ❌ | ⚠️ Limited |
 | **csvtojson**  | Quick CLI conversions, Node pipelines | ⭐⭐⭐   | ✅ Stream | ⚠️ Partial flattening | ⚠️ Basic | ⚠️ Basic | ❌ |
 | **fast-csv**   | High-performance streaming in Node | ⭐⭐    | ✅ Stream | ❌ | ❌ | ❌ | ❌ |
@@ -277,28 +301,37 @@ These functions and classes provide lower-level access for custom workflows and 
 
 ## 📚 Folder Structure
 
-```text
+```bash
 nexus-dsm/
-├── src/
-│   ├── parsers/          # CSV and JSON parsing logic
-│   ├── converters/       # Format transformation modules
-│   ├── validators/       # Syntax, quote balance, header, and schema checks
-│   ├── schemas/          # Schema definitions
-│   ├── indexers/         # (Planned) indexing logic
-│   ├── constants/        # Shared constants
-│   ├── adapters/         # Environment or format adapters
-│   └── utils/            # Shared helpers
-│   └── index.ts          # Main export file
-├── __tests__/            # Unit and integration tests
-├── lib/                  # External libraries (e.g. papaparse.min.js)
-├── api/                  # Optional HTTP service layer (Phase 3)
-├── cli/                  # Optional CLI wrapper (Phase 4)
-├── docs/                 # Specs, architecture diagrams, usage notes
-├── vitest.config.ts      # Vitest test runner config
-├── tsconfig.json         # TypeScript configuration
-├── CONTRIBUTING.md       # Contribution guidelines
-├── LICENSE               # Project license
-└── README.md             # This file
+├── .github/                 # GitHub Actions workflows & issue templates
+│   ├── workflows/           # CI/CD pipelines
+│   └── ISSUE_TEMPLATE/      # Issue templates for bug reports and feature requests
+├── src/                     # Source code
+│   ├── adapters/            # Adapters for external libraries (e.g., PapaParse)
+│   ├── cli/                 # Command-Line Interface implementation
+│   ├── constants/           # Shared constants and configuration
+│   ├── converters/          # Logic for converting between data formats (CSV <-> JSON)
+│   ├── parsers/             # Core parsing logic for CSV, JSON, and streaming
+│   ├── types/               # TypeScript type definitions and interfaces
+│   ├── utils/               # General utility functions and helpers
+│   └── index.ts             # Main entry point for the library
+├── __tests__/               # Unit and integration tests
+│   ├── fixtures/            # Test data files (CSV, JSON, etc.)
+│   └── unit/                # Unit tests for individual modules
+├── examples/                # Example usage of the library
+├── .gitignore               # Files and directories to ignore in Git
+├── .prettierrc.json         # Prettier configuration for code formatting
+├── CHANGELOG.md             # Detailed log of all project changes
+├── CONTRIBUTING.md          # Guidelines for contributing to the project
+├── LICENSE                  # Project license
+├── package.json             # Project metadata and dependencies
+├── pnpm-lock.yaml           # pnpm lock file
+├── README.md                # Project README
+├── ROADMAP.md               # Project roadmap and future plans
+├── SECURITY.md              # Security policy and vulnerability reporting
+├── tsconfig.json            # TypeScript configuration
+└── vitest.config.ts         # Vitest configuration for testing
+
 ```
 
 ---
@@ -328,6 +361,8 @@ We welcome PRs, issues, and architectural suggestions. Whether you're extending 
 This toolkit's powerful and reliable CSV parsing capabilities are made possible by **[Papa Parse](http://papaparse.com)**, the fastest in-browser CSV parser for JavaScript.
 
 ![Parser Core: PapaParse](https://img.shields.io/badge/parser%20core-PapaParse-blue)
+![stream-json](https://img.shields.io/badge/stream--json-streaming-blue)
+![stream-chain](https://img.shields.io/badge/stream--chain-streaming-blue)
 
 ---
 

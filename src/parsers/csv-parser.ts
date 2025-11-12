@@ -36,7 +36,7 @@ import { ParsedFileMetaBuilder } from "../utils/parsed-file-meta-builder.js";
  *   logger.info("Parsed Data:", response.data);
  *   logger.info("Eligibility:", response.meta.eligibleForConversion);
  * } else {
- *   console.error("Parsing Failed:", response.message);
+ *   logger.error("Parsing Failed:", response.message);
  *   logger.info("Error Details:", response.meta.diagnostics);
  * }
  */
@@ -121,6 +121,7 @@ export default async function parseCSV(
                     hasValidRows:
                         data.length > 0 && validationFlags.hasValidRows,
                 },
+                encoding: "utf-8", // Default to utf-8 for string parsing
                 diagnostics: {
                     warnings: customErrors.map((e) => e.message),
                     errorCodes: customErrors.map((e) => e.code),

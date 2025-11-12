@@ -7,6 +7,7 @@ Our development trajectory is focused on building a comprehensive, developer-fir
 - **Robust Parsing:** Implemented resilient parsers for CSV and JSON with detailed error reporting.
 - **Rich Metadata:** Generate comprehensive metadata for every parsing operation, including validation flags and diagnostic info.
 - **Intelligent Conversion:** Full round-trip conversion between CSV and JSON with smart defaults and flexible options (`deep`/`shallow` flattening and un-flattening).
+- **High-Performance Streaming Parsers**: Implemented intelligent orchestration for `parseCsvFromFile` and `parseJsonFromFile` to automatically leverage stream-based processing for large files, including a new dedicated streaming JSON parser.
 - **Developer-First Diagnostics:** Provide expressive error messages, hints, and eligibility reasons to make debugging data issues fast and intuitive.
 
 ## ✅ **Phase 2: Advanced Validation & Tooling (Complete)**

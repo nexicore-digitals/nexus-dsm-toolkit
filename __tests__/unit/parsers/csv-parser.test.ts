@@ -1,6 +1,7 @@
 import Papa from "papaparse";
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, Mock } from "vitest";
 import {
+    CSV_TOO_LARGE,
     TSV_SAMPLE,
     EMPTY_FILE,
     INVALID_QUOTES,
@@ -13,6 +14,21 @@ import {
     VALID_SAMPLE,
 } from "../../fixtures/csv/csv-mock-data.js";
 import { parseCSV, parseCsvFromFile } from "../../../src/parsers/index.js";
+import { Readable } from "stream";
+
+// Mock the entire 'fs' module to ensure createReadStream is intercepted
+vi.mock("fs", async (importOriginal) => {
+    const actualFs = await importOriginal<typeof import("fs")>();
+    return {
+        ...actualFs,
+        createReadStream: vi.fn(), // Mock createReadStream
+    };
+});
+
+// Import fs and fileAnalysis after mocking
+import * as fs from "fs";
+import * as fileAnalysis from "../../../src/utils/file-analysis.js";
+import { logger } from "../../../logger.js";
 
 vi.useFakeTimers();
 vi.setSystemTime(new Date("2023-01-01T00:00:00.000Z"));
@@ -187,6 +203,40 @@ describe("CSV Parsing tests", () => {
 
             // Clean up the global scope
             delete (global as any).window;
+        });
+
+        it("should automatically use streaming for files larger than MAX_SIZE_BYTES", async () => {
+            const mockFilePath = "/fake/path/huge.csv";
+            const mockStream = Readable.from(CSV_TOO_LARGE.content);
+
+            // Mock fileAnalysis to report a large file size
+            vi.spyOn(fileAnalysis, "analyzeFileMetadata").mockResolvedValue({
+                absolutePath: mockFilePath,
+                content: "", // Content not read by analyzeFileMetadata
+                diagnostics: [],
+                encoding: "utf-8",
+                size: 60 * 1024 * 1024, // 60MB, larger than MAX_SIZE_BYTES
+                sourceLabel: "huge.csv",
+            });
+            (fs.createReadStream as Mock).mockReturnValue(mockStream);
+
+            const result = await parseCsvFromFile(mockFilePath);
+            expect(result.success).toBe(true);
+            // Further assertions can check if the stream parser was indeed used
+            // (e.g., by checking specific meta properties or data structure if different)
+            // For now, success implies it handled the large file without crashing.
+            expect(fs.createReadStream).toHaveBeenCalledWith(mockFilePath, {
+                encoding: "utf8",
+            });
+            logger.info(
+                "CSV Payload size:",
+                (
+                    Buffer.byteLength(CSV_TOO_LARGE.content, "utf-8") /
+                    1024 /
+                    1024
+                ).toFixed(2),
+                "MB"
+            );
         });
     });
 });

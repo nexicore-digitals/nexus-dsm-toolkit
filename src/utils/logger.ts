@@ -6,6 +6,6 @@ export const logger = {
         if (process.env.NODE_ENV !== "test") console.warn(...args);
     },
     error: (...args: unknown[]) => {
-        console.error(...args);
+        logger.error(...args);
     },
 };

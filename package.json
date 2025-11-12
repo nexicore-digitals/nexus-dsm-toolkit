@@ -1,6 +1,6 @@
 {
     "name": "nexus-dsm",
-    "version": "2.0.0",
+    "version": "2.1.0",
     "description": "Modular toolkit for parsing, validating, and converting structured datasets (CSV ↔ JSON) with reviewer clarity.",
     "type": "module",
     "license": "MIT",
@@ -17,7 +17,7 @@
         "maintainer": "Owen • Nexicore Digital",
         "description": "Modular toolkit for parsing, validating, and converting structured datasets (CSV ↔ JSON) with reviewer clarity.",
         "license": "MIT",
-        "version": "2.0.0",
+        "version": "2.1.0",
         "bin": {
             "nexus-dsm": "./dist/cli.js"
         },
@@ -100,6 +100,8 @@
         "@types/node": "^24.10.0",
         "ora": "^9.0.0",
         "papaparse": "^5.5.3",
+        "stream-chain": "^2.2.5",
+        "stream-json": "^1.9.1",
         "winston": "^3.18.3",
         "yargs": "^18.0.0"
     },
@@ -107,10 +109,12 @@
         "@eslint/js": "^9.35.0",
         "@types/jsonstream": "^0.8.33",
         "@types/papaparse": "^5.3.16",
+        "@types/stream-chain": "^2.1.0",
+        "@types/stream-json": "^1.7.8",
         "@types/yargs": "^17.0.34",
         "@typescript-eslint/eslint-plugin": "^8.46.1",
         "@typescript-eslint/parser": "^8.46.1",
-        "eslint": "^9.38.0",
+        "eslint": "^9.39.1",
         "eslint-plugin-import": "^2.32.0",
         "eslint-plugin-prettier": "^5.5.4",
         "eslint-plugin-vitest": "^0.5.4",

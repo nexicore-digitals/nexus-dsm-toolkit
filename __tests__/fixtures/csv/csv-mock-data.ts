@@ -10,6 +10,11 @@ export const NO_HEADERS = {
     content: "1,Alice,alice@example.com\n2,Bob,bob@example.com",
 };
 
+export const EMPTY_LINES = {
+    success: true,
+    content: `id,name,email\n1,Alice,alice@example.com\n\n2,Bob,bob@example.com`,
+};
+
 export const MISSING_HEADER_VALUE = {
     success: false,
     content: `id,name,email,
@@ -73,4 +78,16 @@ export const TSV_SAMPLE = {
     meta: {
         delimiter: "\t",
     },
+};
+
+export const CSV_WITH_COMMENTS = {
+    success: true,
+    content:
+        "id,name,email\n# This is a comment line1,Alice,alice@example.com\n2,Bob,bob@example.com# Another comment",
+};
+
+const row = `"${"Charlie".repeat(100)}",${"Delta".repeat(100)}\n`; // ~200 bytes/row
+export const CSV_TOO_LARGE = {
+    success: true,
+    content: `name,code\n` + row.repeat(53_000), // ~60MB total
 };

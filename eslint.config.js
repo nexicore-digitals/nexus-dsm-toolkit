@@ -8,6 +8,7 @@ export default [
     {
         ignores: [
             "dist/",
+            "build/",
             "coverage/",
             "*.d.ts",
             "*.js.map",

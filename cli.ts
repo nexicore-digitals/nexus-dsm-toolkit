@@ -123,7 +123,8 @@ async function main() {
                         (to === "csv" || to === "tsv")
                     ) {
                         const jsonResponse = await parseJsonFromFile(
-                            argv.input as string
+                            argv.input as string,
+                            { stream: argv.stream as boolean }
                         );
                         if (jsonResponse.success) {
                             await convertToCsv(jsonResponse, {
@@ -224,7 +225,8 @@ async function main() {
                 const spinner = ora(`Parsing JSON file: ${argv.input}`).start();
                 try {
                     const response = await parseJsonFromFile(
-                        argv.input as string
+                        argv.input as string,
+                        { stream: argv.stream as boolean }
                     );
 
                     if (response.success) {
