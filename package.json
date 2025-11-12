@@ -21,7 +21,18 @@
         "version": "2.0.0",
         "entrypoints": {
             "daemon": "/usr/bin/nexus-dsm"
-        }
+        },
+        "bin": {
+            "nexus-dsm": "./dist/cli.js"
+        },
+        "exclude": [
+            "src",
+            "node_modules",
+            ".git",
+            "test",
+            "docs",
+            "README.md"
+        ]
     },
     "repository": {
         "type": "git",
