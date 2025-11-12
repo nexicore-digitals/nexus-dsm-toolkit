@@ -1,4 +1,3 @@
-import fs from "fs/promises";
 import type { JsonResponse } from "../types/json-response.js";
 import parseJSON from "./json-parser.js";
 import {
@@ -14,14 +13,21 @@ import {
     fileNotFoundError,
     fileSystemError,
 } from "../constants/custom-errors.js";
-import path from "path";
+import {
+    analyzeFileMetadata,
+    readFileContent,
+} from "../../src/utils/file-analysis.js";
 
-const MAX_SIZE_BYTES = 5 * 1024 * 1024; // 5MB
+/**
+ * Options for parsing a JSON file from a file path.
+ */
+export interface JsonFileParsingOptions {
+    // This interface is kept for future compatibility but currently has no effect.
+}
 
 export default async function parseJsonFromFile(
     filePath: string
 ): Promise<JsonResponse> {
-    // Environment check: This function is Node.js-specific.
     if (typeof window !== "undefined") {
         return {
             ...jsonEnvironmentError,
@@ -30,28 +36,28 @@ export default async function parseJsonFromFile(
         };
     }
 
-    const absolutePath = path.resolve(filePath);
     const customErrors: SpecificJsonError[] = [];
 
-    // File I/O and Pre-Parsing Checks ---
-    let fileHandle;
-    try {
-        const stats = await fs.stat(absolutePath);
+    const fileMetadata = await analyzeFileMetadata(filePath);
 
-        // Check file size without reading the content
-        if (stats.size > MAX_SIZE_BYTES) {
+    if (fileMetadata.diagnostics && fileMetadata.diagnostics.length > 0) {
+        // If analyzeFileMetadata found errors (e.g., file not found, too large)
+        if (fileMetadata.diagnostics[0].code === "FileTooLarge") {
             return createErrorResponse([jsonFileTooLargeError]);
         }
+        return createErrorResponse(
+            // Cast to SpecificJsonError
+            fileMetadata.diagnostics as SpecificJsonError[]
+        );
+    }
 
-        fileHandle = await fs.open(absolutePath, "r");
-        const fileContent = await fileHandle.readFile("utf8");
-
+    try {
+        const fileContent = await readFileContent(fileMetadata.absolutePath);
         // Check if the file is empty after reading
         customErrors.push(...checkEmptyFile(fileContent));
         if (customErrors.length > 0) {
             return createErrorResponse(customErrors);
         }
-
         // --- Core Parsing ---
         // Now, call the pure parseJSON function with the file content
         return await parseJSON(fileContent);
@@ -60,7 +66,7 @@ export default async function parseJsonFromFile(
             return createErrorResponse([
                 {
                     ...fileNotFoundError,
-                    message: `The file '${absolutePath}' was not found.`,
+                    message: `The file '${fileMetadata.absolutePath}' was not found.`,
                 },
             ]);
         }
@@ -71,9 +77,5 @@ export default async function parseJsonFromFile(
                 message: `An error occurred while reading the file: ${err instanceof Error && "message" in err ? err.message : ""}`,
             },
         ]);
-    } finally {
-        if (fileHandle) {
-            await fileHandle.close();
-        }
     }
 }

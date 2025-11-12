@@ -31,9 +31,7 @@ export interface ParsedFileMeta {
 /**
  * A specialized metadata that extends the papaparse response meta
  */
-export interface CsvParseMeta extends ParseMeta {
-    renamedHeaders?: string[] | null;
-}
+export interface CsvParseMeta extends ParseMeta {}
 
 /**
  * A specialized metadata object for successfully parsed CSV/TSV files.
@@ -76,9 +74,9 @@ export interface FileAnalysisResult {
     sourceLabel: string; // e.g. "data.csv"
     absolutePath: string; // full path for traceability
     content: string; // raw file content
-    size: number; // file size in bytes
-    encoding?: string; // optional: UTF-8, etc.
-    diagnostics?: SpecificCsvError[] | SpecificJsonError[]; // optional: warnings or notes
+    size: number; // file size in bytes (0 if file not found/inaccessible)
+    encoding: string; // e.g., UTF-8 (default to 'utf-8' if not explicitly detected)
+    diagnostics?: (SpecificCsvError | SpecificJsonError)[]; // optional: warnings or notes
 }
 
 export interface CsvFileAnalysisResult extends FileAnalysisResult {

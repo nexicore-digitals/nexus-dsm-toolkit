@@ -47,3 +47,8 @@ export * from "./csv.errors.js";
  * Detailed, specific error types for JSON parsing failures (e.g., `JsonInvalidRootError`).
  */
 export * from "./json-errors.js";
+
+/**
+ * Types related to file reading operations.
+ */
+export * from "./filereader.js";

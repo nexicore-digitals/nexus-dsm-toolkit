@@ -1,4 +1,8 @@
-import type { FileNotFoundError, FileSystemError } from "../types/errors.js";
+import type {
+    FileNotFoundError,
+    FileSystemError,
+    FileTooLargeError,
+} from "../types/errors.js";
 
 export const fileSystemError: FileSystemError = {
     name: "FileSystemError",
@@ -7,10 +11,16 @@ export const fileSystemError: FileSystemError = {
     code: "FileSystemError",
 };
 
-// Also, you'll want a specific error for 'file not found'
 export const fileNotFoundError: FileNotFoundError = {
     name: "FileNotFoundError",
     message: "The specified file could not be found.",
     type: "FileNotFoundError", // Use the new type
     code: "FileNotFound",
+};
+
+export const fileTooLargeError: FileTooLargeError = {
+    name: "FileTooLargeError",
+    message: "The file is too large to process.",
+    type: "FileTooLargeError",
+    code: "FileTooLarge",
 };

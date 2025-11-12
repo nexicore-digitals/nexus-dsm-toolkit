@@ -125,7 +125,8 @@
         "examples",
         "__tests__",
         "vitest.config.ts",
-        "main.ts"
+        "main.ts",
+        "cli.ts"
     ],
     "exclude": ["node_modules", "dist", "coverage"]
 }

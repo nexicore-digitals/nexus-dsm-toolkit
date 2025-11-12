@@ -1,40 +1,61 @@
-name: Publish to JSR
+name: Publish to JSR and GitHub Release
+
 on:
     push:
-        branches:
-            - "release/v*"
+        tags:
+            - "v*.*.*" # Triggers only on version tags like v2.0.0
 
 jobs:
     publish:
         runs-on: ubuntu-latest
         permissions:
-            contents: read
+            contents: write
             id-token: write
-        steps:
-            - uses: actions/checkout@v4
-              name: Checkout repository
+            packages: write
 
-            - uses: pnpm/action-setup@v3
-              name: Install pnpm
+        steps:
+            - name: 🧱 Checkout repository
+              uses: actions/checkout@v4
+
+            - name: 🧰 Setup pnpm
+              uses: pnpm/action-setup@v3
               with:
                   version: 8
                   run_install: false
 
-            - name: Get pnpm store directory
-              shell: bash
-              run: |
-                  echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+            - name: 🧠 Get pnpm store directory
+              run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
 
-            - uses: actions/cache@v3
-              name: Setup pnpm cache
+            - name: 🗃️ Setup pnpm cache
+              uses: actions/cache@v3
               with:
                   path: ${{ env.STORE_PATH }}
                   key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
                   restore-keys: |
                       ${{ runner.os }}-pnpm-store-
 
-            - name: Install dependencies
+            - name: 📦 Install dependencies
               run: pnpm install
 
-            - name: Publish package
+            - name: ✅ Run checks
+              run: pnpm checks
+
+            - name: 🛠 Build project
+              run: pnpm build
+
+            - name: 🧪 Install jq (required by node-deb)
+              run: sudo apt-get install -y jq
+
+            - name: 🧱 Build .deb package
+              run: pnpm run build-deb
+
+            - name: 🚀 Upload .deb to GitHub Release
+              uses: softprops/action-gh-release@v2
+              with:
+                  files: nexus-dsm_*.deb
+
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: 📤 Publish to JSR
               run: npx jsr publish

@@ -13,6 +13,7 @@ import type {
     CsvConversionOptions,
 } from "../types/conversion.js";
 import type { CsvResponse } from "../types/csv.response.js";
+import { writeToFile } from "../../src/utils/file-writer.js";
 
 /**
  * Recursively flattens a nested object into a single-level object.
@@ -102,8 +103,8 @@ export function convertCsvStructure(
  *
  * @param response The `JsonResponse` from the parsing stage.
  * @param options Configuration for the conversion, such as flattening strategy.
- * @returns A `CsvConversionResult` which is either a `SuccessfulCsvConversionResult`
- *          containing the string content, or a `FailedConversionResult`.
+ * @returns A `Promise` that resolves to a `CsvConversionResult`, which is either a
+ *          `SuccessfulCsvConversionResult` or a `FailedConversionResult`.
  *
  * @example
  * const nestedJson = `[{"name":"Alice","profile":{"age":30}}]`;
@@ -113,10 +114,14 @@ export function convertCsvStructure(
  * const deep = convertToCsv(jsonResponse, { flattening: 'deep' });
  * // deep.content is: name,profile.age\r\nAlice,30
  */
-export function convertToCsv(
+export async function convertToCsv(
     response: JsonResponse,
-    options?: CsvConversionOptions
-): CsvConversionResult {
+    options: CsvConversionOptions = {
+        flattening: "shallow",
+        tsv: false,
+        writeToFile: false,
+    }
+): Promise<CsvConversionResult> {
     if (!response.success || !response.meta?.eligibleForConversion) {
         const hints: string[] = [];
         if (!response.success) {
@@ -152,12 +157,24 @@ export function convertToCsv(
     let recordsForCsv: object[];
     let allHeaders: string[];
 
+    const isTsv = options?.tsv ?? false;
+    const delimiter = isTsv ? "\t" : ",";
     if (options?.flattening === "deep") {
         // Deep flatten each record and collect all unique column headers.
         recordsForCsv = rootItems.map((record) => flattenObject(record));
         allHeaders = [
             ...new Set(recordsForCsv.flatMap((record) => Object.keys(record))),
         ];
+        // Ensure all records have the same keys in the same order for consistent output.
+        recordsForCsv = recordsForCsv.map((record) => {
+            const orderedRecord: Record<string, unknown> = {};
+            for (const header of allHeaders) {
+                orderedRecord[header] = (record as Record<string, unknown>)[
+                    header
+                ];
+            }
+            return orderedRecord;
+        });
     } else {
         // Default "shallow" conversion: stringify nested objects.
         recordsForCsv = rootItems.map((record) => {
@@ -183,18 +200,31 @@ export function convertToCsv(
             columnNames: [],
             flatRecords: [],
             rowCount: 0,
-            delimiter: ",",
+            delimiter: delimiter,
             conversionMeta: {
                 flattening: options?.flattening === "deep" ? "deep" : "shallow",
             },
+            dataType: "csv",
         };
     }
 
     const content = Papa.unparse(recordsForCsv, {
         header: true,
-        columns: allHeaders,
-        quotes: true, // Default to quoting fields for safety
+        // By not providing the `columns` array, we let PapaParse derive headers
+        // from the first object's keys. This correctly uses the specified delimiter
+        // for the header row, fixing the TSV spacing issue.
+        // columns: allHeaders,
+        // Only quote fields that contain the delimiter, newline characters, or the quote character itself.
+        // For TSV, this means fields are rarely quoted, giving a clean output.
+        // For CSV, it maintains data integrity without unnecessarily quoting every field.
+        quotes: (value: any) =>
+            typeof value === "string" &&
+            (value.includes(delimiter) ||
+                value.includes("\n") ||
+                value.includes("\r") ||
+                value.includes('"')),
         quoteChar: '"',
+        delimiter: delimiter,
     });
 
     const result: SuccessfulCsvConversionResult = {
@@ -203,11 +233,22 @@ export function convertToCsv(
         columnNames: allHeaders,
         flatRecords: recordsForCsv,
         rowCount: recordsForCsv.length,
-        delimiter: ",",
+        delimiter: delimiter,
         conversionMeta: {
             flattening: options?.flattening === "deep" ? "deep" : "shallow",
         },
+        dataType: "csv",
     };
+
+    result.dataType = isTsv ? "tsv" : "csv";
+
+    if (options && options.writeToFile) {
+        await writeToFile(
+            options?.outputPath ?? "output",
+            result.content,
+            result.dataType
+        );
+    }
 
     return result;
 }

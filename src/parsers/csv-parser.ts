@@ -33,16 +33,16 @@ import { ParsedFileMetaBuilder } from "../utils/parsed-file-meta-builder.js";
  * const csvString = `id,name\n1,Alice\n2,Bob`;
  * const response = await parseCSV(csvString);
  * if (response.success) {
- *   console.log("Parsed Data:", response.data);
- *   console.log("Eligibility:", response.meta.eligibleForConversion);
+ *   logger.info("Parsed Data:", response.data);
+ *   logger.info("Eligibility:", response.meta.eligibleForConversion);
  * } else {
  *   console.error("Parsing Failed:", response.message);
- *   console.log("Error Details:", response.meta.diagnostics);
+ *   logger.info("Error Details:", response.meta.diagnostics);
  * }
  */
 export default async function parseCSV(
     csv: string,
-    source = "string-input"
+    source: string = "Unknown"
 ): Promise<CsvResponse> {
     const customErrors: SpecificCsvError[] = [];
 

@@ -16,10 +16,10 @@ async function main(data: string) {
     }
 }
 
-async function run() {
+async function runAllParsers() {
     await main(VALID_ARRAY_OF_OBJECTS.content);
     logger.info("\n-----------\n");
     await main(ALL_EMPTY_OBJECTS.content);
 }
 
-run();
+runAllParsers();

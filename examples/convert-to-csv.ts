@@ -1,6 +1,7 @@
-import { parseJSON, convertToCsv } from "../main.js";
+import { logger } from "../logger.js";
+import { parseJSON, convertToCsv, parseCSV, convertToJson } from "../main.js";
 
-console.log("--- Running JSON to CSV/TSV Conversion Example ---");
+logger.info("--- Running JSON to CSV/TSV Conversion Example ---");
 
 // 1. Define a JSON string with deeply nested objects and multi-level nested arrays.
 const jsonString = `[
@@ -21,37 +22,39 @@ async function runSuccess() {
     const jsonResponse = await parseJSON(jsonString);
 
     if (jsonResponse.success) {
-        console.log("Parsed JSON Format:", jsonResponse.meta.format);
+        logger.info("Parsed JSON Format:", jsonResponse.meta.format);
         // 3. Convert the successful parse result to CSV.
         // By default, it performs a "shallow" conversion.
-        const shallowResult = convertToCsv(jsonResponse);
+        const shallowResult = await convertToCsv(jsonResponse);
 
         if (shallowResult.success) {
-            console.log("✅ Shallow Conversion (Default):");
-            console.log(
+            logger.info("✅ Shallow Conversion (Default):");
+            logger.info(
                 "Flattening Mode:",
                 shallowResult.conversionMeta.flattening
             );
-            console.log(shallowResult.content);
+            logger.info(shallowResult.content);
         }
 
         // You can also perform a "deep" conversion.
-        const deepResult = convertToCsv(jsonResponse, { flattening: "deep" });
+        const deepResult = await convertToCsv(jsonResponse, {
+            flattening: "deep",
+        });
 
         if (deepResult.success) {
-            console.log("\n✅ Deep Conversion:");
-            console.log(
+            logger.info("\n✅ Deep Conversion:");
+            logger.info(
                 "Flattening Mode:",
                 deepResult.conversionMeta.flattening
             );
-            console.log(deepResult.content);
+            logger.info(deepResult.content);
         } else {
             console.error("❌ CSV Conversion Failed:", deepResult.message);
         }
     }
 }
 
-console.log("\n--- Running Failed JSON to CSV Conversion Example ---");
+logger.info("\n--- Running Failed JSON to CSV Conversion Example ---");
 
 // 1. Define a JSON string with inconsistent keys, making it ineligible for CSV conversion.
 const badJsonString = `[
@@ -64,35 +67,32 @@ async function runFailure() {
     const jsonResponse = await parseJSON(badJsonString);
 
     if (jsonResponse.success) {
-        console.log("Parsed JSON Format:", jsonResponse.meta.format);
-        console.log(
+        logger.info("Parsed JSON Format:", jsonResponse.meta.format);
+        logger.info(
             "JSON parsing succeeded, but data is not eligible for conversion."
         );
-        console.log("Eligibility:", jsonResponse.meta.eligibleForConversion);
-        console.log(
+        logger.info("Eligibility:", jsonResponse.meta.eligibleForConversion);
+        logger.info(
             "Reason:",
             jsonResponse.meta.diagnostics?.eligibilityReason
         );
-        console.log(
+        logger.info(
             "Inconsistent Keys:",
             jsonResponse.meta.validationFlags.inconsistentKeys
         );
 
         // 3. Attempt to convert the ineligible data to CSV.
-        const csvResult = convertToCsv(jsonResponse);
+        const csvResult = await convertToCsv(jsonResponse);
 
         if (!csvResult.success) {
-            console.log("\n✅ Conversion correctly failed! Details:");
-            console.log("Message:", csvResult.message);
-            console.log("Hints:", csvResult.hints);
+            logger.info("\n✅ Conversion correctly failed! Details:");
+            logger.info("Message:", csvResult.message);
+            logger.info("Hints:", csvResult.hints);
         }
     }
 }
 
-runSuccess();
-runFailure();
-
-console.log("\n--- Running TSV Conversion Example ---");
+logger.info("\n--- Running TSV Conversion Example ---");
 
 // 1. Define a TSV string
 const tsvString = `id\tname\tage\n1\tAlice\t30\n2\tBob\t25`;
@@ -102,16 +102,16 @@ async function runTsvExample() {
     const tsvResponse = await parseCSV(tsvString);
 
     if (tsvResponse.success) {
-        console.log("✅ TSV Parsing successful!");
-        console.log("Parsed Format:", tsvResponse.meta.format); // Should be 'tsv'
-        console.log("Delimiter:", tsvResponse.meta.delimiter); // Should be '\t'
-        console.log("Data:", tsvResponse.data);
+        logger.info("✅ TSV Parsing successful!");
+        logger.info("Parsed Format:", tsvResponse.meta.format); // Should be 'tsv'
+        logger.info("Delimiter:", tsvResponse.meta.delimiter); // Should be '\t'
+        logger.info("Data:", tsvResponse.data);
 
         // Convert TSV data to JSON
-        const jsonResult = convertToJson(tsvResponse);
+        const jsonResult = await convertToJson(tsvResponse);
         if (jsonResult.success) {
-            console.log("\n✅ TSV to JSON Conversion successful!");
-            console.log("JSON Content:", jsonResult.content);
+            logger.info("\n✅ TSV to JSON Conversion successful!");
+            logger.info("JSON Content:", jsonResult.content);
         } else {
             console.error(
                 "❌ TSV to JSON Conversion Failed:",
@@ -120,10 +120,15 @@ async function runTsvExample() {
         }
     } else {
         console.error("❌ TSV Parsing Failed:", tsvResponse.message);
-        console.log("Diagnostics:", tsvResponse.meta?.diagnostics);
+        logger.info("Diagnostics:", tsvResponse.meta?.diagnostics);
     }
 }
 
-// Assuming convertToJson is imported from main.js
-import { convertToJson, parseCSV } from "../main.js";
-runTsvExample();
+async function runAllExamples() {
+    await runSuccess();
+    await runFailure();
+    await runTsvExample();
+    logger.info("\n--- All CSV Conversion Examples Finished ---");
+}
+
+await runAllExamples();

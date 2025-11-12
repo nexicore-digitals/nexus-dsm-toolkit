@@ -23,6 +23,7 @@ export interface SuccessfulJsonConversionResult {
         /** The strategy used to handle nested structures. */
         unflatten: boolean;
     };
+    dataType: "json";
 }
 
 /**
@@ -44,11 +45,13 @@ export interface SuccessfulCsvConversionResult {
         /** The strategy used to handle nested structures. */
         flattening: "deep" | "shallow";
     };
+    dataType: "csv" | "tsv";
 }
 
 /**
  * Defines the options available for converting JSON to CSV.
  */
+
 export interface CsvConversionOptions {
     /**
      * Specifies the strategy for handling nested objects within the JSON data.
@@ -56,6 +59,32 @@ export interface CsvConversionOptions {
      * - `'deep'`: Recursively flattens nested objects into separate columns with dot notation (e.g., 'user.name').
      */
     flattening?: "deep" | "shallow";
+
+    /**
+     * Optional: If provided, the converted CSV content will be written to this file path.
+     */
+
+    outputPath?: string;
+
+    /**
+     * Optional: If `true`, the converted content will be written to the `outputPath` if provided.
+     * If `false` or `undefined`, content will not be written to a file.
+     * Defaults to `true` if `outputPath` is provided.
+     */
+
+    writeToFile?: boolean;
+
+    /**
+     * Optional: If `true`, the converted CSV content will use '\t' as a delimiter.
+     * This will override the `delimiter` option if both are provided.
+     */
+
+    tsv?: boolean;
+
+    /**
+     * If `true`, forces the use of a streaming parser if applicable.
+     */
+    stream?: boolean;
 }
 
 /**
@@ -67,6 +96,20 @@ export interface JsonConversionOptions {
      * CSV headers (e.g., 'user.name' or 'tags[0]'). Defaults to `false`.
      */
     unflatten?: boolean;
+
+    /**
+     * Optional: If provided, the converted CSV content will be written to this file path.
+     */
+
+    outputPath?: string;
+
+    /**
+     * Optional: If `true`, the converted content will be written to the `outputPath` if provided.
+     * If `false` or `undefined`, content will not be written to a file.
+     * Defaults to `true` if `outputPath` is provided.
+     */
+
+    writeToFile?: boolean;
 }
 
 /**

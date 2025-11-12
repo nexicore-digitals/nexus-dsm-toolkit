@@ -35,20 +35,20 @@ describe("CSV Conversion Logic", () => {
         } as JsonParsedFileMeta,
     };
 
-    it("should fail conversion if response is not eligible", () => {
+    it("should fail conversion if response is not eligible", async () => {
         const ineligible: Partial<JsonResponse> = {
             ...mockJsonResponse,
             success: false,
         };
 
-        const result = convertToCsv(ineligible as JsonResponse);
+        const result = await convertToCsv(ineligible as JsonResponse);
         expect(result.success).toBe(false);
         if (result.success) return;
         expect(result.message).toContain("not eligible for conversion");
     });
 
-    it("should serialize a JSON response into a CSV string", () => {
-        const result = convertToCsv(mockJsonResponse);
+    it("should serialize a JSON response into a CSV string", async () => {
+        const result = await convertToCsv(mockJsonResponse);
 
         expect(result.success).toBe(true);
         if (!result.success) return;
@@ -65,7 +65,7 @@ describe("CSV Conversion Logic", () => {
         expect(result.rowCount).toBe(2);
     });
 
-    it("should stringify nested objects by default (shallow conversion)", () => {
+    it("should stringify nested objects by default (shallow conversion)", async () => {
         const nestedJsonResponse: JsonResponse = {
             success: true,
             data: [
@@ -88,17 +88,18 @@ describe("CSV Conversion Logic", () => {
             } as JsonParsedFileMeta,
         };
 
-        const result = convertToCsv(nestedJsonResponse);
+        const result = await convertToCsv(nestedJsonResponse);
         expect(result.success).toBe(true);
         if (!result.success) return;
-        expect(result.content).toContain('"name","profile"');
-        // The assertion needs to account for quotes around all fields
+        // The header should not be quoted as it contains no special characters.
+        expect(result.content).toContain("name,profile");
+        // The stringified JSON contains commas, so it *should* be quoted.
         expect(result.content).toContain(
-            '"Alice","{""age"":30,""registered"":true}"'
+            'Alice,"{""age"":30,""registered"":true}"'
         );
     });
 
-    it("should deeply flatten nested objects when 'deep' option is used", () => {
+    it("should deeply flatten nested objects when 'deep' option is used", async () => {
         const nestedJsonResponse: JsonResponse = {
             success: true,
             data: [
@@ -121,7 +122,9 @@ describe("CSV Conversion Logic", () => {
             } as JsonParsedFileMeta,
         };
 
-        const result = convertToCsv(nestedJsonResponse, { flattening: "deep" });
+        const result = await convertToCsv(nestedJsonResponse, {
+            flattening: "deep",
+        });
         expect(result.success).toBe(true);
         if (!result.success) return;
 
@@ -130,19 +133,19 @@ describe("CSV Conversion Logic", () => {
         expect(simplifiedContent).toBe(expectedCsv);
     });
 
-    it("should fail serialization if structure conversion fails", () => {
+    it("should fail serialization if structure conversion fails", async () => {
         const ineligible: Partial<JsonResponse> = {
             ...mockJsonResponse,
             success: false,
         };
 
-        const result = convertToCsv(ineligible as JsonResponse);
+        const result = await convertToCsv(ineligible as JsonResponse);
         expect(result.success).toBe(false);
         if (result.success) return;
         expect(result.message).toContain("not eligible for conversion");
     });
 
-    it("should handle empty data gracefully", () => {
+    it("should handle empty data gracefully", async () => {
         const emptyResponse: JsonResponse = {
             ...mockJsonResponse,
             data: [],
@@ -152,7 +155,7 @@ describe("CSV Conversion Logic", () => {
             } as JsonParsedFileMeta,
         };
 
-        const result = convertToCsv(emptyResponse);
+        const result = await convertToCsv(emptyResponse);
         expect(result.success).toBe(true);
         if (!result.success) return;
         // When converting an empty JSON array, the result should be an empty CSV string.
@@ -166,7 +169,7 @@ describe("CSV Conversion Logic", () => {
         expect(result).toMatchSnapshot();
     });
 
-    it("should deeply flatten arrays with bracket notation", () => {
+    it("should deeply flatten arrays with bracket notation", async () => {
         const jsonWithArray: JsonResponse = {
             success: true,
             data: [
@@ -189,16 +192,18 @@ describe("CSV Conversion Logic", () => {
             } as JsonParsedFileMeta,
         };
 
-        const result = convertToCsv(jsonWithArray, { flattening: "deep" });
+        const result = await convertToCsv(jsonWithArray, {
+            flattening: "deep",
+        });
         expect(result.success).toBe(true);
         if (!result.success) return;
 
         expect(result.columnNames).toEqual(["id", "tags[0]", "tags[1]"]);
-        // The assertion needs to account for quotes around all fields
-        expect(result.content).toContain('"1","admin","editor"');
+        // With the new quoting logic, simple values are not quoted.
+        expect(result.content).toContain("1,admin,editor");
     });
 
-    it("should deeply flatten multi-level nested arrays with bracket notation", () => {
+    it("should deeply flatten multi-level nested arrays with bracket notation", async () => {
         const jsonWithNestedArray: JsonResponse = {
             success: true,
             data: [
@@ -227,7 +232,7 @@ describe("CSV Conversion Logic", () => {
             } as JsonParsedFileMeta,
         };
 
-        const result = convertToCsv(jsonWithNestedArray, {
+        const result = await convertToCsv(jsonWithNestedArray, {
             flattening: "deep",
         });
         expect(result.success).toBe(true);
@@ -240,8 +245,8 @@ describe("CSV Conversion Logic", () => {
             "matrix[1][0]",
             "matrix[1][1]",
         ]);
-        // The assertion needs to account for quotes around all fields
-        expect(result.content).toContain('"1","1","2","3","4"');
-        expect(result.content).toContain('"2","5","6",,');
+        // With the new quoting logic, simple values are not quoted.
+        expect(result.content).toContain("1,1,2,3,4");
+        expect(result.content).toContain("2,5,6,,");
     });
 });
