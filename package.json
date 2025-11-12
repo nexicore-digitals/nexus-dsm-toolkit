@@ -19,9 +19,11 @@
         "license": "MIT",
         "version": "2.0.0",
         "bin": {
-            "nexus-dsm": "./dist/cli.js"
+            "nexus-dsm": "./dist/cli.cjs"
         },
-        "entrypoint": "./dist/cli.cjs"
+        "entrypoints": {
+            "cli": "./dist/cli.cjs"
+        }
     },
     "repository": {
         "type": "git",

@@ -183,8 +183,10 @@ Perfect—here’s a clean, contributor-friendly section you can add to your REA
 Download the `.deb` file from [GitHub Releases](https://github.com/nexicore-digitals/nexus-dsm-toolkit/releases), then run:
 
 ```bash
+curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+sudo apt install -y nodejs
 sudo dpkg -i nexus-dsm.deb
-sudo apt-get install -f  # Fix any missing dependencies
+sudo apt install -f  # Fix any missing dependencies
 ```
 
 This installs the CLI globally as `nexus-dsm`.
