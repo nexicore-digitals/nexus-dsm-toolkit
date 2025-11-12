@@ -4,9 +4,12 @@
  */
 
 import { Readable } from "stream";
-import { chain } from "stream-chain";
-import { parser } from "stream-json";
-import { streamArray } from "stream-json/streamers/StreamArray.js";
+import StreamChain from "stream-chain";
+const chain = StreamChain.chain;
+import StreamJson from "stream-json/index.js";
+const parser = StreamJson.Parser;
+import StreamArray from "stream-json/streamers/StreamArray.js";
+const streamArray = StreamArray.streamArray;
 import type { JsonResponse } from "../types/json-response.js";
 import type { SpecificJsonError } from "../types/json-errors.js";
 import {
@@ -53,7 +56,7 @@ export async function parseJsonStream(
 
         const pipeline = chain([
             stream,
-            parser(),
+            new parser(),
             streamArray(), // Assumes a root array of objects
         ]);
 
